@@ -31,10 +31,10 @@ public class AutoBase extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
 
     static final double COUNTS_PER_MOTOR_REV = 560;
-    static final double DRIVE_GEAR_REDUCTION = (1/9); // This is < 1.0 if geared UP
+    static final double DRIVE_GEAR_REDUCTION = (0.11111); // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 3.0;  // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double COUNTS_PER_INCH = 1.2*4*((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415));
 
     public final String VUFORIA_KEY = "AZjeccj/////AAABmZ7TkGdQaE90s4Gyo3b9T6oMtsulwtj5kAdhfhIabefDBj9bL1HNlKjYyp+p20rz5XXI3XDI+LJhqiNDUymG5F9OnRzuEMCWrAiD+KapcXmFnFqQE/1KtAdlOTLURn2zaOPk9yYQQnRuk4mKoIMNFSHbvD5jCcAEb2Xd6fCeFPXfUqof2JWKSklygJqup0mgtWOPlxb+PdPgRuGeSzTyZtOCuyGzny5vUTnno/ShUCH2Am56oJUwzvNJS22oBn1dwsPiNIZBJK/EkHfDzJPkxDLMQGP0r2FMDheJRy+nU/xQ///p26LxrG6Gm3MT1Wal7tVigS1IJEB0B+eoqK+6LBlRvDf+CFCBj9nXY7eIy9I1";
 
@@ -84,6 +84,7 @@ public class AutoBase extends LinearOpMode {
 
 
     }
+
     public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {  //forward back and turn with encoder, always do 3 less
 
         robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -100,8 +101,14 @@ public class AutoBase extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
+            telemetry.addData("counts per inch", this.COUNTS_PER_INCH);
+            telemetry.update();
+
             newLeftTarget = (int) ((leftInches) * this.COUNTS_PER_INCH);
             newRightTarget = (int) ((rightInches) * this.COUNTS_PER_INCH);
+
+            telemetry.addData("counts to run", newLeftTarget);
+            telemetry.update();
 
             robot.fpd.setTargetPosition(newLeftTarget);
             robot.fsd.setTargetPosition(newRightTarget);
@@ -113,6 +120,7 @@ public class AutoBase extends LinearOpMode {
             robot.bpd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.bsd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            //give the motors a 2% error allowance
             int NT1 = (int) (newLeftTarget * 0.981); //fp
             int NT2 = (int) (newRightTarget * 0.981); //fp
 
@@ -131,7 +139,7 @@ public class AutoBase extends LinearOpMode {
                             (Math.abs(robot.bpd.getCurrentPosition()) < Math.abs(NT1)) ||
                             (Math.abs(robot.bsd.getCurrentPosition()) < Math.abs(NT2))))
             {
-                //empty loop body
+                //empty loop body that keeps running leaving motors running until time is up
             }
 
             robot.fpd.setPower(0);
@@ -148,7 +156,7 @@ public class AutoBase extends LinearOpMode {
         }
     }
 
-    public void sideways(double speed, double frontInches, double backInches, double timeoutS) {
+    public void sideways(double speed, double frontInches, double backInches, double timeoutS) { //positive is left
         int newFrontTarget = 0;
         int newBackTarget = 0;
 
@@ -230,22 +238,87 @@ public class AutoBase extends LinearOpMode {
 
     }
 
-
-
-
     public void setMotorDir() { //make sure correct - not 100% sure
-        robot.fsd.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.bsd.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.fsd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.bsd.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.fpd.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.bpd.setDirection(DcMotorSimple.Direction.FORWARD);
 
     }
+
     public void setMotorDirStrafe(){ //make sure correct
-        robot.fsd.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.bsd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.fsd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.bsd.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.fpd.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.bpd.setDirection(DcMotorSimple.Direction.FORWARD);
     }
+
+   /* public void turn90Left(double speed, double timeoutS){ //double degrees for later to input in turn
+        robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.fsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.bsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        setMotorDir();
+
+        if (opModeIsActive()){
+
+            new_fpdTarget = (int)//encoder counts go here
+            new_fsdTarget = (int)
+            new_bpdTarget = (int)
+            new_bsdTarget = (int)
+
+            robot.fpd.setTargetPosition(new_fpdTarget);
+            robot.fsd.setTargetPosition(new_fsdTarget);
+            robot.bpd.setTargetPosition(new_bpdTarget);
+            robot.bsd.setTargetPosition(new_bsdTarget);
+
+            robot.fpd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.fsd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.bpd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.bsd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            int fpdPost = (int) (new_fpdTarget * 0.981);
+            int fsdPost = (int) (new_fsdTarget * 0.981);
+            int bpdPost = (int) (new_bpdTarget * 0.981);
+            int bsdPost = (int) (new_bsdTarget * 0.981);
+
+            runtime.reset();
+
+            robot.fpd.setPower(-Math.abs(speed));
+            robot.fsd.setPower(-Math.abs(speed));
+            robot.bsd.setPower(Math.abs(speed));
+            robot.bpd.setPower(Math.abs(speed));
+
+            while (robot.fpd.isBusy() && robot.fsd.isBusy() && robot.bpd.isBusy() && robot.bsd.isBusy() &&
+                    opModeIsActive() && (runtime.seconds() < timeoutS) &&
+                    ((Math.abs(robot.fpd.getCurrentPosition()) < Math.abs(fpdPost)) ||
+                            (Math.abs(robot.fsd.getCurrentPosition()) < Math.abs(fsdPost)) ||
+                            (Math.abs(robot.bpd.getCurrentPosition()) < Math.abs(bpdPost)) ||
+                            (Math.abs(robot.bsd.getCurrentPosition()) < Math.abs(bsdPost))))
+            {
+                //empty loop body that keeps running leaving motors running until time is up
+            }
+
+            robot.fpd.setPower(0);
+            robot.fsd.setPower(0);
+            robot.bpd.setPower(0);
+            robot.bsd.setPower(0);
+
+            robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.fsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+
+
+
+
+
+
+
+    } */
 
     public void initVuforia() {
         /*
@@ -261,7 +334,6 @@ public class AutoBase extends LinearOpMode {
 
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
-
     public void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
