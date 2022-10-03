@@ -16,7 +16,14 @@ public class testEncoderValues extends AutoBase {
 
         while (opModeIsActive()){
 
-            sleep(20000);
+        //test color values
+          senseColors();
+
+          sleep (20000);
+
+
+           //testing encoder values below
+            /*sleep(20000);
 
             telemetry.addData("fpd", robot.fpd.getCurrentPosition());
             telemetry.addData("fsd", robot.fsd.getCurrentPosition());
@@ -24,9 +31,12 @@ public class testEncoderValues extends AutoBase {
             telemetry.addData("bsd", robot.bsd.getCurrentPosition());
             telemetry.update();
 
-            sleep(10000);
+            sleep(10000);*/
 
-            stop();
+
+
+
+            //stop();
 
         }
     }

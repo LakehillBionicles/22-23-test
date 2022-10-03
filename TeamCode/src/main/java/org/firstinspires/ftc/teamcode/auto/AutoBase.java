@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -77,6 +78,10 @@ public class AutoBase extends LinearOpMode {
         robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.bsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //initVuforia();
+
+        //initTfod();
 
         telemetry.addData("Vision is Ready", ")");
         telemetry.update();
@@ -156,7 +161,46 @@ public class AutoBase extends LinearOpMode {
         }
     }
 
-    public void sideways(double speed, double frontInches, double backInches, double timeoutS) { //positive is left
+
+    public void driveUntilDist(double speed, double distance, double timeoutS) {  //method to drive until dist. sensor reads...
+
+        robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.fsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.bsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+
+        setMotorDir();
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            do {
+                robot.fpd.setPower(-Math.abs(speed));
+                robot.fsd.setPower(-Math.abs(speed));
+                robot.bsd.setPower(Math.abs(speed));
+                robot.bpd.setPower(Math.abs(speed));
+
+            } while (robot.distSensor.getDistance(DistanceUnit.INCH) < distance); //put in actual distance here
+
+            robot.fpd.setPower(0);
+            robot.fsd.setPower(0);
+            robot.bsd.setPower(0);
+            robot.bpd.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.fsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            sleep(40);
+        }
+    }
+
+
+
+    public void sideways(double speed, double frontInches, double backInches, double timeoutS) { //positive is right
         int newFrontTarget = 0;
         int newBackTarget = 0;
 
@@ -246,14 +290,89 @@ public class AutoBase extends LinearOpMode {
 
     }
 
-    public void setMotorDirStrafe(){ //make sure correct
-        robot.fsd.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.bsd.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.fpd.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.bpd.setDirection(DcMotorSimple.Direction.FORWARD);
+    public void setMotorDirStrafe(){
+        robot.fsd.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.bsd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.fpd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.bpd.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-   /* public void turn90Left(double speed, double timeoutS){ //double degrees for later to input in turn
+    public void senseColors (){
+        while (opModeIsActive()) {
+            telemetry.addData("red", robot.colorSensor.red());
+            telemetry.addData("green", robot.colorSensor.green());
+            telemetry.addData("blue", robot.colorSensor.blue());
+            telemetry.update();
+        }
+    }
+
+    public void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = CameraDirection.BACK;
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
+    public void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.inputSize = 320;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.setZoom(1, 16.0 / 9.0);
+        tfod.activate();
+    }
+
+    public String detectCone() {
+        String position = "";
+        int k = 0;
+        do {
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("Object Detected", updatedRecognitions.size());
+                    if (updatedRecognitions.size() == 0) { telemetry.addData("Position","top");
+                        position = "top";
+                    }
+                    // step through the list of recognitions and display boundary info.
+                    int i = 0;
+                    for (Recognition recognition : updatedRecognitions) {
+
+                        if (recognition.getLeft() > 400) {
+                            telemetry.addData("Position","middle");
+                            position = "middle";
+                        } else if (recognition.getLeft() < 400) {
+                            telemetry.addData("Position","bottom");
+                            position = "bottom";
+                        }
+
+                        i++;
+                    }
+
+                    telemetry.update();
+                    return position;
+                }
+            }
+            k++;
+        } while (opModeIsActive() && position.equals("s") && k < 1000);
+        return position;
+
+    }
+
+
+    /* public void turn90Left(double speed, double timeoutS){ //double degrees for later to input in turn
         robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.fsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -320,31 +439,7 @@ public class AutoBase extends LinearOpMode {
 
     } */
 
-    public void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.BACK;
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
-    }
-    public void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
-        tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 320;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.setZoom(1, 16.0 / 9.0);
-        tfod.activate();
-    }
     public void updateAngles() {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;

@@ -19,6 +19,8 @@ public class TemaruHardware extends LinearOpMode {
     public DcMotor fsd = null;
     public DcMotor bpd = null;
     public DcMotor bsd = null;
+    public ColorSensor colorSensor = null;
+    public DistanceSensor distSensor = null;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -52,6 +54,8 @@ public class TemaruHardware extends LinearOpMode {
         fsd = hwMap.get(DcMotor.class, "fsd");
         bpd = hwMap.get(DcMotor.class, "bpd");
         bsd = hwMap.get(DcMotor.class, "bsd");
+        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
+        distSensor = hwMap.get(DistanceSensor.class, "distSensor");
 
 
         fsd.setDirection(DcMotorSimple.Direction.REVERSE);
