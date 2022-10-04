@@ -1,28 +1,20 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+
+import static org.firstinspires.ftc.teamcode.TemaruHardware.armSpeed;
+import static org.firstinspires.ftc.teamcode.TemaruHardware.closeHand;
+import static org.firstinspires.ftc.teamcode.TemaruHardware.openHand;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.TemaruHardware;
-
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
 
 @TeleOp
 //@Disabled
-public class testDrive extends LinearOpMode {
+public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 2 is arm/hand
     TemaruHardware robot = new TemaruHardware();
-
 
     public static double testDriveSpeed = 1.0;
     double speed = 1;
@@ -45,18 +37,15 @@ public class testDrive extends LinearOpMode {
                 turn();
             }
 
+            armLift();
+            hand();
+
+
+
+
         }
 
-       /* public void drive(double stickX double stickY) { //omni strafe ||Testing||
-            double angle = Math.atan2(stickY, stickX);
-            double magnitude = Math.sqrt(Math.pow(stickY, 2) + Math.pow(stickX, 2));
-            if (stickX > 0.2 || stickX < -0.2 || stickY < -0.2 || stickY > 0.2) {
-                isMoving = true;
-                fsd.setPower((Math.sin(angle + Math.PI / 4)) * magnitude * speed);//cos maybe?
-               bpd.setPower((Math.sin(angle + Math.PI / 4)) * magnitude * speed);
-               fpd.setPower((Math.sin(angle - Math.PI / 4)) * magnitude * speed);
-                bsd.setPower((Math.sin(angle - Math.PI / 4)) * magnitude * speed);
-            }*/
+
     }
 
     public void drive() {
@@ -127,33 +116,50 @@ public class testDrive extends LinearOpMode {
 
         }
     }
-            public void turn() {
-                if (gamepad1.left_stick_y < -0.2) {
-                    robot.fpd.setPower(gamepad1.left_stick_y);
-                    robot.bsd.setPower(-gamepad1.left_stick_y);
-                    robot.fsd.setPower(-gamepad1.left_stick_y);
-                    robot.bpd.setPower(gamepad1.left_stick_y);
-                } else if (gamepad1.left_stick_y > 0.2) {
-                    robot.fpd.setPower(gamepad1.left_stick_y);
-                    robot.bsd.setPower(-gamepad1.left_stick_y);
-                    robot.fsd.setPower(-gamepad1.left_stick_y);
-                    robot.bpd.setPower(gamepad1.left_stick_y);
 
-                } else {
-                    robot.fpd.setPower(0);
-                    robot.bpd.setPower(0);
-                    robot.fsd.setPower(0);
-                    robot.bsd.setPower(0);
-            }
+    public void turn() {
+        if (gamepad1.left_stick_y < -0.2) {
+            robot.fpd.setPower(gamepad1.left_stick_y);
+            robot.bsd.setPower(-gamepad1.left_stick_y);
+            robot.fsd.setPower(-gamepad1.left_stick_y);
+            robot.bpd.setPower(gamepad1.left_stick_y);
+        } else if (gamepad1.left_stick_y > 0.2) {
+            robot.fpd.setPower(gamepad1.left_stick_y);
+            robot.bsd.setPower(-gamepad1.left_stick_y);
+            robot.fsd.setPower(-gamepad1.left_stick_y);
+            robot.bpd.setPower(gamepad1.left_stick_y);
+
+        } else {
+            robot.fpd.setPower(0);
+            robot.bpd.setPower(0);
+            robot.fsd.setPower(0);
+            robot.bsd.setPower(0);
         }
+    }
 
-        /* public void testDrive(){
+    public void armLift(){
+        if (gamepad2.left_bumper){
+            robot.arm1.setPower(armSpeed);
+            robot.arm2.setPower(armSpeed);
 
+        } else if (gamepad2.right_bumper){
+            robot.arm1.setPower(-(armSpeed));
+            robot.arm2.setPower(-(armSpeed));
 
+        } else {
+            robot.arm1.setPower(0.0);
+            robot.arm2.setPower(0.0);
+        }
+    }
 
-
-
-    }*/
-
+    public void hand(){
+        if (gamepad2.a){
+            robot.hand.setPosition(openHand);
+        } else if (gamepad2.y){
+            robot.hand.setPosition(closeHand);
+        }
+        //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
 
     }
+
+}

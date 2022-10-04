@@ -19,8 +19,19 @@ public class TemaruHardware extends LinearOpMode {
     public DcMotor fsd = null;
     public DcMotor bpd = null;
     public DcMotor bsd = null;
+
+    public DcMotor arm1 = null;
+    public DcMotor arm2 = null;
+
+    public Servo hand = null;
+
     public ColorSensor colorSensor = null;
     public DistanceSensor distSensor = null;
+
+    public static final double armSpeed = 1.0;
+    public static final double openHand = 1.0;
+    public static final double closeHand = 0.0;
+
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -54,31 +65,51 @@ public class TemaruHardware extends LinearOpMode {
         fsd = hwMap.get(DcMotor.class, "fsd");
         bpd = hwMap.get(DcMotor.class, "bpd");
         bsd = hwMap.get(DcMotor.class, "bsd");
+
+        arm1 = hwMap.get(DcMotor.class, "arm1");
+        arm2 = hwMap.get(DcMotor.class, "arm2");
+
+        hand = hwMap.get(Servo.class, "hand");
+
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
         distSensor = hwMap.get(DistanceSensor.class, "distSensor");
 
+        //set directions
 
         fsd.setDirection(DcMotorSimple.Direction.REVERSE);
         bsd.setDirection(DcMotorSimple.Direction.REVERSE);
         fpd.setDirection(DcMotorSimple.Direction.REVERSE);
         bpd.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        arm1.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
+        arm2.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
 
-        //might need to comment these back out if no work
+        //set power to 0
         fpd.setPower(0);
         fsd.setPower(0);
         bpd.setPower(0);
         bsd.setPower(0);
 
+        arm1.setPower(0);
+        arm2.setPower(0);
+
+        //encoder run
         fpd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fsd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bpd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bsd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        //brake behavior
         fpd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fsd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bpd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bsd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 
