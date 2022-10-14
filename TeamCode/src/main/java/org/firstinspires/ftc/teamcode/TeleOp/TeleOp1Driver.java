@@ -49,8 +49,8 @@ public class TeleOp1Driver extends LinearOpMode {
                 turn();
             }
 
-            armLift();
-            hand();
+            //armLift();
+            //hand();
 
 
 
@@ -158,7 +158,7 @@ public class TeleOp1Driver extends LinearOpMode {
             }
         }
 
-    public void armLift(){
+    /*public void armLift(){
         if (gamepad1.left_bumper){
             robot.arm1.setPower(armSpeed);
             robot.arm2.setPower(armSpeed);
@@ -171,9 +171,9 @@ public class TeleOp1Driver extends LinearOpMode {
             robot.arm1.setPower(0.0);
             robot.arm2.setPower(0.0);
         }
-    }
+    }*/
 
-    public void hand(){
+    /*public void hand(){
         if (gamepad1.a){
             robot.hand.setPosition(openHand);
         } else if (gamepad1.y){
@@ -181,7 +181,7 @@ public class TeleOp1Driver extends LinearOpMode {
         }
         //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
 
-    }
+    }*/
         /* public void testDrive(){
 
 

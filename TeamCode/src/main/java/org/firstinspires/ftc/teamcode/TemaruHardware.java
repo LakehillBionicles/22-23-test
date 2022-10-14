@@ -20,8 +20,8 @@ public class TemaruHardware extends LinearOpMode {
     public DcMotor bpd = null;
     public DcMotor bsd = null;
 
-    public DcMotor arm1 = null;
-    public DcMotor arm2 = null;
+    //public DcMotor arm1 = null;
+    //public DcMotor arm2 = null;
 
     public Servo hand = null;
 
@@ -50,7 +50,6 @@ public class TemaruHardware extends LinearOpMode {
     public TemaruHardware() {
     }
 
-
     @Override
 
     public void runOpMode() {
@@ -66,10 +65,10 @@ public class TemaruHardware extends LinearOpMode {
         bpd = hwMap.get(DcMotor.class, "bpd");
         bsd = hwMap.get(DcMotor.class, "bsd");
 
-        arm1 = hwMap.get(DcMotor.class, "arm1");
-        arm2 = hwMap.get(DcMotor.class, "arm2");
+        //arm1 = hwMap.get(DcMotor.class, "arm1");
+        //arm2 = hwMap.get(DcMotor.class, "arm2");
 
-        hand = hwMap.get(Servo.class, "hand");
+        //hand = hwMap.get(Servo.class, "hand");
 
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
         distSensor = hwMap.get(DistanceSensor.class, "distSensor");
@@ -81,8 +80,8 @@ public class TemaruHardware extends LinearOpMode {
         fpd.setDirection(DcMotorSimple.Direction.REVERSE);
         bpd.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        arm1.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
-        arm2.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
+        //arm1.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
+        //arm2.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
 
         //set power to 0
         fpd.setPower(0);
@@ -90,8 +89,8 @@ public class TemaruHardware extends LinearOpMode {
         bpd.setPower(0);
         bsd.setPower(0);
 
-        arm1.setPower(0);
-        arm2.setPower(0);
+        //arm1.setPower(0);
+        //arm2.setPower(0);
 
         //encoder run
         fpd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -99,8 +98,8 @@ public class TemaruHardware extends LinearOpMode {
         bpd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bsd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //brake behavior
         fpd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -108,8 +107,8 @@ public class TemaruHardware extends LinearOpMode {
         bpd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bsd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 

@@ -162,27 +162,26 @@ public class AutoBase extends LinearOpMode {
     }
 
 
-    public void driveUntilDist(double speed, double distance, double timeoutS) {  //method to drive until dist. sensor reads...
+    public void driveUntilDist(double speed, double timeoutS) {  //method to drive until dist. sensor reads...
 
         robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.fsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.bsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
-
         setMotorDir();
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
-            do {
-                robot.fpd.setPower(-Math.abs(speed));
-                robot.fsd.setPower(-Math.abs(speed));
-                robot.bsd.setPower(Math.abs(speed));
-                robot.bpd.setPower(Math.abs(speed));
+            robot.fpd.setPower(-Math.abs(speed));
+            robot.fsd.setPower(-Math.abs(speed));
+            robot.bsd.setPower(Math.abs(speed));
+            robot.bpd.setPower(Math.abs(speed));
 
-            } while (robot.distSensor.getDistance(DistanceUnit.INCH) < distance); //put in actual distance here
+            do {
+                //Do nothing letting motors run until distance sensor sees a cone
+            } while (robot.distSensor.getDistance(DistanceUnit.CM) > 13); //put in actual distance here
 
             robot.fpd.setPower(0);
             robot.fsd.setPower(0);
@@ -281,6 +280,30 @@ public class AutoBase extends LinearOpMode {
 
 
     }
+
+
+    /*public void armLift(double speed, double inches, double timeoutS) { //backwards?
+        robot.arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int newTarget = 0;
+
+        if (opModeIsActive()) {
+
+            newTarget = (int) inches; //inches * this.COUNTS_PER_INCH?
+            robot.arm1.setTargetPosition(newTarget);
+            robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            int NT = (int) (newTarget * 0.981); //fp
+            runtime.reset();
+            robot.arm1.setPower(Math.abs(speed));
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) && robot.arm1.isBusy() &&
+                    ((Math.abs(robot.arm1.getCurrentPosition()) < Math.abs(NT)))) {
+            }
+            robot.arm1.setPower(0);
+            robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+
+    }*/
+
 
     public void setMotorDir() { //make sure correct - not 100% sure
         robot.fsd.setDirection(DcMotorSimple.Direction.FORWARD);
