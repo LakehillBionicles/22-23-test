@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.auto.AutoBase;
 @Autonomous
 //@Disabled
 
+//test to see if everything works
 
 public class testAuto extends AutoBase {
 
