@@ -164,24 +164,23 @@ public class AutoBase extends LinearOpMode {
 
     public void driveUntilDist(double speed, double timeoutS) {  //method to drive until dist. sensor reads...
 
-        robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.fsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.bsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        setMotorDir();
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
-            robot.fpd.setPower(-Math.abs(speed));
-            robot.fsd.setPower(-Math.abs(speed));
+            runtime.reset();
+
+            setMotorDir();
+
+            //changed all below to pos (both f and s were neg)
+            robot.fpd.setPower(Math.abs(speed));
+            robot.fsd.setPower(Math.abs(speed));
             robot.bsd.setPower(Math.abs(speed));
             robot.bpd.setPower(Math.abs(speed));
 
-            do {
+            while (robot.distSensor.getDistance(DistanceUnit.CM) > 13) {
                 //Do nothing letting motors run until distance sensor sees a cone
-            } while (robot.distSensor.getDistance(DistanceUnit.CM) > 13); //put in actual distance here
+            }
 
             robot.fpd.setPower(0);
             robot.fsd.setPower(0);
@@ -189,10 +188,10 @@ public class AutoBase extends LinearOpMode {
             robot.bpd.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            /*robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.fsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.bsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
             sleep(40);
         }
     }
@@ -277,6 +276,15 @@ public class AutoBase extends LinearOpMode {
 
             sleep(250);   // optional pause after each move
         }
+
+
+    }
+
+
+    public void odoWheelAngle(){
+
+
+
 
 
     }

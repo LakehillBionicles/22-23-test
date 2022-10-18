@@ -19,13 +19,20 @@ public class blueSideBlueTerminal extends AutoBase{
 
             //vision and store as variable for later
 
+            //YOU MESSED THIS UP -- DEAL WITH PRELOADED CONE FIRST THEN CREATE TOUCH SENSOR LOOP
+
             sideways(1.0, -38.0, -36.0, 3.0); //line up w/ cones
+
+
 
             //haven't checked measurements or to see if works here down
 
-            //driveUntilDist(1.0, 4.5, 3.0); //guestimating on distance right now
+            driveUntilDist(0.5, 7.0); //guestimating on distance right now
 
-            //close hand
+            telemetry.addData("did this work","yes");            //close hand
+            telemetry.update();
+
+            sleep(100000000);
 
             encoderDrive(1.0, -36.0, -36.0, 3.0); //back up until lined up with poles
 
