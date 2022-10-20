@@ -29,6 +29,9 @@ public class AutoBase extends LinearOpMode {
     BNO055IMU imu;
     Orientation angles;
 
+    public int portEncoderPos = 0;
+    public int starEncoderPos = 0;
+
     public ElapsedTime runtime = new ElapsedTime();
 
     static final double COUNTS_PER_MOTOR_REV = 560;
@@ -281,13 +284,91 @@ public class AutoBase extends LinearOpMode {
     }
 
 
-    public void odoWheelAngle(){
+    public void resetTicks() {
+        resetPortTicks();
+        resetStarTicks();
+    }
+    public void resetPortTicks() {
+        portEncoderPos = robot.odoPort.getCurrentPosition();
+    }
+    public int getPortTicks() {
+        return robot.odoPort.getCurrentPosition() - portEncoderPos;
+    }
+    public void resetStarTicks() {
+        starEncoderPos = robot.odoStar.getCurrentPosition();
+    }
+    public int getStarTicks() {
+        return robot.odoStar.getCurrentPosition() - starEncoderPos;
+    }
+    public void correctForDrift(){
+        if (getPortTicks() != getStarTicks()){ //put in a percentage otherwise will get stuck in constant loop like .97 should be fine
+            //if port > star correct star to meet port
+            //if star > port correct port to meet star
 
+            //is there a way to make this constant like a while op mode is active
+
+
+
+
+
+        } else {
+         //do nothing
+        }
 
 
 
 
     }
+
+    public void touchResetTicks(){ //method for reset ticks once both touch sensors are activated
+        if (robot.touchSensorPort.isPressed() && robot.touchSensorStar.isPressed()){
+            resetTicks();
+            telemetry.addData("Touch Sensors", "");
+            telemetry.update();
+        } else{
+        //do nothing
+        }
+    }
+
+    public void driveUntilTouch(double speed){ //function that drives until both touch sensors are pushed
+        if (opModeIsActive()) {
+
+            runtime.reset();
+
+            setMotorDir();
+
+            robot.fpd.setPower(Math.abs(speed));
+            robot.fsd.setPower(Math.abs(speed));
+            robot.bsd.setPower(Math.abs(speed));
+            robot.bpd.setPower(Math.abs(speed));
+
+            while (!(robot.touchSensorStar.isPressed()) || !(robot.touchSensorPort.isPressed())) {
+                //Do nothing letting motors run until distance sensor sees a cone
+            }
+
+            robot.fpd.setPower(0);
+            robot.fsd.setPower(0);
+            robot.bsd.setPower(0);
+            robot.bpd.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            /*robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.fsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+            sleep(40);
+        }
+
+
+
+    }
+
+
+
+
+
+
+
 
 
     /*public void armLift(double speed, double inches, double timeoutS) { //backwards?
@@ -311,6 +392,8 @@ public class AutoBase extends LinearOpMode {
             }
 
     }*/
+
+    //make a hand method
 
 
     public void setMotorDir() { //make sure correct - not 100% sure

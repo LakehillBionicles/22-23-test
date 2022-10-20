@@ -11,9 +11,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class TemaruHardware extends LinearOpMode {
+
+    //test for AUSTIN
 
     public DcMotor fpd = null;
     public DcMotor fsd = null;
@@ -23,10 +26,15 @@ public class TemaruHardware extends LinearOpMode {
     //public DcMotor arm1 = null;
     //public DcMotor arm2 = null;
 
+    public DcMotor odoPort = null; //these are the odometery wheels
+    public DcMotor odoStar = null;
+
     public Servo hand = null;
 
     public ColorSensor colorSensor = null;
     public DistanceSensor distSensor = null;
+    public TouchSensor touchSensorPort = null;
+    public TouchSensor touchSensorStar = null;
 
     public static final double armSpeed = 1.0;
     public static final double openHand = 1.0;
@@ -68,10 +76,16 @@ public class TemaruHardware extends LinearOpMode {
         //arm1 = hwMap.get(DcMotor.class, "arm1");
         //arm2 = hwMap.get(DcMotor.class, "arm2");
 
+        odoPort = hwMap.get(DcMotor.class, "odoPort");
+        odoStar = hwMap.get(DcMotor.class, "odoStar");
+
         //hand = hwMap.get(Servo.class, "hand");
 
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
         distSensor = hwMap.get(DistanceSensor.class, "distSensor");
+
+        touchSensorPort = hwMap.get(TouchSensor.class, "touchSensorPort");
+        touchSensorStar = hwMap.get(TouchSensor.class, "touchSensorStar");
 
         //set directions
 
@@ -80,8 +94,14 @@ public class TemaruHardware extends LinearOpMode {
         fpd.setDirection(DcMotorSimple.Direction.REVERSE);
         bpd.setDirection(DcMotorSimple.Direction.REVERSE);
 
+
+
         //arm1.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
         //arm2.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
+
+        odoPort.setDirection(DcMotorSimple.Direction.FORWARD);
+        odoStar.setDirection(DcMotorSimple.Direction.FORWARD);
+
 
         //set power to 0
         fpd.setPower(0);
