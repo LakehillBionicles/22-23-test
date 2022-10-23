@@ -16,8 +16,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class TemaruHardware extends LinearOpMode {
 
-    //test for AUSTIN
-
     public DcMotor fpd = null;
     public DcMotor fsd = null;
     public DcMotor bpd = null;
@@ -37,8 +35,8 @@ public class TemaruHardware extends LinearOpMode {
     public TouchSensor touchSensorStar = null;
 
     public static final double armSpeed = 1.0;
-    public static final double openHand = 1.0;
-    public static final double closeHand = 0.0;
+    public static final double openHandPos = 1.0;
+    public static final double closeHandPos = 0.0;
 
 
     private ElapsedTime runtime = new ElapsedTime();

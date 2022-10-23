@@ -19,6 +19,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.TemaruHardware;
+import static org.firstinspires.ftc.teamcode.TemaruHardware.closeHandPos;
+import static org.firstinspires.ftc.teamcode.TemaruHardware.openHandPos;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 
 import java.util.List;
@@ -301,23 +303,21 @@ public class AutoBase extends LinearOpMode {
         return robot.odoStar.getCurrentPosition() - starEncoderPos;
     }
     public void correctForDrift(){
-        if (getPortTicks() != getStarTicks()){ //put in a percentage otherwise will get stuck in constant loop like .97 should be fine
-            //if port > star correct star to meet port
-            //if star > port correct port to meet star
+        double speedTicksPort = ((getPortTicks() - getStarTicks()) * COUNTS_PER_INCH);
 
-            //is there a way to make this constant like a while op mode is active
+        if (getPortTicks() > getStarTicks()){
+            robot.fsd.setPower(speedTicksPort);
+            robot.bsd.setPower(speedTicksPort);//correcting function here
+            //move star motors to new target
+            //new target = difference in ticks
+            //ticks to wheel ticks ratio
+            robot.fpd.getCurrentPosition();
 
-
-
-
-
+        } else if (getStarTicks() > getPortTicks()){
+            //correcting function here
         } else {
-         //do nothing
+            //do nothing
         }
-
-
-
-
     }
 
     public void touchResetTicks(){ //method for reset ticks once both touch sensors are activated
@@ -371,6 +371,8 @@ public class AutoBase extends LinearOpMode {
 
 
 
+
+
     /*public void armLift(double speed, double inches, double timeoutS) { //backwards?
         robot.arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int newTarget = 0;
@@ -392,10 +394,16 @@ public class AutoBase extends LinearOpMode {
             }
 
     }*/
+/*
+    public void openHand(){
+        robot.hand.setPosition(openHandPos);
+    }
 
-    //make a hand method
+    public void closeHand(){
+        robot.hand.setPosition(closeHandPos);
+    }
 
-
+*/
     public void setMotorDir() { //make sure correct - not 100% sure
         robot.fsd.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.bsd.setDirection(DcMotorSimple.Direction.FORWARD);

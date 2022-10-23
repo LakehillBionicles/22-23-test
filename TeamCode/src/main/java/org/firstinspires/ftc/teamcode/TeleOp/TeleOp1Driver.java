@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.TemaruHardware.armSpeed;
-import static org.firstinspires.ftc.teamcode.TemaruHardware.closeHand;
-import static org.firstinspires.ftc.teamcode.TemaruHardware.openHand;
+import static org.firstinspires.ftc.teamcode.TemaruHardware.closeHandPos;
+import static org.firstinspires.ftc.teamcode.TemaruHardware.openHandPos;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -171,17 +171,17 @@ public class TeleOp1Driver extends LinearOpMode {
             robot.arm1.setPower(0.0);
             robot.arm2.setPower(0.0);
         }
-    }*/
+    }
 
-    /*public void hand(){
+    public void hand(){
         if (gamepad1.a){
-            robot.hand.setPosition(openHand);
+            robot.hand.setPosition(openHandPos);
         } else if (gamepad1.y){
-            robot.hand.setPosition(closeHand);
+            robot.hand.setPosition(closeHandPos);
         }
         //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
 
-    }*/
+    } */
         /* public void testDrive(){
 
 
