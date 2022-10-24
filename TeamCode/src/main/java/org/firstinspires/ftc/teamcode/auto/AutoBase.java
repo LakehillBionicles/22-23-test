@@ -39,7 +39,7 @@ public class AutoBase extends LinearOpMode {
     static final double COUNTS_PER_MOTOR_REV = 560;
     static final double DRIVE_GEAR_REDUCTION = (0.11111); // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 3.0;  // For figuring circumference
-    static final double COUNTS_PER_INCH = 1.2*4*((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double COUNTS_PER_INCH = 1.2 * 4 * ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415));
 
     public final String VUFORIA_KEY = "AZjeccj/////AAABmZ7TkGdQaE90s4Gyo3b9T6oMtsulwtj5kAdhfhIabefDBj9bL1HNlKjYyp+p20rz5XXI3XDI+LJhqiNDUymG5F9OnRzuEMCWrAiD+KapcXmFnFqQE/1KtAdlOTLURn2zaOPk9yYQQnRuk4mKoIMNFSHbvD5jCcAEb2Xd6fCeFPXfUqof2JWKSklygJqup0mgtWOPlxb+PdPgRuGeSzTyZtOCuyGzny5vUTnno/ShUCH2Am56oJUwzvNJS22oBn1dwsPiNIZBJK/EkHfDzJPkxDLMQGP0r2FMDheJRy+nU/xQ///p26LxrG6Gm3MT1Wal7tVigS1IJEB0B+eoqK+6LBlRvDf+CFCBj9nXY7eIy9I1";
@@ -59,11 +59,11 @@ public class AutoBase extends LinearOpMode {
     }
 
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
         startUp();
     }
 
-    public void startUp(){
+    public void startUp() {
         robot.init(hardwareMap);
 
         setMotorDir();
@@ -90,7 +90,6 @@ public class AutoBase extends LinearOpMode {
 
         telemetry.addData("Vision is Ready", ")");
         telemetry.update();
-
 
 
     }
@@ -147,8 +146,7 @@ public class AutoBase extends LinearOpMode {
                     ((Math.abs(robot.fpd.getCurrentPosition()) < Math.abs(NT1)) ||
                             (Math.abs(robot.fsd.getCurrentPosition()) < Math.abs(NT2)) ||
                             (Math.abs(robot.bpd.getCurrentPosition()) < Math.abs(NT1)) ||
-                            (Math.abs(robot.bsd.getCurrentPosition()) < Math.abs(NT2))))
-            {
+                            (Math.abs(robot.bsd.getCurrentPosition()) < Math.abs(NT2)))) {
                 //empty loop body that keeps running leaving motors running until time is up
             }
 
@@ -200,7 +198,6 @@ public class AutoBase extends LinearOpMode {
             sleep(40);
         }
     }
-
 
 
     public void sideways(double speed, double frontInches, double backInches, double timeoutS) { //positive is right
@@ -286,26 +283,32 @@ public class AutoBase extends LinearOpMode {
     }
 
 
-    public void resetTicks() {
+    /*public void resetTicks() {
         resetPortTicks();
         resetStarTicks();
     }
+
     public void resetPortTicks() {
         portEncoderPos = robot.odoPort.getCurrentPosition();
     }
+
     public int getPortTicks() {
         return robot.odoPort.getCurrentPosition() - portEncoderPos;
     }
+
     public void resetStarTicks() {
         starEncoderPos = robot.odoStar.getCurrentPosition();
     }
+
     public int getStarTicks() {
         return robot.odoStar.getCurrentPosition() - starEncoderPos;
     }
-    public void correctForDrift(){
-        double speedTicksPort = ((getPortTicks() - getStarTicks()) * COUNTS_PER_INCH);
 
-        if (getPortTicks() > getStarTicks()){
+    public void correctForDrift() {
+        double speedTicksPort = ((getPortTicks() - getStarTicks()) * COUNTS_PER_INCH);
+        double speedTicksStar = ((getStarTicks() - getPortTicks()) * COUNTS_PER_INCH);
+
+        if (getPortTicks() > getStarTicks()) {
             robot.fsd.setPower(speedTicksPort);
             robot.bsd.setPower(speedTicksPort);//correcting function here
             //move star motors to new target
@@ -313,24 +316,30 @@ public class AutoBase extends LinearOpMode {
             //ticks to wheel ticks ratio
             robot.fpd.getCurrentPosition();
 
-        } else if (getStarTicks() > getPortTicks()){
-            //correcting function here
+        } else if (getStarTicks() > getPortTicks()) {
+            robot.fpd.setPower(speedTicksStar);
+            robot.bpd.setPower(speedTicksStar);//correcting function here
+            //move star motors to new target
+            //new target = difference in ticks
+            //ticks to wheel ticks ratio
+            robot.fpd.getCurrentPosition();
         } else {
             //do nothing
         }
     }
+    */
 
-    public void touchResetTicks(){ //method for reset ticks once both touch sensors are activated
-        if (robot.touchSensorPort.isPressed() && robot.touchSensorStar.isPressed()){
+    /*public void touchResetTicks() { //method for reset ticks once both touch sensors are activated
+        if (robot.touchSensorPort.isPressed() && robot.touchSensorStar.isPressed()) {
             resetTicks();
             telemetry.addData("Touch Sensors", "");
             telemetry.update();
-        } else{
-        //do nothing
+        } else {
+            //do nothing
         }
-    }
+    }*/
 
-    public void driveUntilTouch(double speed){ //function that drives until both touch sensors are pushed
+    /*public void driveUntilTouch(double speed){ //function that drives until both touch sensors are pushed
         if (opModeIsActive()) {
 
             runtime.reset();
@@ -355,21 +364,9 @@ public class AutoBase extends LinearOpMode {
             /*robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.fsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.bsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+            robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             sleep(40);
         }
-
-
-
-    }
-
-
-
-
-
-
-
-
 
 
 
