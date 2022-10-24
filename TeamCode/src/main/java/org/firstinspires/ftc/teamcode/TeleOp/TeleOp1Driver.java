@@ -161,15 +161,12 @@ public class TeleOp1Driver extends LinearOpMode {
     /*public void armLift(){
         if (gamepad1.left_bumper){
             robot.arm1.setPower(armSpeed);
-            robot.arm2.setPower(armSpeed);
 
         } else if (gamepad1.right_bumper){
             robot.arm1.setPower(-(armSpeed));
-            robot.arm2.setPower(-(armSpeed));
 
         } else {
             robot.arm1.setPower(0.0);
-            robot.arm2.setPower(0.0);
         }
     }
 

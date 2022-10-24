@@ -9,13 +9,22 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 public class blueSideBlueTerminal extends AutoBase{
     public void runOpMode(){
         super.runOpMode();
+        startVision();
         startUp();
         waitForStart();
 
         while (opModeIsActive()){
+            if(tagOfInterest == null || tagOfInterest.id == LEFT){
+                telemetry.addData("Direction","Left");
+            }else if(tagOfInterest.id == MIDDLE){
+                telemetry.addData("Direction","Middle");
+                //trajectory
+            }else{
+                telemetry.addData("Direction","Right");
+                //trajectory
+            }
 
-
-            sideways(1.0, -23.0, -21.0, 3.0); //increase front in by 2 to account for drift
+        sideways(1.0, -23.0, -21.0, 3.0); //increase front in by 2 to account for drift
 
             //vision and store as variable for later
 
