@@ -17,7 +17,7 @@ public class testEncoderValues extends AutoBase {
         while (opModeIsActive()){
 
         //test color values
-          senseColors();
+          //senseColors();
 
           sleep (20000);
 

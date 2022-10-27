@@ -43,12 +43,8 @@ public class TeleOp1Driver extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if(gamepad1.left_stick_y < 0.2 && gamepad1.left_stick_y > -0.2) {
-                drive();
-            }else {
-                turn();
-            }
 
+                drive();
             //armLift();
             //hand();
 
@@ -69,7 +65,7 @@ public class TeleOp1Driver extends LinearOpMode {
             }*/
     }
 
-    public void drive() {
+    public void turn() {
         if (gamepad1.right_stick_x < 0.2 && gamepad1.right_stick_x > -0.2 && gamepad1.right_stick_y < -0.2) {   //forward
             robot.fpd.setPower(gamepad1.right_stick_y);
             robot.bpd.setPower(gamepad1.right_stick_y);
@@ -85,22 +81,22 @@ public class TeleOp1Driver extends LinearOpMode {
             telemetry.addData("back", "");
 
 
-        } else if (gamepad1.right_stick_x > 0.5 && (gamepad1.right_stick_y > -0.25 && gamepad1.right_stick_y < 0.25)) {  //star
+        } else if (gamepad1.left_stick_x > 0.5 && (gamepad1.left_stick_y > -0.25 && gamepad1.left_stick_y < 0.25)) {  //star
 
 
-            robot.fsd.setPower(gamepad1.right_stick_x);
-            robot.bsd.setPower(-gamepad1.right_stick_x);
-            robot.fpd.setPower(-gamepad1.right_stick_x);
-            robot.bpd.setPower(gamepad1.right_stick_x);
+            robot.fsd.setPower(gamepad1.left_stick_x);
+            robot.bsd.setPower(gamepad1.left_stick_x);
+            robot.fpd.setPower(gamepad1.left_stick_x);
+            robot.bpd.setPower(gamepad1.left_stick_x);
 
             telemetry.addData("star", "");
 
-        } else if ((gamepad1.right_stick_x < -0.5 && gamepad1.right_stick_y > -0.25 && gamepad1.right_stick_y < 0.25)) {  //port
+        } else if ((gamepad1.left_stick_x < -0.5 && gamepad1.left_stick_y > -0.25 && gamepad1.left_stick_y < 0.25)) {  //port
 
-            robot.fsd.setPower(gamepad1.right_stick_x);
-            robot.bsd.setPower(-gamepad1.right_stick_x);
-            robot.fpd.setPower(-gamepad1.right_stick_x);
-            robot.bpd.setPower(gamepad1.right_stick_x);
+            robot.fsd.setPower(-gamepad1.left_stick_x);
+            robot.bsd.setPower(-gamepad1.left_stick_x);
+            robot.fpd.setPower(-gamepad1.left_stick_x);
+            robot.bpd.setPower(-gamepad1.left_stick_x);
 
             telemetry.addData("port", "");
 
@@ -137,19 +133,29 @@ public class TeleOp1Driver extends LinearOpMode {
 
         }
     }
+    //lk;jfl;asdjflk;asdhg;sdfj;lk
 
-    public void turn() {
-                if (gamepad1.left_stick_y < -0.2) {
-                    robot.fpd.setPower(gamepad1.left_stick_y);
-                    robot.bsd.setPower(-gamepad1.left_stick_y);
-                    robot.fsd.setPower(-gamepad1.left_stick_y);
-                    robot.bpd.setPower(gamepad1.left_stick_y);
+    public void drive() {
+                if (gamepad1.left_stick_x > 0.2) {
+                    robot.fpd.setPower(-gamepad1.left_stick_x);
+                    robot.bsd.setPower(gamepad1.left_stick_x);
+                    robot.fsd.setPower(gamepad1.left_stick_x);
+                    robot.bpd.setPower(-gamepad1.left_stick_x);
+                } else if (gamepad1.left_stick_x < -0.2) {
+                    robot.fpd.setPower(-gamepad1.left_stick_x);
+                    robot.bsd.setPower(gamepad1.left_stick_x);
+                    robot.fsd.setPower(gamepad1.left_stick_x);
+                    robot.bpd.setPower(-gamepad1.left_stick_x);
                 } else if (gamepad1.left_stick_y > 0.2) {
-                    robot.fpd.setPower(gamepad1.left_stick_y);
-                    robot.bsd.setPower(-gamepad1.left_stick_y);
+                    robot.fpd.setPower(-gamepad1.left_stick_y);
+                    robot.bsd.setPower(gamepad1.left_stick_y);
                     robot.fsd.setPower(-gamepad1.left_stick_y);
                     robot.bpd.setPower(gamepad1.left_stick_y);
-
+                } else if (gamepad1.left_stick_y < -0.2){
+                    robot.fpd.setPower(-gamepad1.left_stick_y);
+                    robot.bsd.setPower(gamepad1.left_stick_y);
+                    robot.fsd.setPower(-gamepad1.left_stick_y);
+                    robot.bpd.setPower(gamepad1.left_stick_y);
                 } else {
                     robot.fpd.setPower(0);
                     robot.bpd.setPower(0);
@@ -158,19 +164,19 @@ public class TeleOp1Driver extends LinearOpMode {
             }
         }
 
-    /*public void armLift(){
-        if (gamepad1.left_bumper){
-            robot.arm1.setPower(armSpeed);
+    public void armLift(){
+        if (gamepad1.left_bumper){ //not useful
+            robot.arm1.setPower(.5);
 
-        } else if (gamepad1.right_bumper){
-            robot.arm1.setPower(-(armSpeed));
+        } else if (gamepad1.right_bumper){ //goes up
+            robot.arm1.setPower(-0.5);
 
         } else {
             robot.arm1.setPower(0.0);
         }
     }
 
-    public void hand(){
+    /*public void hand(){
         if (gamepad1.a){
             robot.hand.setPosition(openHandPos);
         } else if (gamepad1.y){

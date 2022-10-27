@@ -570,14 +570,14 @@ public class AutoBase extends LinearOpMode {
         robot.bpd.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void senseColors (){
+    /*public void senseColors (){
         while (opModeIsActive()) {
             telemetry.addData("red", robot.colorSensor.red());
             telemetry.addData("green", robot.colorSensor.green());
             telemetry.addData("blue", robot.colorSensor.blue());
             telemetry.update();
         }
-    }
+    }*/
 
     public void initVuforia() {
         /*
