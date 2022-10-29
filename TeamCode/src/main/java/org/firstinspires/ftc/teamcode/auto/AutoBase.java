@@ -556,10 +556,10 @@ public class AutoBase extends LinearOpMode {
 
 */
     public void setMotorDir() { //make sure correct - not 100% sure
-        robot.fsd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.fsd.setDirection(DcMotorSimple.Direction.FORWARD); //neg??
         robot.bsd.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.fpd.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.bpd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.bpd.setDirection(DcMotorSimple.Direction.FORWARD); //neg??
 
     }
 
