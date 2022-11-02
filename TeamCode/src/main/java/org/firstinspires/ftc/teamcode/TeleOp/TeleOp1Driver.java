@@ -73,9 +73,9 @@ public class TeleOp1Driver extends LinearOpMode {
              //NEED
             //if you press a bumper, run the ARMLIFT method until the bumper is "unpressed"
             armLift();
-            lightsTouch();
-            lightsDist();
-            //hand();
+            doLights();
+            hand();
+            magnetMagic();
 
         }
 
@@ -165,8 +165,6 @@ public class TeleOp1Driver extends LinearOpMode {
 
     public void armLift(){
 
-        robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -189,37 +187,42 @@ public class TeleOp1Driver extends LinearOpMode {
 
     }
 
-    /*public void hand(){
+    public void hand(){
         if (gamepad1.a){
-            robot.hand.setPosition(1.0);
+            robot.hand.setPower(1.0);
         } else if (gamepad1.y){
-            robot.hand.setPosition(0);
+            robot.hand.setPower(-1.0);
+        } else {
+            robot.hand.setPower(0.0);
         }
         //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
 
-    }*/
+    }
 
 
-    public void lightsTouch(){
+    public void doLights(){
         if (robot.touchSensorPort.isPressed() && robot.touchSensorStar.isPressed()){
             robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
-
+        } else if (robot.distSensor.getDistance(DistanceUnit.CM) < 8){
+            robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
         } else {
-            robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+          robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         }
+    }
+
+    public void magnetMagic(){
+        if (robot.magnet.isPressed()){ //is pressed at 1 cm
+            telemetry.addData("it works", "yay");
+            telemetry.update();
+        } else {
+
+        }
+
+
     }
 
 
 
-    public void lightsDist(){
-        if (robot.distSensor.getDistance(DistanceUnit.CM) < 8){
-          robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
-        } else {
-            robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
-        }
-
-
-    }
         /* public void testDrive(){
 
 
