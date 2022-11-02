@@ -38,8 +38,10 @@ public class TeleOp1Driver extends LinearOpMode {
         robot.init(hardwareMap);
 
         waitForStart();
+
         telemetry.addData("does this work", "yes it does");
         telemetry.update();
+
 
         while (opModeIsActive()) {
 
@@ -71,10 +73,9 @@ public class TeleOp1Driver extends LinearOpMode {
              //NEED
             //if you press a bumper, run the ARMLIFT method until the bumper is "unpressed"
             armLift();
+            lightsTouch();
+            lightsDist();
             //hand();
-
-
-
 
         }
 
@@ -163,27 +164,60 @@ public class TeleOp1Driver extends LinearOpMode {
         }
 
     public void armLift(){
-        if (gamepad1.left_bumper){ //not useful
-            robot.arm1.setPower(1);
 
-        } else if (gamepad1.right_bumper){ //goes up
-            robot.arm1.setPower(-1);
+        robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        if (gamepad1.left_bumper){ //goes up
+            robot.arm1.setPower(0.5);
+            robot.arm2.setPower(0.5);
+        while (robot.arm1.getCurrentPosition() < 3000){
+            //empty
+        }
+        } else if (gamepad1.right_bumper){ //goes down
+            robot.arm1.setPower(-0.5);
+            robot.arm2.setPower(-0.5);
+        while (robot.arm1.getCurrentPosition() > 3000){
+
+        }
         } else {
             robot.arm1.setPower(0.0);
+            robot.arm2.setPower(0.0);
+        }
+
+    }
+
+    /*public void hand(){
+        if (gamepad1.a){
+            robot.hand.setPosition(1.0);
+        } else if (gamepad1.y){
+            robot.hand.setPosition(0);
+        }
+        //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
+
+    }*/
+
+
+    public void lightsTouch(){
+        if (robot.touchSensorPort.isPressed() && robot.touchSensorStar.isPressed()){
+            robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
+
+        } else {
+            robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         }
     }
 
-    public void hand(){
-        if (gamepad1.a){
-            robot.hand.setPower(1.0);
-        } else if (gamepad1.y){
-            robot.hand.setPower(-1.0);
-        } else{
-            robot.hand.setPower(0.0);
 
+
+    public void lightsDist(){
+        if (robot.distSensor.getDistance(DistanceUnit.CM) < 8){
+          robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
+        } else {
+            robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         }
-        //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
+
 
     }
         /* public void testDrive(){
