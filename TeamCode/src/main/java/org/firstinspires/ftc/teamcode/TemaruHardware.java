@@ -29,11 +29,15 @@ public class TemaruHardware extends LinearOpMode {
 
     public DcMotor hand = null;
 
-    //public ColorSensor colorSensor = null;
+    public ColorSensor colorSensorPort = null;
+    public ColorSensor colorSensorStar = null;
+
     public DistanceSensor distSensor = null;
+
     public TouchSensor touchSensorPort = null;
     public TouchSensor touchSensorStar = null;
-    public TouchSensor magnet = null;
+
+    //public TouchSensor magnet = null;
 
     public RevBlinkinLedDriver lights = null;
 
@@ -82,11 +86,15 @@ public class TemaruHardware extends LinearOpMode {
 
         hand = hwMap.get(DcMotor.class, "hand");
 
-        //colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
+        colorSensorPort = hwMap.get(ColorSensor.class, "colorSensorPort");
+        colorSensorStar = hwMap.get(ColorSensor.class, "colorSensorStar");
+
         distSensor = hwMap.get(DistanceSensor.class, "distSensor");
+
         touchSensorPort = hwMap.get(TouchSensor.class, "touchSensorPort");
         touchSensorStar = hwMap.get(TouchSensor.class, "touchSensorStar");
-        magnet = hwMap.get(TouchSensor.class, "magnet");
+
+        //magnet = hwMap.get(TouchSensor.class, "magnet");
 
         hand = hwMap.get(DcMotor.class, "hand");
 

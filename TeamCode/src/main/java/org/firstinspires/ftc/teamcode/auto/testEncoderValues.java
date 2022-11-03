@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.auto;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @Autonomous
 //@Disabled
@@ -17,7 +16,11 @@ public class testEncoderValues extends AutoBase {
         while (opModeIsActive()){
 
         //test color values
-          //senseColors();
+
+
+            senseColorsPort();
+
+
 
           sleep (20000);
 

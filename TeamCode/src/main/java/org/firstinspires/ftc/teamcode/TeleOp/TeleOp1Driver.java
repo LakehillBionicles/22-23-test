@@ -75,7 +75,6 @@ public class TeleOp1Driver extends LinearOpMode {
             armLift();
             doLights();
             hand();
-            magnetMagic();
 
         }
 
@@ -163,34 +162,26 @@ public class TeleOp1Driver extends LinearOpMode {
             }
         }
 
+
+
     public void armLift(){
 
-        robot.arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        if (gamepad1.left_bumper){ //goes up
-            robot.arm1.setPower(0.5);
-            robot.arm2.setPower(0.5);
-        while (robot.arm1.getCurrentPosition() < 3000){
-            //empty
-        }
-        } else if (gamepad1.right_bumper){ //goes down
-            robot.arm1.setPower(-0.5);
-            robot.arm2.setPower(-0.5);
-        while (robot.arm1.getCurrentPosition() > 3000){
-
-        }
-        } else {
+        if (gamepad1.left_bumper) { //goes up
+            robot.arm1.setPower(1);
+            robot.arm2.setPower(1);
+        } else if (gamepad1.right_bumper){
+            robot.arm1.setPower(-0.4);
+            robot.arm2.setPower(-0.4);
+        } else if (!(gamepad1.left_bumper) && !(gamepad1.right_bumper)){
             robot.arm1.setPower(0.0);
             robot.arm2.setPower(0.0);
-        }
-
+        } else {}
     }
 
     public void hand(){
-        if (gamepad1.a){
+        if (gamepad1.y){
             robot.hand.setPower(1.0);
-        } else if (gamepad1.y){
+        } else if (gamepad1.a){
             robot.hand.setPower(-1.0);
         } else {
             robot.hand.setPower(0.0);
@@ -210,16 +201,18 @@ public class TeleOp1Driver extends LinearOpMode {
         }
     }
 
-    public void magnetMagic(){
+    /*public void magnetMagic(){
         if (robot.magnet.isPressed()){ //is pressed at 1 cm
             telemetry.addData("it works", "yay");
             telemetry.update();
         } else {
+            telemetry.addData("no work", "sad");
+            telemetry.update();
 
         }
 
 
-    }
+    }*/
 
 
 

@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @Autonomous
-//@Disabled
+@Disabled
 
-public class blueSideBlueTerminal extends AutoBase{
+public class blueSideBlueTerminal extends AutoBaseAprilTag {
     public void runOpMode(){
         super.runOpMode();
         startVision();
