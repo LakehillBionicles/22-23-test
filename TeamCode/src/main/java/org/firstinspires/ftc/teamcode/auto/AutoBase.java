@@ -39,6 +39,11 @@ public class AutoBase extends LinearOpMode {
     static final double COUNTS_PER_INCH = 1.2 * 4 * ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415));
 
+    static final String sleeveColor = "";
+
+    private double spedAdjust = .15;
+    private int boundBE = 5;
+
     public final String VUFORIA_KEY = "AZjeccj/////AAABmZ7TkGdQaE90s4Gyo3b9T6oMtsulwtj5kAdhfhIabefDBj9bL1HNlKjYyp+p20rz5XXI3XDI+LJhqiNDUymG5F9OnRzuEMCWrAiD+KapcXmFnFqQE/1KtAdlOTLURn2zaOPk9yYQQnRuk4mKoIMNFSHbvD5jCcAEb2Xd6fCeFPXfUqof2JWKSklygJqup0mgtWOPlxb+PdPgRuGeSzTyZtOCuyGzny5vUTnno/ShUCH2Am56oJUwzvNJS22oBn1dwsPiNIZBJK/EkHfDzJPkxDLMQGP0r2FMDheJRy+nU/xQ///p26LxrG6Gm3MT1Wal7tVigS1IJEB0B+eoqK+6LBlRvDf+CFCBj9nXY7eIy9I1";
 
 
@@ -279,6 +284,39 @@ public class AutoBase extends LinearOpMode {
 
     }
 
+    public void correctSideways(double speed) {
+
+        double sped = (speed - spedAdjust);
+
+        if (robot.bsd.getCurrentPosition() > boundBE) { // too much forward side
+
+            while (robot.bsd.getCurrentPosition() > boundBE) {
+                //decrease front side motor speed for adjustments, at spEd
+                robot.fpd.setPower(sped);
+                robot.fsd.setPower(sped);
+
+            }
+
+            //put front side motor speed back where it should be, at spEEd
+            robot.fsd.setPower(speed);
+            robot.fpd.setPower(speed);
+
+        } else if (robot.bsd.getCurrentPosition() < -boundBE) {   //too much back side
+
+            while (robot.bsd.getCurrentPosition() < -boundBE) {
+                //decrease back side motor speed for adjustments, at spEd
+                robot.bsd.setPower(sped);
+                robot.bpd.setPower(sped);
+
+            }
+
+            //put back side motor speed back where it should be, at spEEd
+            robot.bsd.setPower(sped);
+            robot.bpd.setPower(sped);
+
+        }
+    }
+
     public void driveUntilTouch(double speed) { //function that drives until both touch sensors are pushed
         if (opModeIsActive()) {
 
@@ -310,28 +348,47 @@ public class AutoBase extends LinearOpMode {
     }
 
 
-        public void armLift ( double speed, double inches, double timeoutS){ //backwards?
+
+        public void armLift ( double speed, double inches, double timeoutS){
+        inches = inches / (2*3.14*23.8) * 560;
+            // inches = inches*((560*23.8)/25.4);
+            robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
             robot.arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
             int newTarget = 0;
 
             if (opModeIsActive()) {
 
                 newTarget = (int) inches; //inches * this.COUNTS_PER_INCH?
                 robot.arm1.setTargetPosition(newTarget);
+                robot.arm2.setTargetPosition(newTarget);
                 robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 int NT = (int) (newTarget * 0.981); //fp
                 runtime.reset();
                 robot.arm1.setPower(Math.abs(speed));
+                robot.arm2.setPower(Math.abs(speed*0.9));//0.9 is encoder ticks of arm 1 over arm2
                 while (opModeIsActive() &&
                         (runtime.seconds() < timeoutS) && robot.arm1.isBusy() &&
                         ((Math.abs(robot.arm1.getCurrentPosition()) < Math.abs(NT)))) {
                 }
                 robot.arm1.setPower(0);
+                robot.arm2.setPower(0);
                 robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
         }
+
+        /*public void intakeHand (double speed) {
+            robot.hand.setPower(speed);
+            sleep(1000);
+            robot.hand.setPower(speed);
+        }*/
+
 
 
         public void setMotorDir () { //make sure correct - not 100% sure
@@ -348,6 +405,7 @@ public class AutoBase extends LinearOpMode {
             robot.fpd.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.bpd.setDirection(DcMotorSimple.Direction.REVERSE);
         }
+
     public void senseColorTelemetry(){ //drive until see not green
         while (opModeIsActive()){
         telemetry.addData("redStar", robot.colorSensorStar.red());
@@ -363,53 +421,85 @@ public class AutoBase extends LinearOpMode {
     }
     }
 
-    public void senseColorsStar (){
+    public String senseColorsStar () {
 
-        while (opModeIsActive()){
+        String colorStar = "blank";
 
-            if (robot.colorSensorStar.red() > (robot.colorSensorStar.blue()) && robot.colorSensorStar.red() > (robot.colorSensorStar.green())){
-                 telemetry.addData("i see red", " ");
-                 telemetry.update();
+        while (opModeIsActive() && colorStar.equals("blank")) {
 
-             } else if (robot.colorSensorStar.blue() > (robot.colorSensorStar.red()) && robot.colorSensorStar.blue() > (robot.colorSensorStar.green())){
-                 telemetry.addData("i see blue", " ");
-                 telemetry.update();
-             } else if (robot.colorSensorStar.green() > (robot.colorSensorStar.red()) && robot.colorSensorStar.green() > (robot.colorSensorStar.blue())){
-                 telemetry.addData("i see green", " ");
-                 telemetry.update();
-
-             }else {
-                 telemetry.addData("i see nothing", " ");
-                 telemetry.update();
-
-             }
-
-        }
-    }
-
-    public void senseColorsPort (){
-
-        while (opModeIsActive()){
-
-            if (robot.colorSensorPort.red() > (robot.colorSensorPort.blue()) && robot.colorSensorPort.red() > (robot.colorSensorPort.green())){
+            if (robot.colorSensorStar.red() > (robot.colorSensorStar.blue()) && robot.colorSensorStar.red() > (robot.colorSensorStar.green())) {
+                colorStar = "red";
                 telemetry.addData("i see red", " ");
                 telemetry.update();
+                colorStar = "red";
+                //sleeveColor.equals(red);
 
-
-            } else if (robot.colorSensorPort.blue() > (robot.colorSensorPort.red()) && robot.colorSensorPort.blue() > (robot.colorSensorPort.green())){
+            } else if (robot.colorSensorStar.blue() > (robot.colorSensorStar.red()) && robot.colorSensorStar.blue() > (robot.colorSensorStar.green())) {
+                colorStar = "blue";
                 telemetry.addData("i see blue", " ");
                 telemetry.update();
-            } else if (robot.colorSensorPort.green() > (robot.colorSensorPort.red()) && robot.colorSensorPort.green() > (robot.colorSensorPort.blue())){
+                colorStar = "blue";
+
+            } else if (robot.colorSensorStar.green() > (robot.colorSensorStar.red()) && robot.colorSensorStar.green() > (robot.colorSensorStar.blue())) {
+                colorStar = "green";
                 telemetry.addData("i see green", " ");
                 telemetry.update();
+                colorStar = "green";
 
-            }else {
+            } else {
                 telemetry.addData("i see nothing", " ");
                 telemetry.update();
+                colorStar = "no go";
 
             }
 
         }
+        return colorStar;
+    }
+
+    public String senseColorsPort(){
+        String colorPort = "blank";
+
+        while (opModeIsActive()&& colorPort.equals("blank")){
+
+            if (robot.colorSensorPort.red() > (robot.colorSensorPort.blue()) && robot.colorSensorPort.red() > (robot.colorSensorPort.green())){
+                colorPort = "red";
+                telemetry.addData("i see red", " ");
+                telemetry.update();
+                colorPort ="red";
+
+
+            } else if (robot.colorSensorPort.blue() > (robot.colorSensorPort.red()) && robot.colorSensorPort.blue() > (robot.colorSensorPort.green())){
+                colorPort = "blue";
+                telemetry.addData("i see blue", " ");
+                telemetry.update();
+                colorPort ="blue";
+
+            } else if (robot.colorSensorPort.green() > (robot.colorSensorPort.red()) && robot.colorSensorPort.green() > (robot.colorSensorPort.blue())){
+                colorPort = "green";
+                telemetry.addData("i see green", " ");
+                telemetry.update();
+                colorPort = "green";
+
+            }else {
+                telemetry.addData("i see nothing", " ");
+                telemetry.update();
+                colorPort = "no go";
+            }
+        }
+
+            return colorPort;
+    }
+
+
+
+
+
+
+    public void blueParkingMethod (){
+
+
+
     }
 
     /*public void initVuforia() {

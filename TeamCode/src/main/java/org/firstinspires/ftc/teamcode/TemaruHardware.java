@@ -27,12 +27,16 @@ public class TemaruHardware extends LinearOpMode {
     //public DcMotor odoPort = null; //these are the odometery wheels
     //public DcMotor odoStar = null;
 
-    public DcMotor hand = null;
+    //public DcMotor hand = null;
+    public Servo servoFinger = null;
 
     public ColorSensor colorSensorPort = null;
     public ColorSensor colorSensorStar = null;
 
     public DistanceSensor distSensor = null;
+
+    public DistanceSensor distSensorArm = null;
+    public TouchSensor touchSensorArm = null;
 
     public TouchSensor touchSensorPort = null;
     public TouchSensor touchSensorStar = null;
@@ -84,19 +88,23 @@ public class TemaruHardware extends LinearOpMode {
         //odoPort = hwMap.get(DcMotor.class, "odoPort");
         //odoStar = hwMap.get(DcMotor.class, "odoStar");
 
-        hand = hwMap.get(DcMotor.class, "hand");
+        //hand = hwMap.get(DcMotor.class, "hand");
+        servoFinger = hwMap.get(Servo.class, "servoFinger");
 
         colorSensorPort = hwMap.get(ColorSensor.class, "colorSensorPort");
         colorSensorStar = hwMap.get(ColorSensor.class, "colorSensorStar");
 
         distSensor = hwMap.get(DistanceSensor.class, "distSensor");
 
+        distSensorArm = hwMap.get(DistanceSensor.class, "distSensorArm");
+        touchSensorArm = hwMap.get(TouchSensor.class, "touchSensorArm");
+
         touchSensorPort = hwMap.get(TouchSensor.class, "touchSensorPort");
         touchSensorStar = hwMap.get(TouchSensor.class, "touchSensorStar");
 
-        //magnet = hwMap.get(TouchSensor.class, "magnet");
 
-        hand = hwMap.get(DcMotor.class, "hand");
+
+        //hand = hwMap.get(DcMotor.class, "hand");
 
         lights = hwMap.get(RevBlinkinLedDriver.class, "lights");
 
@@ -114,7 +122,7 @@ public class TemaruHardware extends LinearOpMode {
         arm1.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
         arm2.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
 
-        hand.setDirection(DcMotorSimple.Direction.FORWARD);
+        //hand.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //odoPort.setDirection(DcMotorSimple.Direction.FORWARD);
         //odoStar.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -129,7 +137,7 @@ public class TemaruHardware extends LinearOpMode {
         arm1.setPower(0);
         arm2.setPower(0);
 
-        hand.setPower(0);
+        //hand.setPower(0);
 
 
         //encoder run
@@ -141,7 +149,7 @@ public class TemaruHardware extends LinearOpMode {
         arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        hand.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //hand.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         //brake behavior
@@ -153,7 +161,7 @@ public class TemaruHardware extends LinearOpMode {
         arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hand.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //hand.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 }

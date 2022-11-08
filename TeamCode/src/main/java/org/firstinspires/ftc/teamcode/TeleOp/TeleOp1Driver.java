@@ -74,7 +74,9 @@ public class TeleOp1Driver extends LinearOpMode {
             //if you press a bumper, run the ARMLIFT method until the bumper is "unpressed"
             armLift();
             doLights();
-            hand();
+            //hand();
+            servoHand();
+            setArmToHeight();
 
         }
 
@@ -178,15 +180,65 @@ public class TeleOp1Driver extends LinearOpMode {
         } else {}
     }
 
-    public void hand(){
-        if (gamepad1.y){
+    /*public void hand(){
+        if (gamepad1.left_trigger > 0){
             robot.hand.setPower(1.0);
-        } else if (gamepad1.a){
+        } else if (gamepad1.right_trigger > 0){
             robot.hand.setPower(-1.0);
         } else {
             robot.hand.setPower(0.0);
         }
         //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
+
+    }*/
+
+    public void servoHand(){
+        if (gamepad1.left_trigger > 0){
+            robot.servoFinger.setPosition(0.0);
+        } else {
+            robot.servoFinger.setPosition(1.0);
+        }
+        //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
+
+    }
+
+    public void setArmToHeight(){
+        while (gamepad1.a){
+            if (robot.distSensorArm.getDistance(DistanceUnit.CM) > 50){
+                robot.arm1.setPower(-0.1);
+                robot.arm2.setPower(-0.1);
+
+            } else if (robot.distSensorArm.getDistance(DistanceUnit.CM) < 50){
+                robot.arm1.setPower(0.1);
+                robot.arm2.setPower(0.1);
+
+            } else {
+              robot.arm1.setPower(0.0);
+              robot.arm2.setPower(0.0);
+
+            } //middle poll is 74
+            //large poll is 100
+            //hand distance is 15
+        }
+        while (gamepad1.a){
+            if (robot.distSensorArm.getDistance(DistanceUnit.CM) > 50){
+                robot.arm1.setPower(-0.1);
+                robot.arm2.setPower(-0.1);
+
+            } else if (robot.distSensorArm.getDistance(DistanceUnit.CM) < 50){
+                robot.arm1.setPower(0.1);
+                robot.arm2.setPower(0.1);
+
+            } else {
+                robot.arm1.setPower(0.0);
+                robot.arm2.setPower(0.0);
+
+            } //middle poll is 74
+            //large poll is 100
+            //hand distance is 15
+        }
+
+
 
     }
 
