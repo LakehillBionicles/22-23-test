@@ -12,7 +12,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.TemaruHardware;
 
 @TeleOp
-//@Disabled
+@Disabled
+
+///////////////////////////////////////////YOU NEED TO UPDATE THIS///////////////////////////////////////////////////////////////
+
 public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 2 is arm/hand
     TemaruHardware robot = new TemaruHardware();
 

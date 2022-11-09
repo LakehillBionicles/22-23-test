@@ -349,7 +349,10 @@ public class AutoBase extends LinearOpMode {
 
 
 
-        public void armLift ( double speed, double inches, double timeoutS){
+        public void armLift ( double speed, double inches, double timeoutS){ //right now this function only lifts to the highest pole
+
+
+
         inches = inches / (2*3.14*23.8) * 560;
             // inches = inches*((560*23.8)/25.4);
             robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -385,7 +388,7 @@ public class AutoBase extends LinearOpMode {
 
         public void handDrop () {
             robot.servoFinger.setPosition(0.0);
-            sleep(3000);
+            sleep(1500); //this wait may need to be longer
             robot.servoFinger.setPosition(1.0);
         }
 

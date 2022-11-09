@@ -244,6 +244,15 @@ public class TeleOp1Driver extends LinearOpMode {
             robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 85) * (3.1415 / 4) / 85)));
         }
 
+
+        /* MATH EXPLAINED BELOW /////////////////////////////////////////////////////////////////////////////////////////
+
+        * 2 * --> adds more power to the arm
+        * - sign --> fixes direction
+        * sin (((current distances of all sensors added together - target distance) * pi/4) /total height of arm)
+        *
+        * *////////////////////////////////////////////////////////////////////////////////////////////////////////
+
            /* } else if (robot.distSensorArm.getDistance(DistanceUnit.CM) < 13){
                 robot.arm1.setPower(1.0);
                 robot.arm2.setPower(1.0);
@@ -263,27 +272,8 @@ public class TeleOp1Driver extends LinearOpMode {
                 // if current - target is here this power
 
 
-
-
-
         }
-        /*while (gamepad1.a){
-            if (robot.distSensorArm.getDistance(DistanceUnit.CM) > 50){
-                robot.arm1.setPower(-0.1);
-                robot.arm2.setPower(-0.1);
 
-            } else if (robot.distSensorArm.getDistance(DistanceUnit.CM) < 50){
-                robot.arm1.setPower(0.1);
-                robot.arm2.setPower(0.1);
-
-            } else {
-                robot.arm1.setPower(0.0);
-                robot.arm2.setPower(0.0);
-
-            } //middle poll is 74
-            //large poll is 100
-            //hand distance is 15
-        }*/
 
 
 
@@ -295,7 +285,9 @@ public class TeleOp1Driver extends LinearOpMode {
             robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
         } else if (robot.distSensor.getDistance(DistanceUnit.CM) < 8){
             robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
-        } else {
+        } else if (robot.touchSensorArm.isPressed()){
+            robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED); //this should make it works with the dist. sensor
+        }else {
           robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         }
     }

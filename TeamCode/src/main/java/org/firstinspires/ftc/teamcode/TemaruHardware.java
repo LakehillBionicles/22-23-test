@@ -38,6 +38,7 @@ public class TemaruHardware extends LinearOpMode {
     public DistanceSensor distSensorArm = null;
     public DistanceSensor distSensorLowerArm = null;
     public DistanceSensor distSensorMiddleArm = null;
+
     public TouchSensor touchSensorArm = null;
 
     public TouchSensor touchSensorPort = null;
