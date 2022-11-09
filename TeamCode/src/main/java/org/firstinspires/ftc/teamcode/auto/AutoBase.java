@@ -383,11 +383,11 @@ public class AutoBase extends LinearOpMode {
 
         }
 
-        /*public void intakeHand (double speed) {
-            robot.hand.setPower(speed);
-            sleep(1000);
-            robot.hand.setPower(speed);
-        }*/
+        public void handDrop () {
+            robot.servoFinger.setPosition(0.0);
+            sleep(3000);
+            robot.servoFinger.setPosition(1.0);
+        }
 
 
 

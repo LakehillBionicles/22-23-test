@@ -77,6 +77,7 @@ public class TeleOp1Driver extends LinearOpMode {
             //hand();
             servoHand();
             setArmToHeight();
+            displayDistance();
 
         }
 
@@ -202,25 +203,71 @@ public class TeleOp1Driver extends LinearOpMode {
 
     }
 
-    public void setArmToHeight(){
-        while (gamepad1.a){
-            if (robot.distSensorArm.getDistance(DistanceUnit.CM) > 50){
-                robot.arm1.setPower(-0.1);
-                robot.arm2.setPower(-0.1);
+    public void displayDistance(){
+            telemetry.addData("upper arm:", robot.distSensorArm.getDistance(DistanceUnit.CM));
+            telemetry.addData("lower arm:", robot.distSensorLowerArm.getDistance(DistanceUnit.CM));
+            telemetry.addData("middle arm:", robot.distSensorMiddleArm.getDistance(DistanceUnit.CM));
+            telemetry.addData("distance:", robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM));
+            telemetry.update();
 
-            } else if (robot.distSensorArm.getDistance(DistanceUnit.CM) < 50){
-                robot.arm1.setPower(0.1);
-                robot.arm2.setPower(0.1);
+            //small distance 39
+        //medium distance 47
+        //big distance
+        // pick up cone from ground dist 15
+
+
+
+    }
+
+    public void setArmToHeight(){
+        while (gamepad1.a) { //cone distance
+
+            robot.arm1.setPower(-(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 15) * (3.1415 / 4) / 85)));
+            robot.arm2.setPower(-(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 15) * (3.1415 / 4) / 85)));
+        }
+
+        while (gamepad1.x){ //small distance
+
+            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)  - 50) * (3.1415 / 4) / 85)));
+            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 50) * (3.1415 / 4) / 85)));
+        }
+
+        while (gamepad1.y){ //medium distance
+
+            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 84) * (3.1415 / 4) / 85)));
+            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 84) * (3.1415 / 4) / 85)));
+        }
+
+        while (gamepad1.b){ //large distance -- might need to comment out
+
+            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 85) * (3.1415 / 4) / 85)));
+            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 85) * (3.1415 / 4) / 85)));
+        }
+
+           /* } else if (robot.distSensorArm.getDistance(DistanceUnit.CM) < 13){
+                robot.arm1.setPower(1.0);
+                robot.arm2.setPower(1.0);
 
             } else {
               robot.arm1.setPower(0.0);
-              robot.arm2.setPower(0.0);
+              robot.arm2.setPower(0.0);*/
 
-            } //middle poll is 74
-            //large poll is 100
-            //hand distance is 15
+              //(sin(|current - targer|) / max height ) * pi / 4
+
+              //target pos - current pos = how far away
+                //set speed based on
+                //power is function of __ or power is minus function of ___
+                //absolute value around difference
+
+                //if current - target is here this power
+                // if current - target is here this power
+
+
+
+
+
         }
-        while (gamepad1.a){
+        /*while (gamepad1.a){
             if (robot.distSensorArm.getDistance(DistanceUnit.CM) > 50){
                 robot.arm1.setPower(-0.1);
                 robot.arm2.setPower(-0.1);
@@ -236,11 +283,11 @@ public class TeleOp1Driver extends LinearOpMode {
             } //middle poll is 74
             //large poll is 100
             //hand distance is 15
-        }
+        }*/
 
 
 
-    }
+
 
 
     public void doLights(){

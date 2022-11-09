@@ -36,6 +36,8 @@ public class TemaruHardware extends LinearOpMode {
     public DistanceSensor distSensor = null;
 
     public DistanceSensor distSensorArm = null;
+    public DistanceSensor distSensorLowerArm = null;
+    public DistanceSensor distSensorMiddleArm = null;
     public TouchSensor touchSensorArm = null;
 
     public TouchSensor touchSensorPort = null;
@@ -97,6 +99,8 @@ public class TemaruHardware extends LinearOpMode {
         distSensor = hwMap.get(DistanceSensor.class, "distSensor");
 
         distSensorArm = hwMap.get(DistanceSensor.class, "distSensorArm");
+        distSensorLowerArm = hwMap.get(DistanceSensor.class, "distSensorLowerArm");
+        distSensorMiddleArm = hwMap.get(DistanceSensor.class, "distSensorMiddleArm");
         touchSensorArm = hwMap.get(TouchSensor.class, "touchSensorArm");
 
         touchSensorPort = hwMap.get(TouchSensor.class, "touchSensorPort");
