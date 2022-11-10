@@ -222,8 +222,8 @@ public class TeleOp1Driver extends LinearOpMode {
     public void setArmToHeight(){
         while (gamepad1.a) { //cone distance
 
-            robot.arm1.setPower(-(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 15) * (3.1415 / 4) / 85)));
-            robot.arm2.setPower(-(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 15) * (3.1415 / 4) / 85)));
+            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 15) * (3.1415 / 4) / 85)));
+            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 15) * (3.1415 / 4) / 85)));
         }
 
         while (gamepad1.x){ //small distance

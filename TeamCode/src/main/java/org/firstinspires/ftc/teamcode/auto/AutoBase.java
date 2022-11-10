@@ -163,6 +163,11 @@ public class AutoBase extends LinearOpMode {
             robot.fsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.bsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.fsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.bsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
             sleep(40);
         }
     }
@@ -191,7 +196,10 @@ public class AutoBase extends LinearOpMode {
             robot.fsd.setPower(0);
             robot.bsd.setPower(0);
             robot.bpd.setPower(0);
-
+            robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.fsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.bsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             // Turn off RUN_TO_POSITION
             /*robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.fsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -200,6 +208,97 @@ public class AutoBase extends LinearOpMode {
             sleep(40);
         }
     }
+
+    public void setMotorDirTurn(){
+        robot.fsd.setDirection(DcMotorSimple.Direction.REVERSE); //Positive is counterclockwise
+        robot.bsd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.fpd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.bpd.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    public void turn(double speed, double portInches, double starInches, double timeoutS){//Positive is counterclockwise. 1 inch = 6 degrees
+            int newPortTarget = 0;
+            int newStarTarget = 0;
+            setMotorDirTurn();
+
+        if (opModeIsActive()) {
+
+
+            // Determine new target position, and pass to motor controller
+            newPortTarget = robot.fpd.getCurrentPosition() + (int) ((portInches * this.COUNTS_PER_INCH)/6.67);
+            newStarTarget = robot.bsd.getCurrentPosition() + (int) ((starInches * this.COUNTS_PER_INCH)/6.67);
+
+            robot.fpd.setTargetPosition(newPortTarget);
+            robot.fsd.setTargetPosition(newStarTarget);
+            robot.bpd.setTargetPosition(newPortTarget);
+            robot.bsd.setTargetPosition(newStarTarget);
+
+
+            int turnNT1 = (int) (newPortTarget * 0.981); //fs
+            int turnNT2 = (int) (newStarTarget * 0.981); //bs       //I don't know what NT Does
+
+
+            robot.fpd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.fsd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.bpd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.bsd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robot.fpd.setPower(Math.abs(speed));  //-
+            robot.fsd.setPower(Math.abs(speed));
+            robot.bsd.setPower(Math.abs(speed));  //-
+            robot.bpd.setPower(Math.abs(speed));
+
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    // ( front_star_wheel.isBusy() && front_port_wheel.isBusy()))
+                    ((Math.abs(robot.fsd.getCurrentPosition()) < Math.abs(turnNT1)) || (Math.abs(robot.bsd.getCurrentPosition()) < Math.abs(turnNT2)))) { // took this out for now || (Math.abs(robot.bsd.getCurrentPosition()) < Math.abs(NT2))
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newPortTarget, newStarTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        robot.fpd.getCurrentPosition(),
+                        robot.bsd.getCurrentPosition());
+
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.fpd.setPower(0);
+            robot.fsd.setPower(0);
+            robot.bsd.setPower(0);
+            robot.bpd.setPower(0);
+
+            robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.fsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+            robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.fsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.bsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+            sleep(250);   // optional pause after each move
+        }
+
+
+
+    }
+
+
+
 
 
     public void sideways(double speed, double frontInches, double backInches, double timeoutS) { //positive is right
@@ -425,11 +524,11 @@ public class AutoBase extends LinearOpMode {
     }
 
     public String senseColorsStar () {
-
+        handDrop(); //open hand
         String colorStar = "blank";
 
         while (opModeIsActive() && colorStar.equals("blank")) {
-
+            handDrop();
             if (robot.colorSensorStar.red() > (robot.colorSensorStar.blue()) && robot.colorSensorStar.red() > (robot.colorSensorStar.green())) {
                 colorStar = "red";
                 telemetry.addData("i see red", " ");
