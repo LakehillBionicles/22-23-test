@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.auto.AutoBase;
 @Autonomous
 //@Disabled
 
-public class redSideTerminalCone extends AutoBase {
+public class blueSideRedTerminalCone extends AutoBase {
 
-    ///////////////////////TEST THESE NUMBERS -- I GUESSED ON ALL THESE////////////////////////////////////
+///////////////////////TEST THESE NUMBERS -- I GUESSED ON ALL THESE////////////////////////////////////
     //DELETE THIS COMMENT WHEN THIS AUTO WORKS PRETTY GOOD/////////////////////////////////////////////
 
 
@@ -77,6 +77,9 @@ public class redSideTerminalCone extends AutoBase {
             stop();
         }
     }
+
+
+
 
 
 

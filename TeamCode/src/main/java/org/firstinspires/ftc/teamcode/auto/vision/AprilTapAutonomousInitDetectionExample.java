@@ -33,7 +33,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.ArrayList;
 
-    @TeleOp
+    //@TeleOp
     public class AprilTapAutonomousInitDetectionExample extends LinearOpMode
     {
         OpenCvCamera camera;
