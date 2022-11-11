@@ -335,7 +335,7 @@ public class AutoBaseAprilTag extends LinearOpMode {
             robot.bsd.setPower(Math.abs(speed));
             robot.bpd.setPower(Math.abs(speed));
 
-            while (robot.distSensor.getDistance(DistanceUnit.CM) > 13) {
+            while (robot.distSensorHorizontal.getDistance(DistanceUnit.CM) > 13) {
                 //Do nothing letting motors run until distance sensor sees a cone
             }
 

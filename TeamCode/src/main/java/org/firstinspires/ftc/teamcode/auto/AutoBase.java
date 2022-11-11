@@ -171,24 +171,24 @@ public class AutoBase extends LinearOpMode {
             sleep(40);
         }
     }
-
-    public void driveUntilDist(double speed, double timeoutS) {  //method to drive until dist. sensor reads...
+    //DriveUntilDist doesn't work no idea why. Motors just don't turn on
+    public void driveUntilDist(double speed, double timeoutS) {  //method to drive until dist. sensor reads.../
 
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             runtime.reset();
-
-            setMotorDir();
-
+            robot.fpd.setPower(-0.2);
+            robot.fsd.setPower(-0.2);
+            robot.bsd.setPower(0.2);
+            robot.bpd.setPower(0.2);
             //changed all below to pos (both f and s were neg)
-            robot.fpd.setPower(Math.abs(speed));
-            robot.fsd.setPower(Math.abs(speed));
-            robot.bsd.setPower(Math.abs(speed));
-            robot.bpd.setPower(Math.abs(speed));
 
-            while (robot.distSensor.getDistance(DistanceUnit.CM) > 13) {
+
+            while (robot.distSensorHorizontal.getDistance(DistanceUnit.CM) > 9 && runtime.seconds()<timeoutS && opModeIsActive()) {//Is 13 correct?
+                telemetry.addData("horizontal", robot.distSensorHorizontal.getDistance(DistanceUnit.CM));
+                telemetry.update();
                 //Do nothing letting motors run until distance sensor sees a cone
             }
 

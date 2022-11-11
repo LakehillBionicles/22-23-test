@@ -22,6 +22,12 @@ public class testAuto extends AutoBase {
         while (opModeIsActive()) {
 
 
+            armLift(1.0, 3200, 30);
+            telemetry.addData("arm", "lift well");
+            telemetry.update();
+            sleep(20000);
+
+
 
             //robot.fpd.setPower(1.0);
             //robot.fsd.setPower(1.0);
@@ -30,8 +36,7 @@ public class testAuto extends AutoBase {
 
             //encoderDrive(0.2, 50.0, 50.0, 10.0);
 
-            telemetry.addData("distance", robot.distSensor.getDistance(DistanceUnit.CM));
-            telemetry.update();
+
 
 
 
