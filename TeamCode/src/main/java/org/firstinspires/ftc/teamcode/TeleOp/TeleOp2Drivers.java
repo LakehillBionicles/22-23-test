@@ -25,6 +25,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
     public static double testDriveSpeed = 1.0;
     double speed = 1;
+    double speedStrafe = 0.7;
     double startHeading;
     boolean isMoving;
 
@@ -43,16 +44,18 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
             if(gamepad1.left_stick_x > 0.2 || gamepad1.left_stick_x < -0.2 || gamepad1.left_stick_y > 0.2 ||gamepad1.left_stick_y < -0.2){
                 //if you move the left joystick, run the DRIVE method until the joystick goes back to "zero"
+
                 while(gamepad1.left_stick_x > 0.2 || gamepad1.left_stick_x < -0.2 || gamepad1.left_stick_y > 0.2 ||gamepad1.left_stick_y < -0.2) {
+
                     drive();
                 }
                 robot.fpd.setPower(0);
                 robot.bpd.setPower(0);
                 robot.fsd.setPower(0);
                 robot.bsd.setPower(0);
-            }else if(gamepad1.right_stick_x > 0.15 || gamepad1.right_stick_x < -0.15){
+            }else if(gamepad1.right_stick_x > 0.15 || gamepad1.right_stick_x < -0.15&& gamepad1.left_stick_y==0 &&  gamepad1.left_stick_x==0){
                 //if you move the right joystick, run the TURN method until the joystick goes back to "zero"
-                while(gamepad1.right_stick_x > 0.15 || gamepad1.right_stick_x < -0.15){
+                while(gamepad1.right_stick_x > 0.15 || gamepad1.right_stick_x < -0.15&& gamepad1.left_stick_y==0 &&  gamepad1.left_stick_x==0){
                     turn();
                 }
                 robot.fpd.setPower(0);
@@ -89,7 +92,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     }
 
     public void turn() {
-        if (gamepad1.right_stick_x > 0.15 || gamepad1.right_stick_x < -0.15) {    //clockwise
+        if (gamepad1.right_stick_x > 0.15 || gamepad1.right_stick_x < -0.15 && gamepad1.left_stick_y==0 &&  gamepad1.left_stick_x==0) {    //clockwise
             //isMoving = true; Don't know what this does might need it
             robot.fpd.setPower(-gamepad1.right_stick_x * speed);
             robot.bpd.setPower(gamepad1.right_stick_x * speed);
@@ -132,26 +135,30 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     //lk;jfl;asdjflk;asdhg;sdfj;lk
 
     public void drive() {
-        if (gamepad1.left_stick_x > 0.2 && gamepad1.right_stick_y < 0.2 && gamepad1.right_stick_y > -0.2) {
-            robot.bpd.setPower(-gamepad1.left_stick_x);
-            robot.fpd.setPower(-gamepad1.left_stick_x);
-            robot.bsd.setPower(gamepad1.left_stick_x);
-            robot.fsd.setPower(gamepad1.left_stick_x);
-        } else if (gamepad1.left_stick_x < -0.2 && gamepad1.right_stick_y < 0.2 && gamepad1.right_stick_y > -0.2) {
-            robot.bpd.setPower(-gamepad1.left_stick_x);
-            robot.fpd.setPower(-gamepad1.left_stick_x);
-            robot.bsd.setPower(gamepad1.left_stick_x);
-            robot.fsd.setPower(gamepad1.left_stick_x);
-        } else if (gamepad1.left_stick_y > 0.2 && gamepad1.right_stick_x < 0.2 && gamepad1.right_stick_x > -0.2) {//forward
-            robot.fpd.setPower(gamepad1.left_stick_y);
-            robot.bsd.setPower(-gamepad1.left_stick_y);
-            robot.fsd.setPower(gamepad1.left_stick_y);
-            robot.bpd.setPower(-gamepad1.left_stick_y);
-        } else if (gamepad1.left_stick_y < -0.2 && gamepad1.right_stick_x < 0.2 && gamepad1.right_stick_x > -0.2){//backward
-            robot.fpd.setPower(gamepad1.left_stick_y);
-            robot.bsd.setPower(-gamepad1.left_stick_y);
-            robot.fsd.setPower(gamepad1.left_stick_y);
-            robot.bpd.setPower(-gamepad1.left_stick_y);
+
+
+        if (gamepad1.left_stick_x > 0.2 && gamepad1.right_stick_y < 0.2 && gamepad1.right_stick_y > -0.2) {//right
+
+            robot.bpd.setPower(- (speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8))));
+            robot.fpd.setPower(- (speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8))));
+            robot.bsd.setPower(speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8)));
+            robot.fsd.setPower(speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8)));
+        } else if (gamepad1.left_stick_x < -0.2 && gamepad1.right_stick_y < 0.2 && gamepad1.right_stick_y > -0.2) {//left
+
+            robot.bpd.setPower(- (speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8))));
+            robot.fpd.setPower(- (speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8))));
+            robot.bsd.setPower(speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8)));
+            robot.fsd.setPower(speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8)));
+        } else if (gamepad1.left_stick_y > 0.2) {//forward
+            robot.fpd.setPower(gamepad1.left_stick_y-(gamepad1.right_stick_x * .8));// && (gamepad1.right_stick_x < 0.2 && gamepad1.right_stick_x > -0.2)
+            robot.bsd.setPower(-gamepad1.left_stick_y-(gamepad1.right_stick_x * .8));
+            robot.fsd.setPower(gamepad1.left_stick_y+(gamepad1.right_stick_x * .8));
+            robot.bpd.setPower(-gamepad1.left_stick_y+(gamepad1.right_stick_x * .8));
+        } else if (gamepad1.left_stick_y < -0.2){//backward
+            robot.fpd.setPower(gamepad1.left_stick_y-(gamepad1.right_stick_x * .8));
+            robot.bsd.setPower(-gamepad1.left_stick_y- (gamepad1.right_stick_x * .8));//(gamepad1.right_stick_x < 0.2 && gamepad1.right_stick_x > -0.2)
+            robot.fsd.setPower(gamepad1.left_stick_y+(gamepad1.right_stick_x * .8));
+            robot.bpd.setPower(-gamepad1.left_stick_y+(gamepad1.right_stick_x * .8));
         } else {
             robot.fpd.setPower(0);
             robot.bpd.setPower(0);
@@ -164,15 +171,17 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
     public void armLift(){
 
+        //sldkfjalsdhgsadhf;ajsdlfj
+
         if (gamepad2.left_bumper) { //goes up
             robot.arm1.setPower(1);
             robot.arm2.setPower(1);
         } else if (gamepad2.right_bumper){
             robot.arm1.setPower(-0.4);
             robot.arm2.setPower(-0.4);
-        } else if (!(gamepad2.left_bumper) && !(gamepad2.right_bumper)){
-            robot.arm1.setPower(0.0);
-            robot.arm2.setPower(0.0);
+        } else if (!(gamepad2.left_bumper) && !(gamepad2.right_bumper) && !gamepad2.a && !gamepad2.b && !gamepad2.y && !gamepad2.x){
+            robot.arm1.setPower(0.1);
+            robot.arm2.setPower(0.1);
         } else {}
     }
 
@@ -217,28 +226,27 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     }
 
     public void setArmToHeight(){
-        while (gamepad2.a) { //cone distance
+        if (gamepad2.a) { //cone distance
+            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 25) * (3.1415 / 4) / 85)));
+            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 25) * (3.1415 / 4) / 85)));
+        }
+        if (gamepad2.x){ //small distance
 
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 15) * (3.1415 / 4) / 85)));
-            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 15) * (3.1415 / 4) / 85)));
+            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)  - 60) * (3.1415 / 4) / 85)));
+            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 60) * (3.1415 / 4) / 85)));
         }
 
-        while (gamepad2.x){ //small distance
+        if (gamepad2.y){ //medium distance
 
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)  - 50) * (3.1415 / 4) / 85)));
-            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 50) * (3.1415 / 4) / 85)));
+            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
+            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
         }
 
-        while (gamepad2.y){ //medium distance
 
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 84) * (3.1415 / 4) / 85)));
-            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 84) * (3.1415 / 4) / 85)));
-        }
+        if (gamepad2.b){ //large distance -- might need to comment out
 
-        while (gamepad2.b){ //large distance -- might need to comment out
-
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 85) * (3.1415 / 4) / 85)));
-            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 85) * (3.1415 / 4) / 85)));
+            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
+            robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
         }
 
 

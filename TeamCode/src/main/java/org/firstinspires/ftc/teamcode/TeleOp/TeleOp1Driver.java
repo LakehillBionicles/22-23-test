@@ -169,13 +169,13 @@ public class TeleOp1Driver extends LinearOpMode {
 
     public void armLift(){
 
-        if (gamepad1.left_bumper) { //goes up
+        if (gamepad2.right_trigger>0) { //goes up
             robot.arm1.setPower(1);
             robot.arm2.setPower(1);
-        } else if (gamepad1.right_bumper){
-            robot.arm1.setPower(-0.4);
-            robot.arm2.setPower(-0.4);
-        } else if (!(gamepad1.left_bumper) && !(gamepad1.right_bumper)){
+        } else if (gamepad2.right_bumper){
+            robot.arm1.setPower(-0.6);
+            robot.arm2.setPower(-0.6);
+        } else if (!(gamepad2.left_bumper) && !(gamepad2.right_bumper)){
             robot.arm1.setPower(0.0);
             robot.arm2.setPower(0.0);
         } else {}

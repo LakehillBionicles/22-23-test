@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class AutoBase extends LinearOpMode {
 
-    TemaruHardware robot = new TemaruHardware();
+    public TemaruHardware robot = new TemaruHardware();
     BNO055IMU imu;
     Orientation angles;
 
@@ -477,13 +477,20 @@ public class AutoBase extends LinearOpMode {
                         (runtime.seconds() < timeoutS) && robot.arm1.isBusy() &&
                         ((Math.abs(robot.arm1.getCurrentPosition()) < Math.abs(NT)))) {
                 }
-                robot.arm1.setPower(0);
-                robot.arm2.setPower(0);
+                robot.arm1.setPower(0.6);
+                robot.arm2.setPower(0.6);
                 robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
         }
+
+        public void armStayUp(){
+        while (opModeIsActive()){
+            robot.arm1.setPower(0.1);
+            robot.arm2.setPower(0.1);
+            }
+    }
 
         public void handDrop () {
             robot.servoFinger.setPosition(0.0);
@@ -524,11 +531,9 @@ public class AutoBase extends LinearOpMode {
     }
 
     public String senseColorsStar () {
-        handDrop(); //open hand
-        String colorStar = "blank";
+                String colorStar = "blank";
 
         while (opModeIsActive() && colorStar.equals("blank")) {
-            handDrop();
             if (robot.colorSensorStar.red() > (robot.colorSensorStar.blue()) && robot.colorSensorStar.red() > (robot.colorSensorStar.green())) {
                 colorStar = "red";
                 telemetry.addData("i see red", " ");

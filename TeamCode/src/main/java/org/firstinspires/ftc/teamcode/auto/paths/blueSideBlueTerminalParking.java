@@ -24,10 +24,12 @@ public class blueSideBlueTerminalParking extends AutoBase {
                 sideways(0.4, -7.5,-7.5, 3);
                 encoderDrive(0.4,-15, -15,3);
             }else if(senseColorsPort().equals("blue")){
-                sideways(0.4, -7.5,-7.5, 3);
-                encoderDrive(0.4, 15,15,3);
+                sideways(0.4, -10.5,-10.5, 3);
+
             }else{
                 sideways(0.4, -7.5,-7.5, 3);
+                encoderDrive(0.4, 17,17,3);
+                sideways(0.4, -6, -6, 3);
             }
             //correctSideways(1.0);
             //sleep(1000);//This will be vision

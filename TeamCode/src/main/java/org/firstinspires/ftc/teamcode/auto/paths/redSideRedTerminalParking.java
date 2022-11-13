@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.auto.paths;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
 
 @Autonomous
+@Disabled
 //@Disabled
 
 public class redSideRedTerminalParking extends AutoBase {
@@ -19,7 +21,7 @@ public class redSideRedTerminalParking extends AutoBase {
 
 
 
-            sideways(0.4, 14,14,3);//port is negative and starboard is positive
+            sideways(0.5, 16,16,3);//port is negative and starboard is positive
             if(senseColorsStar().equals( "red")){
                 sideways(0.4, 7.5,7.5, 3);
                 encoderDrive(0.4,15, 15,3);

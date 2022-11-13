@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.auto.paths;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
 
 @Autonomous
-//@Disabled
+@Disabled
 
 public class blueSideRedTerminalParking extends AutoBase {
 

@@ -1,19 +1,13 @@
 package org.firstinspires.ftc.teamcode.auto.paths;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
 
 @Autonomous
 //@Disabled
 
-public class redSideTerminalCone extends AutoBase {
-
-    ///////////////////////TEST THESE NUMBERS -- I GUESSED ON ALL THESE////////////////////////////////////
-    //DELETE THIS COMMENT WHEN THIS AUTO WORKS PRETTY GOOD/////////////////////////////////////////////
-
-
+public class blueCornerCone extends AutoBase {
 
     public void runOpMode(){
         super.runOpMode();
@@ -24,11 +18,18 @@ public class redSideTerminalCone extends AutoBase {
         while (opModeIsActive()){
 
 
+///jhfgkjgklugjyugfk.jgjfl
+            robot.arm1.setPower(0.5);
+            robot.arm2.setPower(0.5);
+
+
+            //turn(0.2, 90, 90, 10);
+
+            //both hand and arm functions should now work -- just focus on gettng the paths down today
 
 
 
-
-            sideways(0.5, 16,16, 3); //move to cone
+            sideways(0.5, -16,-16, 3); //move to cone
 
             //senseColorsPort(); //sense colors and store variable for later
             if(senseColorsPort().equals( "red")){
@@ -40,30 +41,34 @@ public class redSideTerminalCone extends AutoBase {
             }
             telemetry.update();
             sleep(500); //wait to make sure it sees colors
-            sideways(0.4, 30, 30, 3); //c// ont sideways
-            turn(0.5, -28, -28, 1);//It turns to currect for sideways not driving straight
+            sideways(0.4, -30, -30, 3); //c// ont sideways
+            turn(0.5, 28, 28, 1);//It turns to currect for sideways not driving straight
             encoderDrive(0.4, -11, -11, 3); //back up to pole
             sleep(100);//port is negative and starboard is positive
-            turn(0.5,-10,-10,1);
-            sideways(0.4, 11.5, 11.5, 3);//sideways so in front of pole
-            armLift(1.0, 900, 4); //arm up -- double check inches here
-            encoderDrive(0.4, 3, 3, 4);
+            turn(0.5,-20,-20,1);
+            sideways(0.4, -13.5, -13.5, 3);//sideways so in front of pole
+            //armLift(1.0, 900, 4); //arm up -- double check inches here
+            encoderDrive(0.4, 5, 5, 4);
             //driveUntilDist(0.2,3); couldn't make this work
             handDrop(); //open hand
             handDrop();
-            armLift(1.0, 50,2);
-            encoderDrive(0.4, -2, -2, 3);
-            armLift(-1.0, -900, 4); //arm down -- double check inches here
+            //robot.arm1.setPower(0.4);
+            //robot.arm2.setPower(0.4);
+            sleep(100);
+            handDrop();
+            handDrop();
+            encoderDrive(0.4, -4, -4, 3);
+            //armLift(-1.0, -900, 4); //arm down -- double check inches here
             sleep(10); //small wait to make sure hand has dropped -- we might be able to delete this part
-            turn(0.4, 15, 15, 4);
-            sideways(0.4, -34, -34, 3); //sideways away from pole
+            //turn(0.4, -15, -15, 4);
+            sideways(0.4, 33, 33, 3); //sideways away from pole
 
             if(color.equals("red")){
-                stop();
+            stop();
 
 
             }else if(color.equals("blue")){
-                encoderDrive(0.4, 14, 12.5, 3); //go back to center tiles where we started
+                encoderDrive(0.4, 16, 16, 3); //go back to center tiles where we started
 
             }else{
                 encoderDrive(0.4,38, 38,3);
@@ -77,6 +82,7 @@ public class redSideTerminalCone extends AutoBase {
             stop();
         }
     }
+
 
 
 
