@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive;
+package org.firstinspires.ftc.teamcode.odowheels.drive;
 
 import androidx.annotation.NonNull;
 
@@ -26,26 +26,26 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
-import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.odowheels.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.odowheels.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.teamcode.odowheels.trajectorysequence.TrajectorySequenceRunner;
+import org.firstinspires.ftc.teamcode.odowheels.util.LynxModuleUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.TRACK_WIDTH;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksToInches;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.MAX_ANG_ACCEL;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.MAX_ANG_VEL;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.TRACK_WIDTH;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.kA;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.odowheels.drive.DriveConstants.kV;
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
@@ -68,7 +68,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    private DcMotorEx fpd, bpd, bsd, fsd;
     private List<DcMotorEx> motors;
 
     private BNO055IMU imu;
@@ -116,12 +116,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
         // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        fpd = hardwareMap.get(DcMotorEx.class, "fpd");
+        bpd = hardwareMap.get(DcMotorEx.class, "bpd");
+        bsd = hardwareMap.get(DcMotorEx.class, "bsd");
+        fsd = hardwareMap.get(DcMotorEx.class, "fsd");
 
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        motors = Arrays.asList(fpd, bpd, bsd, fsd);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -143,6 +143,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
+
+        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
     }
@@ -285,10 +287,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        fpd.setPower(v);
+        bpd.setPower(v1);
+        bsd.setPower(v2);
+        fsd.setPower(v3);
     }
 
     @Override
