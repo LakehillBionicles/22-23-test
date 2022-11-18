@@ -174,13 +174,13 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         //sldkfjalsdhgsadhf;ajsdlfj
 
         if (gamepad2.left_bumper) { //goes up
-            robot.arm1.setPower(1);
+            robot.frontEncoder.setPower(1);
             robot.arm2.setPower(1);
         } else if (gamepad2.right_bumper){
-            robot.arm1.setPower(-0.4);
+            robot.frontEncoder.setPower(-0.4);
             robot.arm2.setPower(-0.4);
         } else if (!(gamepad2.left_bumper) && !(gamepad2.right_bumper) && !gamepad2.a && !gamepad2.b && !gamepad2.y && !gamepad2.x){
-            robot.arm1.setPower(0.1);
+            robot.frontEncoder.setPower(0.1);
             robot.arm2.setPower(0.1);
         } else {}
     }
@@ -227,25 +227,25 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
     public void setArmToHeight(){
         if (gamepad2.a) { //cone distance
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 25) * (3.1415 / 4) / 85)));
+            robot.frontEncoder.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 25) * (3.1415 / 4) / 85)));
             robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 25) * (3.1415 / 4) / 85)));
         }
         if (gamepad2.x){ //small distance
 
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)  - 60) * (3.1415 / 4) / 85)));
+            robot.frontEncoder.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)  - 60) * (3.1415 / 4) / 85)));
             robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 60) * (3.1415 / 4) / 85)));
         }
 
         if (gamepad2.y){ //medium distance
 
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
+            robot.frontEncoder.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
             robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
         }
 
 
         if (gamepad2.b){ //large distance -- might need to comment out
 
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
+            robot.frontEncoder.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
             robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
         }
 
@@ -259,11 +259,11 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
          * *////////////////////////////////////////////////////////////////////////////////////////////////////////
 
            /* } else if (robot.distSensorArm.getDistance(DistanceUnit.CM) < 13){
-                robot.arm1.setPower(1.0);
+                robot.frontEncoder.setPower(1.0);
                 robot.arm2.setPower(1.0);
 
             } else {
-              robot.arm1.setPower(0.0);
+              robot.frontEncoder.setPower(0.0);
               robot.arm2.setPower(0.0);*/
 
         //(sin(|current - targer|) / max height ) * pi / 4

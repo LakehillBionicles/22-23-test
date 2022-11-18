@@ -21,7 +21,7 @@ public class TemaruHardware extends LinearOpMode {
     public DcMotor bpd = null;
     public DcMotor bsd = null;
 
-    public DcMotor arm1 = null;
+    public DcMotor frontEncoder = null;
     public DcMotor arm2 = null;
 
     //public DcMotor odoPort = null; //these are the odometery wheels
@@ -85,7 +85,7 @@ public class TemaruHardware extends LinearOpMode {
         bpd = hwMap.get(DcMotor.class, "bpd");
         bsd = hwMap.get(DcMotor.class, "bsd");
 
-        arm1 = hwMap.get(DcMotor.class, "arm1");
+        frontEncoder = hwMap.get(DcMotor.class, "frontEncoder");
         arm2 = hwMap.get(DcMotor.class, "arm2");
 
         //odoPort = hwMap.get(DcMotor.class, "odoPort");
@@ -124,7 +124,7 @@ public class TemaruHardware extends LinearOpMode {
 
 
 
-        arm1.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
+        frontEncoder.setDirection(DcMotorSimple.Direction.REVERSE); //check direction
         arm2.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
 
         //hand.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -139,7 +139,7 @@ public class TemaruHardware extends LinearOpMode {
         bpd.setPower(0);
         bsd.setPower(0);
 
-        arm1.setPower(0);
+        frontEncoder.setPower(0);
         arm2.setPower(0);
 
         //hand.setPower(0);
@@ -151,7 +151,7 @@ public class TemaruHardware extends LinearOpMode {
         bpd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bsd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //hand.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -163,7 +163,7 @@ public class TemaruHardware extends LinearOpMode {
         bpd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bsd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //hand.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

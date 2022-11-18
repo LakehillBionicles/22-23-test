@@ -525,23 +525,23 @@ public class AutoBaseAprilTag extends LinearOpMode {
 
 
     /*public void armLift(double speed, double inches, double timeoutS) { //backwards?
-        robot.arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int newTarget = 0;
 
         if (opModeIsActive()) {
 
             newTarget = (int) inches; //inches * this.COUNTS_PER_INCH?
-            robot.arm1.setTargetPosition(newTarget);
-            robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.frontEncoder.setTargetPosition(newTarget);
+            robot.frontEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             int NT = (int) (newTarget * 0.981); //fp
             runtime.reset();
-            robot.arm1.setPower(Math.abs(speed));
+            robot.frontEncoder.setPower(Math.abs(speed));
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) && robot.arm1.isBusy() &&
-                    ((Math.abs(robot.arm1.getCurrentPosition()) < Math.abs(NT)))) {
+                    (runtime.seconds() < timeoutS) && robot.frontEncoder.isBusy() &&
+                    ((Math.abs(robot.frontEncoder.getCurrentPosition()) < Math.abs(NT)))) {
             }
-            robot.arm1.setPower(0);
-            robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontEncoder.setPower(0);
+            robot.frontEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
     }*/

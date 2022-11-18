@@ -66,13 +66,13 @@ public class JudgeOp extends LinearOpMode {
         //sldkfjalsdhgsadhf;ajsdlfj
 
         if (gamepad1.left_bumper) { //goes up
-            robot.arm1.setPower(1);
+            robot.frontEncoder.setPower(1);
             robot.arm2.setPower(1);
         } else if (gamepad1.right_bumper){
-            robot.arm1.setPower(-0.4);
+            robot.frontEncoder.setPower(-0.4);
             robot.arm2.setPower(-0.4);
         } else if (!(gamepad1.left_bumper) && !(gamepad1.right_bumper) && !gamepad1.a && !gamepad1.b && !gamepad1.y && !gamepad1.x){
-            robot.arm1.setPower(0.1);
+            robot.frontEncoder.setPower(0.1);
             robot.arm2.setPower(0.1);
         } else {}
     }
@@ -119,25 +119,25 @@ public class JudgeOp extends LinearOpMode {
 
     public void setArmToHeight(){
         if (gamepad1.a) { //cone distance
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 25) * (3.1415 / 4) / 85)));
+            robot.frontEncoder.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 25) * (3.1415 / 4) / 85)));
             robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 25) * (3.1415 / 4) / 85)));
         }
         if (gamepad1.x){ //small distance
 
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)  - 60) * (3.1415 / 4) / 85)));
+            robot.frontEncoder.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)  - 60) * (3.1415 / 4) / 85)));
             robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 60) * (3.1415 / 4) / 85)));
         }
 
         if (gamepad1.y){ //medium distance
 
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
+            robot.frontEncoder.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
             robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
         }
 
 
         if (gamepad1.b){ //large distance -- might need to comment out
 
-            robot.arm1.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
+            robot.frontEncoder.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
             robot.arm2.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
         }
 
@@ -151,11 +151,11 @@ public class JudgeOp extends LinearOpMode {
          * *////////////////////////////////////////////////////////////////////////////////////////////////////////
 
            /* } else if (robot.distSensorArm.getDistance(DistanceUnit.CM) < 13){
-                robot.arm1.setPower(1.0);
+                robot.frontEncoder.setPower(1.0);
                 robot.arm2.setPower(1.0);
 
             } else {
-              robot.arm1.setPower(0.0);
+              robot.frontEncoder.setPower(0.0);
               robot.arm2.setPower(0.0);*/
 
         //(sin(|current - targer|) / max height ) * pi / 4

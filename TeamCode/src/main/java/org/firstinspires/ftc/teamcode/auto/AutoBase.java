@@ -454,10 +454,10 @@ public class AutoBase extends LinearOpMode {
 
         inches = inches / (2*3.14*23.8) * 560;
             // inches = inches*((560*23.8)/25.4);
-            robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            robot.arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.frontEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             int newTarget = 0;
@@ -465,21 +465,21 @@ public class AutoBase extends LinearOpMode {
             if (opModeIsActive()) {
 
                 newTarget = (int) inches; //inches * this.COUNTS_PER_INCH?
-                robot.arm1.setTargetPosition(newTarget);
+                robot.frontEncoder.setTargetPosition(newTarget);
                 robot.arm2.setTargetPosition(newTarget);
-                robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.frontEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 int NT = (int) (newTarget * 0.981); //fp
                 runtime.reset();
-                robot.arm1.setPower(Math.abs(speed));
+                robot.frontEncoder.setPower(Math.abs(speed));
                 robot.arm2.setPower(Math.abs(speed*0.9));//0.9 is encoder ticks of arm 1 over arm2
                 while (opModeIsActive() &&
-                        (runtime.seconds() < timeoutS) && robot.arm1.isBusy() &&
-                        ((Math.abs(robot.arm1.getCurrentPosition()) < Math.abs(NT)))) {
+                        (runtime.seconds() < timeoutS) && robot.frontEncoder.isBusy() &&
+                        ((Math.abs(robot.frontEncoder.getCurrentPosition()) < Math.abs(NT)))) {
                 }
-                robot.arm1.setPower(0.6);
+                robot.frontEncoder.setPower(0.6);
                 robot.arm2.setPower(0.6);
-                robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.frontEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
@@ -487,7 +487,7 @@ public class AutoBase extends LinearOpMode {
 
         public void armStayUp(){
         while (opModeIsActive()){
-            robot.arm1.setPower(0.1);
+            robot.frontEncoder.setPower(0.1);
             robot.arm2.setPower(0.1);
             }
     }
