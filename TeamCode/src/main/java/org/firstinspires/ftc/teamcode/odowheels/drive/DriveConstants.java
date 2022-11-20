@@ -87,7 +87,7 @@ public class DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 17.74009462194189;
+    public static double MAX_VEL = (75.6126 / 5); //cut velo in half to make graph plateua?
     public static double MAX_ACCEL = 17.74009462194189;
     public static double MAX_ANG_VEL = Math.toRadians(88.38543913043478);
     public static double MAX_ANG_ACCEL = Math.toRadians(88.38543913043478);

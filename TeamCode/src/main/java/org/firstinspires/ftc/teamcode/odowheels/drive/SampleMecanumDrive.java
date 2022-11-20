@@ -279,9 +279,21 @@ public class SampleMecanumDrive extends MecanumDrive {
     @Override
     public List<Double> getWheelVelocities() {
         List<Double> wheelVelocities = new ArrayList<>();
-        for (DcMotorEx motor : motors) {
+
+
+
+            wheelVelocities.add(encoderTicksToInches(-(fpd.getVelocity())));
+            wheelVelocities.add(encoderTicksToInches(bpd.getVelocity()));
+            wheelVelocities.add(encoderTicksToInches(bsd.getVelocity()));
+            wheelVelocities.add(encoderTicksToInches(-(fsd.getVelocity())));
+
+
+
+        /*for (DcMotorEx motor : motors) {
             wheelVelocities.add(encoderTicksToInches(motor.getVelocity()));
-        }
+
+
+        }*/ //this is what used to be in the code before I changed it
         return wheelVelocities;
     }
 
