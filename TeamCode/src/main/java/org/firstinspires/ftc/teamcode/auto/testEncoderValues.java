@@ -19,23 +19,30 @@ public class testEncoderValues extends AutoBase {
         //test color values
 
 
-            senseColorsPort();
+          //  senseColorsPort();
 
 
 
-          sleep (20000);
+            encoderDrive(0.5, 24, 24, 20);
 
 
-           //testing encoder values below
-            /*sleep(20000);
+            sleep(1000);
 
             telemetry.addData("fpd", robot.fpd.getCurrentPosition());
             telemetry.addData("fsd", robot.fsd.getCurrentPosition());
             telemetry.addData("bpd", robot.bpd.getCurrentPosition());
             telemetry.addData("bsd", robot.bsd.getCurrentPosition());
+            telemetry.addData("leftPost", robot.leftEncoder.getCurrentPosition());
+            telemetry.addData("rightPost", robot.rightEncoder.getCurrentPosition());
+            telemetry.addData("frontPost", robot.frontEncoder.getCurrentPosition());
+
+
             telemetry.update();
 
-            sleep(10000);*/
+
+            sleep(10000);
+
+
 
 
 

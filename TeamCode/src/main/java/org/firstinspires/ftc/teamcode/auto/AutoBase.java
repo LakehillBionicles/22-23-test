@@ -28,8 +28,9 @@ public class AutoBase extends LinearOpMode {
     static final double FEET_PER_METER = 3.28084;
 
 
-    public int portEncoderPos = 0;
-    public int starEncoderPos = 0;
+    public int rightEncoderPos = 0;
+    public int leftEncoderPos = 0;
+    public int frontEncoderPos = 0;
 
     public ElapsedTime runtime = new ElapsedTime();
 
@@ -66,6 +67,8 @@ public class AutoBase extends LinearOpMode {
 
     public void startUp() {
         robot.init(hardwareMap);
+
+        resetTicks();
 
         robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.WHITE);
 
@@ -596,6 +599,30 @@ public class AutoBase extends LinearOpMode {
         }
 
             return colorPort;
+    }
+
+    public void resetTicks() {
+        resetLeftTicks();
+        resetFrontTicks();
+        resetRightTicks();
+    }
+    public void resetLeftTicks() {
+        leftEncoderPos = robot.leftEncoder.getCurrentPosition();
+    }
+    public int getLeftTicks() {
+        return robot.leftEncoder.getCurrentPosition() - leftEncoderPos;
+    }
+    public void resetRightTicks() {
+        rightEncoderPos = robot.rightEncoder.getCurrentPosition();
+    }
+    public int getRightTicks() {
+        return robot.rightEncoder.getCurrentPosition() - rightEncoderPos;
+    }
+    public void resetFrontTicks() {
+        frontEncoderPos = robot.frontEncoder.getCurrentPosition();
+    }
+    public int getFrontTicks() {
+        return robot.frontEncoder.getCurrentPosition() - frontEncoderPos;
     }
 
 
