@@ -27,6 +27,9 @@ public class AutoBase extends LinearOpMode {
 
     static final double FEET_PER_METER = 3.28084;
 
+    public int newPOWTarget = 0;
+    public int POWlocation = 0;
+
 
     public int rightEncoderPos = 0;
     public int leftEncoderPos = 0;
@@ -89,7 +92,6 @@ public class AutoBase extends LinearOpMode {
         robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.bsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         //initVuforia();
 
         //initTfod();
