@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 @Autonomous
 //@Disabled
 
-public class odoWheelsFirstTest extends AutoBase {
+public class OdoStrafeTest extends AutoBase {
 
 
 
@@ -23,16 +23,16 @@ public class odoWheelsFirstTest extends AutoBase {
 
         if (opModeIsActive()){
 
-            robot.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.frontEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            telemetry.addData("current pos:", robot.leftEncoder.getCurrentPosition());
+
+            telemetry.addData("current pos:", robot.frontEncoder.getCurrentPosition());
             telemetry.update();
 
             sleep(1000);
 
 
-            SPOWDriveForward(100000, .20, .01, 50000);
+            BOWDriveStrafeStar(-100000, -.20, .01, 50000);
 
             sleep(50000);
 
@@ -67,57 +67,60 @@ public class odoWheelsFirstTest extends AutoBase {
 
 
 
-    public void SPOWDriveForward(double targetDistance, double targetPower, double tolerance, double timeoutS){ //if want to go backwards, change dist and power to negative
+    public void BOWDriveStrafeStar(double targetDistance, double targetPower, double tolerance, double timeoutS){  //if want to go backwards, make dist and power negative
 
-        newSPOWTarget = (((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2) + (int) (targetDistance));//convert target dist l8r
-        SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
+        robot.frontEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        newBOWTarget = ((robot.frontEncoder.getCurrentPosition()) + (int) (targetDistance));//convert target dist l8r
+        BOWlocation = (robot.frontEncoder.getCurrentPosition());
         resetRuntime();
 
 
+
+
         while(runtime.seconds() < timeoutS){
-            while(SPOWlocation < (1-tolerance) * newSPOWTarget){
+            while((Math.abs(BOWlocation)) < (1-tolerance) * (Math.abs(newBOWTarget))){
                 telemetry.addData("are we there yet?", "no");
-                telemetry.addData("newSPOWTarget:", newSPOWTarget);
-                telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("newBOWTarget:", newBOWTarget);
+                telemetry.addData("BOW location: ", BOWlocation);
+                telemetry.addData("avgEncoderPos:", robot.frontEncoder.getCurrentPosition());
 
                 telemetry.update();
 
                 robot.fpd.setPower(targetPower);
-                robot.bpd.setPower(targetPower);
-                robot.fsd.setPower(targetPower);
+                robot.bpd.setPower(-(targetPower));
+                robot.fsd.setPower(-(targetPower));
                 robot.bsd.setPower(targetPower);
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                BOWlocation = (robot.frontEncoder.getCurrentPosition()); //updates the encoder's position inside the loop
 
 
             }
 
             //SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
 
-            while (SPOWlocation > (1+tolerance) * newSPOWTarget){
+            while ((Math.abs(BOWlocation)) > (1+tolerance) * (Math.abs(newBOWTarget))){
                 telemetry.addData("are we there yet?", "too far");
-                telemetry.addData("newSPOWTarget:", newSPOWTarget);
-                telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("newBOWTarget:", newBOWTarget);
+                telemetry.addData("BOW location: ", BOWlocation);
+                telemetry.addData("avgEncoderPos:", robot.frontEncoder.getCurrentPosition());
                 telemetry.update();
 
                 robot.fpd.setPower(-(targetPower));
-                robot.bpd.setPower(-(targetPower));
-                robot.fsd.setPower(-(targetPower));
+                robot.bpd.setPower(targetPower);
+                robot.fsd.setPower(targetPower);
                 robot.bsd.setPower(-(targetPower));
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                BOWlocation = robot.frontEncoder.getCurrentPosition(); //updates the encoder's position inside the loop
 
 
             }
 
-            while ((SPOWlocation > (1-tolerance) * newSPOWTarget) && (SPOWlocation < (1+tolerance) * newSPOWTarget)){
+            while (((Math.abs(BOWlocation)) > (1-tolerance) * (Math.abs(newBOWTarget))) && ((Math.abs(BOWlocation)) < (1+tolerance) * (Math.abs(newBOWTarget)))){
                 telemetry.addData("are we there yet?", "yes");
-                telemetry.addData("newSPOWTarget:", newSPOWTarget);
-                telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
-
+                telemetry.addData("newBOWTarget:", newBOWTarget);
+                telemetry.addData("BOW location: ", BOWlocation);
+                telemetry.addData("avgEncoderPos:", robot.frontEncoder.getCurrentPosition());
                 telemetry.update();
 
                 robot.fpd.setPower(0);
@@ -125,7 +128,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 robot.fsd.setPower(0);
                 robot.bsd.setPower(0);
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                BOWlocation = robot.frontEncoder.getCurrentPosition(); //updates the encoder's position inside the loop
             }
 
 
@@ -274,3 +277,4 @@ public class odoWheelsFirstTest extends AutoBase {
 
 
 }
+

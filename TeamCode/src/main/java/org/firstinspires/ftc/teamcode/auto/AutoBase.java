@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.TemaruHardware;
-import org.openftc.easyopencv.OpenCvCamera;
+//import org.openftc.easyopencv.OpenCvCamera;
 
 import java.util.ArrayList;
 
@@ -27,8 +27,16 @@ public class AutoBase extends LinearOpMode {
 
     static final double FEET_PER_METER = 3.28084;
 
-    public int newPOWTarget = 0;
-    public int POWlocation = 0;
+    public double newPOWTarget = 0;
+    public double newSPOWTarget = 0;
+    public double newSOWTarget = 0;
+    public double newBOWTarget = 0;
+    public double POWlocation = 0;
+    public double SPOWlocation = 0;
+    public double SOWlocation = 0;
+    public double BOWlocation = 0;
+
+
 
 
     public int rightEncoderPos = 0;

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 @Autonomous
 //@Disabled
 
-public class odoWheelsFirstTest extends AutoBase {
+public class OdoAbsTest extends AutoBase {
 
 
 
@@ -67,15 +67,20 @@ public class odoWheelsFirstTest extends AutoBase {
 
 
 
-    public void SPOWDriveForward(double targetDistance, double targetPower, double tolerance, double timeoutS){ //if want to go backwards, change dist and power to negative
+    public void SPOWDriveForward(double targetDistance, double targetPower, double tolerance, double timeoutS){  //if want to go backwards, make dist and power negative
+
+        robot.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         newSPOWTarget = (((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2) + (int) (targetDistance));//convert target dist l8r
         SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
         resetRuntime();
 
 
+
+
         while(runtime.seconds() < timeoutS){
-            while(SPOWlocation < (1-tolerance) * newSPOWTarget){
+            while((Math.abs(SPOWlocation)) < (1-tolerance) * (Math.abs(newSPOWTarget))){
                 telemetry.addData("are we there yet?", "no");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
@@ -95,7 +100,7 @@ public class odoWheelsFirstTest extends AutoBase {
 
             //SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
 
-            while (SPOWlocation > (1+tolerance) * newSPOWTarget){
+            while ((Math.abs(SPOWlocation)) > (1+tolerance) * (Math.abs(newSPOWTarget))){
                 telemetry.addData("are we there yet?", "too far");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
@@ -112,7 +117,7 @@ public class odoWheelsFirstTest extends AutoBase {
 
             }
 
-            while ((SPOWlocation > (1-tolerance) * newSPOWTarget) && (SPOWlocation < (1+tolerance) * newSPOWTarget)){
+            while (((Math.abs(SPOWlocation)) > (1-tolerance) * (Math.abs(newSPOWTarget))) && ((Math.abs(SPOWlocation)) < (1+tolerance) * (Math.abs(newSPOWTarget)))){
                 telemetry.addData("are we there yet?", "yes");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
