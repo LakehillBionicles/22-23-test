@@ -38,6 +38,14 @@ public class AutoBase extends LinearOpMode {
 
 
 
+    public double targetTheta = 0;
+    public double robotTheta = 0;
+
+
+    static final double odoWheelGap = 11.5;
+
+
+
 
     public int rightEncoderPos = 0;
     public int leftEncoderPos = 0;
@@ -50,6 +58,12 @@ public class AutoBase extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 3.0;  // For figuring circumference
     static final double COUNTS_PER_INCH = 1.2 * 4 * ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415));
+
+    static final double COUNTS_PER_ODO_REV = 8192;
+    static final double ODO_GEAR_REDUCTION = (1.0); // This is < 1.0 if geared UP
+    static final double ODO_WHEEL_DIAMETER_INCHES = 2.0;  // For figuring circumference
+    static final double ODO_COUNTS_PER_INCH = ((COUNTS_PER_ODO_REV * ODO_GEAR_REDUCTION) /
+            (ODO_WHEEL_DIAMETER_INCHES * 3.1415));
 
     static final String sleeveColor = "";
 
