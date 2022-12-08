@@ -6,8 +6,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 
 //import kotlin.ranges.URangesKt;   this caused an error
+/////////////////////////////////////////////////////////DO NOT USE!!!!
+
 @Autonomous
-//@Disabled
+@Disabled
 
 public class OdoThetaTest extends AutoBase {
 
@@ -23,14 +25,14 @@ public class OdoThetaTest extends AutoBase {
 
         if (opModeIsActive()){
 
-            robot.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.frontEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.POW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.SOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.BOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
 
 
-            thetaTurn(90, .20, 3, 50000);
+            thetaTurn(-90, .20, 3, 50000);
 
             sleep(50000);
 
@@ -49,19 +51,19 @@ public class OdoThetaTest extends AutoBase {
 
     public void thetaTurn(double degrees, double targetPower, double tolerance, double timeoutS){
 
-        robot.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.POW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.SOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.BOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        POWlocation = (robot.leftEncoder.getCurrentPosition());
-        SOWlocation = (robot.rightEncoder.getCurrentPosition());
+        POWlocation = (robot.POW.getCurrentPosition());
+        SOWlocation = (robot.SOW.getCurrentPosition());
 
 
-        targetTheta = (Math.toRadians(degrees) + (((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) * ODO_COUNTS_PER_INCH) / odoWheelGap));
-        robotTheta = (((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) * ODO_COUNTS_PER_INCH) / odoWheelGap);
+        newTargetTheta = (Math.toRadians(degrees) + (((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap));
+        oldRobotTheta = (((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap);
 
-        //newSPOWTarget = (((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2) + (int) (targetDistance));//convert target dist l8r
-        //SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
+        //newSPOWTarget = (((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2) + (int) (targetDistance));//convert target dist l8r
+        //SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2);
 
         resetRuntime();
 
@@ -69,64 +71,60 @@ public class OdoThetaTest extends AutoBase {
 
 
         while(runtime.seconds() < timeoutS){
-            while((Math.abs(robotTheta)) < ((Math.abs(targetTheta)) - Math.toRadians(tolerance))){
-               /* POWlocation = (robot.leftEncoder.getCurrentPosition());
-                SOWlocation = (robot.rightEncoder.getCurrentPosition());
-                robotTheta = (((POWlocation + SOWlocation) * odoInches) / odoWheelGap);*/ //updates the encoder's position inside the loop
-
+            while((Math.abs(oldRobotTheta)) < ((Math.abs(newTargetTheta)) - Math.toRadians(tolerance))){
+                POWlocation = (robot.POW.getCurrentPosition());
+                SOWlocation = (robot.SOW.getCurrentPosition());
                 telemetry.addData("are we there yet?", "no");
-                telemetry.addData("targetTheta:", targetTheta);
-                telemetry.addData("robot Theta: ", robotTheta);
-                telemetry.addData("theta function:", (((POWlocation + SOWlocation) * ODO_COUNTS_PER_INCH) / odoWheelGap));
+                telemetry.addData("newTargetTheta:", newTargetTheta);
+                telemetry.addData("robot Theta: ", oldRobotTheta);
+                telemetry.addData("robot pow: ", robot.POW.getCurrentPosition());
+                telemetry.addData("robot sow: ", robot.SOW.getCurrentPosition());
+                telemetry.addData("theta function:", (((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap));
 
                 telemetry.update();
 
-                robot.fpd.setPower(-(targetPower));
-                robot.bpd.setPower(-(targetPower));
-                robot.fsd.setPower(targetPower);
-                robot.bsd.setPower(targetPower);
+                robot.fpd.setPower((targetPower));
+                robot.bpd.setPower((targetPower));
+                robot.fsd.setPower(-targetPower);
+                robot.bsd.setPower(-targetPower);
 
-               /* POWlocation = (robot.leftEncoder.getCurrentPosition());
-                SOWlocation = (robot.rightEncoder.getCurrentPosition());*/
-                robotTheta = (((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) * ODO_COUNTS_PER_INCH) / odoWheelGap); //updates the encoder's position inside the loop
+                POWlocation = (robot.POW.getCurrentPosition());
+                SOWlocation = (robot.SOW.getCurrentPosition());
+                oldRobotTheta = (((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap); //updates the encoder's position inside the loop
 
 
             }
 
-            //SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
+            //SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2);
 
-            while ((Math.abs(robotTheta)) > ((Math.abs(targetTheta)) + Math.toRadians(tolerance))){
-                /*POWlocation = (robot.leftEncoder.getCurrentPosition());
-                SOWlocation = (robot.rightEncoder.getCurrentPosition());*/
-                robotTheta = (((POWlocation + SOWlocation) * ODO_COUNTS_PER_INCH) / odoWheelGap); //updates the encoder's position inside the loop
-
+            while ((Math.abs(oldRobotTheta)) > ((Math.abs(newTargetTheta)) + Math.toRadians(tolerance))){
+                POWlocation = (robot.POW.getCurrentPosition());
+                SOWlocation = (robot.SOW.getCurrentPosition());
                 telemetry.addData("are we there yet?", "too far");
-                telemetry.addData("targetTheta:", targetTheta);
-                telemetry.addData("robot Theta: ", robotTheta);
-                telemetry.addData("theta function:", (((POWlocation + SOWlocation) * ODO_COUNTS_PER_INCH) / odoWheelGap));
+                telemetry.addData("newTargetTheta:", newTargetTheta);
+                telemetry.addData("robot Theta: ", oldRobotTheta);
+                telemetry.addData("theta function:", (((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap));
                 telemetry.update();
 
-                robot.fpd.setPower(targetPower);
-                robot.bpd.setPower(targetPower);
-                robot.fsd.setPower(-(targetPower));
-                robot.bsd.setPower(-(targetPower));
+                robot.fpd.setPower(-targetPower);
+                robot.bpd.setPower(-targetPower);
+                robot.fsd.setPower((targetPower));
+                robot.bsd.setPower((targetPower));
 
-               /* POWlocation = (robot.leftEncoder.getCurrentPosition());
-                SOWlocation = (robot.rightEncoder.getCurrentPosition());*/
-                robotTheta = (((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) * ODO_COUNTS_PER_INCH) / odoWheelGap); //updates the encoder's position inside the loop
+                POWlocation = (robot.POW.getCurrentPosition());
+                SOWlocation = (robot.SOW.getCurrentPosition());
+                oldRobotTheta = (((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap); //updates the encoder's position inside the loop
 
 
             }
 
-            while (((Math.abs(robotTheta)) > ((Math.abs(targetTheta)) - Math.toRadians(tolerance))) && ((Math.abs(robotTheta)) < ((Math.abs(targetTheta)) + Math.toRadians(tolerance)))){
-                /*POWlocation = (robot.leftEncoder.getCurrentPosition());
-                SOWlocation = (robot.rightEncoder.getCurrentPosition());
-                robotTheta = (((POWlocation + SOWlocation) * odoInches) / odoWheelGap); *///updates the encoder's position inside the loop
-
+            while (((Math.abs(oldRobotTheta)) > ((Math.abs(newTargetTheta)) - Math.toRadians(tolerance))) && ((Math.abs(oldRobotTheta)) < ((Math.abs(newTargetTheta)) + Math.toRadians(tolerance)))){
+                POWlocation = (robot.POW.getCurrentPosition());
+                SOWlocation = (robot.SOW.getCurrentPosition());
                 telemetry.addData("are we there yet?", "yes");
-                telemetry.addData("targetTheta:", targetTheta);
-                telemetry.addData("robot Theta: ", robotTheta);
-                telemetry.addData("theta function:", (((POWlocation + SOWlocation) * ODO_COUNTS_PER_INCH) / odoWheelGap));
+                telemetry.addData("newTargetTheta:", newTargetTheta);
+                telemetry.addData("robot Theta: ", oldRobotTheta);
+                telemetry.addData("theta function:", (((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap));
                 telemetry.update();
 
                 robot.fpd.setPower(0);
@@ -134,9 +132,9 @@ public class OdoThetaTest extends AutoBase {
                 robot.fsd.setPower(0);
                 robot.bsd.setPower(0);
 
-               /* POWlocation = (robot.leftEncoder.getCurrentPosition());
-                SOWlocation = (robot.rightEncoder.getCurrentPosition());*/
-                robotTheta = (((robot.leftEncoder.getCurrentPosition()+ robot.rightEncoder.getCurrentPosition()) * ODO_COUNTS_PER_INCH) / odoWheelGap); //updates the encoder's position inside the loop
+                POWlocation = (robot.POW.getCurrentPosition());
+                SOWlocation = (robot.SOW.getCurrentPosition());
+                oldRobotTheta = (((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap); //updates the encoder's position inside the loop
             }
 
 

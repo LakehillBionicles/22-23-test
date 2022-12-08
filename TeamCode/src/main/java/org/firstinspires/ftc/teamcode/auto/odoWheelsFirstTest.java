@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 //import kotlin.ranges.URangesKt;   this caused an error
 @Autonomous
-//@Disabled
+@Disabled
+/////////////////////////////////////////////////////////DO NOT USE!!!!
+
 
 public class odoWheelsFirstTest extends AutoBase {
 
@@ -23,10 +25,10 @@ public class odoWheelsFirstTest extends AutoBase {
 
         if (opModeIsActive()){
 
-            robot.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.POW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.SOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            telemetry.addData("current pos:", robot.leftEncoder.getCurrentPosition());
+            telemetry.addData("current pos:", robot.POW.getCurrentPosition());
             telemetry.update();
 
             sleep(1000);
@@ -69,8 +71,8 @@ public class odoWheelsFirstTest extends AutoBase {
 
     public void SPOWDriveForward(double targetDistance, double targetPower, double tolerance, double timeoutS){ //if want to go backwards, change dist and power to negative
 
-        newSPOWTarget = (((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2) + (int) (targetDistance));//convert target dist l8r
-        SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
+        newSPOWTarget = (((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2) + (int) (targetDistance));//convert target dist l8r
+        SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2);
         resetRuntime();
 
 
@@ -79,7 +81,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 telemetry.addData("are we there yet?", "no");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("avgEncoderPos:", ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2));
 
                 telemetry.update();
 
@@ -88,18 +90,18 @@ public class odoWheelsFirstTest extends AutoBase {
                 robot.fsd.setPower(targetPower);
                 robot.bsd.setPower(targetPower);
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
 
 
             }
 
-            //SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
+            //SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2);
 
             while (SPOWlocation > (1+tolerance) * newSPOWTarget){
                 telemetry.addData("are we there yet?", "too far");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("avgEncoderPos:", ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2));
                 telemetry.update();
 
                 robot.fpd.setPower(-(targetPower));
@@ -107,7 +109,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 robot.fsd.setPower(-(targetPower));
                 robot.bsd.setPower(-(targetPower));
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
 
 
             }
@@ -116,7 +118,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 telemetry.addData("are we there yet?", "yes");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("avgEncoderPos:", ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2));
 
                 telemetry.update();
 
@@ -125,7 +127,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 robot.fsd.setPower(0);
                 robot.bsd.setPower(0);
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
             }
 
 
@@ -137,8 +139,8 @@ public class odoWheelsFirstTest extends AutoBase {
 
     /*public void SPOWDriveBackwards(double targetDistance, double targetPower, double tolerance, double timeoutS){
 
-        newSPOWTarget = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2) + (int) (targetDistance);//convert target dist l8r
-        SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
+        newSPOWTarget = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2) + (int) (targetDistance);//convert target dist l8r
+        SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2);
         resetRuntime();
 
 
@@ -147,7 +149,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 telemetry.addData("are we there yet?", "no");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("avgEncoderPos:", ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2));
 
                 telemetry.update();
 
@@ -156,18 +158,18 @@ public class odoWheelsFirstTest extends AutoBase {
                 robot.fsd.setPower(targetPower);
                 robot.bsd.setPower(targetPower);
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
 
 
             }
 
-            SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
+            SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2);
 
             while (SPOWlocation > (1-tolerance) * newSPOWTarget){
                 telemetry.addData("are we there yet?", "too far");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("avgEncoderPos:", ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2));
                 telemetry.update();
 
                 robot.fpd.setPower(-(targetPower));
@@ -175,7 +177,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 robot.fsd.setPower(-(targetPower));
                 robot.bsd.setPower(-(targetPower));
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
 
 
             }
@@ -184,7 +186,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 telemetry.addData("are we there yet?", "yes");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("avgEncoderPos:", ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2));
 
                 telemetry.update();
 
@@ -193,7 +195,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 robot.fsd.setPower(0);
                 robot.bsd.setPower(0);
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
             }
 
 
@@ -205,8 +207,8 @@ public class odoWheelsFirstTest extends AutoBase {
 
     public void BOWStrafePort(double targetDistance, double targetPower, double tolerance, double timeoutS){
 
-        newSPOWTarget = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2) + (int) (targetDistance);//convert target dist l8r
-        SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
+        newSPOWTarget = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2) + (int) (targetDistance);//convert target dist l8r
+        SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2);
         resetRuntime();
 
 
@@ -215,7 +217,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 telemetry.addData("are we there yet?", "no");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("avgEncoderPos:", ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2));
 
                 telemetry.update();
 
@@ -224,18 +226,18 @@ public class odoWheelsFirstTest extends AutoBase {
                 robot.fsd.setPower(targetPower);
                 robot.bsd.setPower(targetPower);
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
 
 
             }
 
-            SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2);
+            SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2);
 
             while (SPOWlocation > (1+tolerance) * newSPOWTarget){
                 telemetry.addData("are we there yet?", "too far");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("avgEncoderPos:", ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2));
                 telemetry.update();
 
                 robot.fpd.setPower(-(targetPower));
@@ -243,7 +245,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 robot.fsd.setPower(-(targetPower));
                 robot.bsd.setPower(-(targetPower));
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
 
 
             }
@@ -252,7 +254,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 telemetry.addData("are we there yet?", "yes");
                 telemetry.addData("newSPOWTarget:", newSPOWTarget);
                 telemetry.addData("SPOW location: ", SPOWlocation);
-                telemetry.addData("avgEncoderPos:", ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2));
+                telemetry.addData("avgEncoderPos:", ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2));
 
                 telemetry.update();
 
@@ -261,7 +263,7 @@ public class odoWheelsFirstTest extends AutoBase {
                 robot.fsd.setPower(0);
                 robot.bsd.setPower(0);
 
-                SPOWlocation = ((robot.leftEncoder.getCurrentPosition() + robot.rightEncoder.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
+                SPOWlocation = ((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2); //updates the encoder's position inside the loop
             }
 
 

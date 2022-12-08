@@ -19,7 +19,7 @@ public class blueCornerCone extends AutoBase {
 
 
 ///jhfgkjgklugjyugfk.jgjfl
-            robot.frontEncoder.setPower(0.5);
+            robot.BOW.setPower(0.5);
             robot.arm2.setPower(0.5);
 
 
@@ -52,7 +52,7 @@ public class blueCornerCone extends AutoBase {
             //driveUntilDist(0.2,3); couldn't make this work
             handDrop(); //open hand
             handDrop();
-            //robot.frontEncoder.setPower(0.4);
+            //robot.BOW.setPower(0.4);
             //robot.arm2.setPower(0.4);
             sleep(100);
             handDrop();

@@ -32,9 +32,9 @@ public class testEncoderValues extends AutoBase {
             telemetry.addData("fsd", robot.fsd.getCurrentPosition());
             telemetry.addData("bpd", robot.bpd.getCurrentPosition());
             telemetry.addData("bsd", robot.bsd.getCurrentPosition());
-            telemetry.addData("leftPost", robot.leftEncoder.getCurrentPosition());
-            telemetry.addData("rightPost", robot.rightEncoder.getCurrentPosition());
-            telemetry.addData("frontPost", robot.frontEncoder.getCurrentPosition());
+            telemetry.addData("leftPost", robot.POW.getCurrentPosition());
+            telemetry.addData("rightPost", robot.SOW.getCurrentPosition());
+            telemetry.addData("frontPost", robot.BOW.getCurrentPosition());
 
 
             telemetry.update();

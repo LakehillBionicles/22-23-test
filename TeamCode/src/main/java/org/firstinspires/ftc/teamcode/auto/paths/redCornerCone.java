@@ -25,7 +25,7 @@ public class redCornerCone extends AutoBase {
 
 
 
-            robot.frontEncoder.setPower(0.5);
+            robot.BOW.setPower(0.5);
             robot.arm2.setPower(0.5);
                     sideways(0.5, 16,16, 3); //move to cone
 

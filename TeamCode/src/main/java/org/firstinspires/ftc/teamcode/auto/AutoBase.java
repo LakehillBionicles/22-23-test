@@ -27,43 +27,96 @@ public class AutoBase extends LinearOpMode {
 
     static final double FEET_PER_METER = 3.28084;
 
+
+    //////////////////////////////// TARGET VALUES ////////////////////////////////////////////////
     public double newPOWTarget = 0;
     public double newSPOWTarget = 0;
     public double newSOWTarget = 0;
     public double newBOWTarget = 0;
+
+    public double newTargetTheta = 0;
+    public double newTargetX = 0;
+    public double newTargetY = 0;
+
+    //////////////////////////////// LOCATIONS ////////////////////////////////////////////////
     public double POWlocation = 0;
     public double SPOWlocation = 0;
     public double SOWlocation = 0;
     public double BOWlocation = 0;
 
+    public double robotTheta = (-(((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap));
+    public double robotX = (BOWlocation / ODO_COUNTS_PER_INCH);
+    public double robotXThetaCorrect = ((BOWlocation / ODO_COUNTS_PER_INCH) - (5 * robotTheta));
+    public double robotY = (((POWlocation + SOWlocation) / 2) /ODO_COUNTS_PER_INCH);
 
 
-    public double targetTheta = 0;
-    public double robotTheta = 0;
+    //////////////////////////////// DO WE REALLY NEED THESE ANYMORE???? ////////////////////////////////////////////////
+    public double strafeError = 0;
+    public double driveError = 0;
+    public double oldRobotTheta = 0;
+    public double oldThetaError = 0;
 
 
-    static final double odoWheelGap = 11.5;
+    //////////////////////////////// POWERS ////////////////////////////////////////////////
+    public double thetaPower = 0;
+    public double xPower = 0;
+    public double yPower = 0;
 
+    //////////////////////////////// ERRORS ////////////////////////////////////////////////
+    public double xError = (newTargetX - robotX);
+    public double yError = (newTargetY - robotY);
+    public double thetaError = (newTargetTheta - robotTheta);
 
+    public double lastThetaError = 0;
+    public double lastXError = 0;
+    public double lastYError = 0;
 
+    //////////////////////////////// DERIV VARIABLES ////////////////////////////////////////////////
+    public double thetaDeriv = 0;
+    public double xDeriv = 0;
+    public double yDeriv = 0;
 
-    public int rightEncoderPos = 0;
-    public int leftEncoderPos = 0;
-    public int frontEncoderPos = 0;
+    //////////////////////////////// INTEGRAL VARIABLES ////////////////////////////////////////////////
+    public double thetaIntegralSum = 0;
+    public double xIntegralSum = 0;
+    public double yIntegralSum = 0;
+
+    public double integralSumLimit = 0.25;
+
+    //////////////////////////////// PID VARIABLES ////////////////////////////////////////////////
+    public double Kp = 1.0;
+    public double Kd = 1.0;
+    public double Ki = 1.0;
+
+    //////////////////////////////// MISC ////////////////////////////////////////////////
+    public double odoTime = 0;
+
+   public double denominator = Math.max(Math.abs(yPower) + Math.abs(xPower) + Math.abs(thetaPower), 1);
+   public double denominator2 = 0;
+
+    public int SOWPos = 0;
+    public int POWPos = 0;
+    public int BOWPos = 0;
 
     public ElapsedTime runtime = new ElapsedTime();
 
+
+//////////////////////////////////// WHEEL CALCULATIONS //////////////////////////////////////////////
     static final double COUNTS_PER_MOTOR_REV = 560;
     static final double DRIVE_GEAR_REDUCTION = (0.11111); // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 3.0;  // For figuring circumference
     static final double COUNTS_PER_INCH = 1.2 * 4 * ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415));
 
+    //////////////////////////////////// ODOMETRY WHEEL CALCULATIONS //////////////////////////////////////////////
     static final double COUNTS_PER_ODO_REV = 8192;
     static final double ODO_GEAR_REDUCTION = (1.0); // This is < 1.0 if geared UP
     static final double ODO_WHEEL_DIAMETER_INCHES = 2.0;  // For figuring circumference
     static final double ODO_COUNTS_PER_INCH = ((COUNTS_PER_ODO_REV * ODO_GEAR_REDUCTION) /
             (ODO_WHEEL_DIAMETER_INCHES * 3.1415));
+
+    static final double odoWheelGap = 11.5;
+
 
     static final String sleeveColor = "";
 
@@ -92,6 +145,8 @@ public class AutoBase extends LinearOpMode {
 
     public void startUp() {
         robot.init(hardwareMap);
+
+
 
         resetTicks();
 
@@ -244,9 +299,9 @@ public class AutoBase extends LinearOpMode {
     }
 
     public void turn(double speed, double portInches, double starInches, double timeoutS){//Positive is counterclockwise. 1 inch = 6 degrees
-            int newPortTarget = 0;
-            int newStarTarget = 0;
-            setMotorDirTurn();
+        int newPortTarget = 0;
+        int newStarTarget = 0;
+        setMotorDirTurn();
 
         if (opModeIsActive()) {
 
@@ -475,90 +530,90 @@ public class AutoBase extends LinearOpMode {
 
 
 
-        public void armLift ( double speed, double inches, double timeoutS){ //right now this function only lifts to the highest pole
+    public void armLift ( double speed, double inches, double timeoutS){ //right now this function only lifts to the highest pole
 
 
 
         inches = inches / (2*3.14*23.8) * 560;
-            // inches = inches*((560*23.8)/25.4);
-            robot.frontEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // inches = inches*((560*23.8)/25.4);
+        robot.BOW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            robot.frontEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.BOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            int newTarget = 0;
+        int newTarget = 0;
 
-            if (opModeIsActive()) {
+        if (opModeIsActive()) {
 
-                newTarget = (int) inches; //inches * this.COUNTS_PER_INCH?
-                robot.frontEncoder.setTargetPosition(newTarget);
-                robot.arm2.setTargetPosition(newTarget);
-                robot.frontEncoder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                int NT = (int) (newTarget * 0.981); //fp
-                runtime.reset();
-                robot.frontEncoder.setPower(Math.abs(speed));
-                robot.arm2.setPower(Math.abs(speed*0.9));//0.9 is encoder ticks of arm 1 over arm2
-                while (opModeIsActive() &&
-                        (runtime.seconds() < timeoutS) && robot.frontEncoder.isBusy() &&
-                        ((Math.abs(robot.frontEncoder.getCurrentPosition()) < Math.abs(NT)))) {
-                }
-                robot.frontEncoder.setPower(0.6);
-                robot.arm2.setPower(0.6);
-                robot.frontEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            newTarget = (int) inches; //inches * this.COUNTS_PER_INCH?
+            robot.BOW.setTargetPosition(newTarget);
+            robot.arm2.setTargetPosition(newTarget);
+            robot.BOW.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            int NT = (int) (newTarget * 0.981); //fp
+            runtime.reset();
+            robot.BOW.setPower(Math.abs(speed));
+            robot.arm2.setPower(Math.abs(speed*0.9));//0.9 is encoder ticks of arm 1 over arm2
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) && robot.BOW.isBusy() &&
+                    ((Math.abs(robot.BOW.getCurrentPosition()) < Math.abs(NT)))) {
             }
-
+            robot.BOW.setPower(0.6);
+            robot.arm2.setPower(0.6);
+            robot.BOW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        public void armStayUp(){
-        while (opModeIsActive()){
-            robot.frontEncoder.setPower(0.1);
-            robot.arm2.setPower(0.1);
-            }
     }
 
-        public void handDrop () {
-            robot.servoFinger.setPosition(0.0);
-            sleep(1500); //this wait may need to be longer
-            robot.servoFinger.setPosition(1.0);
+    public void armStayUp(){
+        while (opModeIsActive()){
+            robot.BOW.setPower(0.1);
+            robot.arm2.setPower(0.1);
         }
+    }
+
+    public void handDrop () {
+        robot.servoFinger.setPosition(0.0);
+        sleep(1500); //this wait may need to be longer
+        robot.servoFinger.setPosition(1.0);
+    }
 
 
 
-        public void setMotorDir () { //make sure correct - not 100% sure
-            robot.fsd.setDirection(DcMotorSimple.Direction.REVERSE); //forward
-            robot.bsd.setDirection(DcMotorSimple.Direction.FORWARD);
-            robot.fpd.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.bpd.setDirection(DcMotorSimple.Direction.FORWARD); //neg??
+    public void setMotorDir () { //make sure correct - not 100% sure
+        robot.fsd.setDirection(DcMotorSimple.Direction.REVERSE); //forward
+        robot.bsd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.fpd.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.bpd.setDirection(DcMotorSimple.Direction.FORWARD); //neg??
 
-        }
+    }
 
-        public void setMotorDirStrafe () {
-            robot.fsd.setDirection(DcMotorSimple.Direction.FORWARD);
-            robot.bsd.setDirection(DcMotorSimple.Direction.FORWARD);
-            robot.fpd.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.bpd.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
+    public void setMotorDirStrafe () {
+        robot.fsd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.bsd.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.fpd.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.bpd.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
 
     public void senseColorTelemetry(){ //drive until see not green
         while (opModeIsActive()){
-        telemetry.addData("redStar", robot.colorSensorStar.red());
-        telemetry.addData("greenStar", robot.colorSensorStar.green());
-        telemetry.addData("blueStar", robot.colorSensorStar.blue());
+            telemetry.addData("redStar", robot.colorSensorStar.red());
+            telemetry.addData("greenStar", robot.colorSensorStar.green());
+            telemetry.addData("blueStar", robot.colorSensorStar.blue());
 
-        telemetry.addData("redPort", robot.colorSensorPort.red());
-        telemetry.addData("greenPort", robot.colorSensorPort.green());
-        telemetry.addData("bluePort", robot.colorSensorPort.blue());
+            telemetry.addData("redPort", robot.colorSensorPort.red());
+            telemetry.addData("greenPort", robot.colorSensorPort.green());
+            telemetry.addData("bluePort", robot.colorSensorPort.blue());
 
-        telemetry.update();
+            telemetry.update();
 
-    }
+        }
     }
 
     public String senseColorsStar () {
-                String colorStar = "blank";
+        String colorStar = "blank";
 
         while (opModeIsActive() && colorStar.equals("blank")) {
             if (robot.colorSensorStar.red() > (robot.colorSensorStar.blue()) && robot.colorSensorStar.red() > (robot.colorSensorStar.green())) {
@@ -622,7 +677,7 @@ public class AutoBase extends LinearOpMode {
             }
         }
 
-            return colorPort;
+        return colorPort;
     }
 
     public void resetTicks() {
@@ -631,22 +686,22 @@ public class AutoBase extends LinearOpMode {
         resetRightTicks();
     }
     public void resetLeftTicks() {
-        leftEncoderPos = robot.leftEncoder.getCurrentPosition();
+        POWPos = robot.POW.getCurrentPosition();
     }
     public int getLeftTicks() {
-        return robot.leftEncoder.getCurrentPosition() - leftEncoderPos;
+        return robot.POW.getCurrentPosition() - POWPos;
     }
     public void resetRightTicks() {
-        rightEncoderPos = robot.rightEncoder.getCurrentPosition();
+        SOWPos = robot.SOW.getCurrentPosition();
     }
     public int getRightTicks() {
-        return robot.rightEncoder.getCurrentPosition() - rightEncoderPos;
+        return robot.SOW.getCurrentPosition() - SOWPos;
     }
     public void resetFrontTicks() {
-        frontEncoderPos = robot.frontEncoder.getCurrentPosition();
+        BOWPos = robot.BOW.getCurrentPosition();
     }
     public int getFrontTicks() {
-        return robot.frontEncoder.getCurrentPosition() - frontEncoderPos;
+        return robot.BOW.getCurrentPosition() - BOWPos;
     }
 
 
@@ -688,5 +743,5 @@ public class AutoBase extends LinearOpMode {
     }*/
 
 
-    }
+}
 

@@ -21,11 +21,11 @@ public class TemaruHardware extends LinearOpMode {
     public DcMotor bpd = null;
     public DcMotor bsd = null;
 
-    public DcMotor frontEncoder = null;
+    public DcMotor BOW = null;
     public DcMotor arm2 = null;
 
-    public DcMotor leftEncoder = null; //these are the odometery wheels
-    public DcMotor rightEncoder = null;
+    public DcMotor POW = null; //these are the odometery wheels
+    public DcMotor SOW = null;
 
     //public DcMotor hand = null;
     public Servo servoFinger = null;
@@ -85,11 +85,11 @@ public class TemaruHardware extends LinearOpMode {
         bpd = hwMap.get(DcMotor.class, "bpd");
         bsd = hwMap.get(DcMotor.class, "bsd");
 
-        frontEncoder = hwMap.get(DcMotor.class, "frontEncoder");
+        BOW = hwMap.get(DcMotor.class, "BOW");
         arm2 = hwMap.get(DcMotor.class, "arm2");
 
-        leftEncoder = hwMap.get(DcMotor.class, "leftEncoder");
-        rightEncoder = hwMap.get(DcMotor.class, "rightEncoder");
+        POW = hwMap.get(DcMotor.class, "POW");
+        SOW = hwMap.get(DcMotor.class, "SOW");
 
         //hand = hwMap.get(DcMotor.class, "hand");
         servoFinger = hwMap.get(Servo.class, "servoFinger");
@@ -124,13 +124,13 @@ public class TemaruHardware extends LinearOpMode {
 
 
 
-        frontEncoder.setDirection(DcMotorSimple.Direction.REVERSE); //check direction
+        BOW.setDirection(DcMotorSimple.Direction.REVERSE); //check direction
         arm2.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
 
         //hand.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        leftEncoder.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightEncoder.setDirection(DcMotorSimple.Direction.FORWARD);
+        POW.setDirection(DcMotorSimple.Direction.FORWARD);
+        SOW.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         //set power to 0
@@ -139,7 +139,7 @@ public class TemaruHardware extends LinearOpMode {
         bpd.setPower(0);
         bsd.setPower(0);
 
-        frontEncoder.setPower(0);
+        BOW.setPower(0);
         arm2.setPower(0);
 
         //hand.setPower(0);
@@ -151,9 +151,9 @@ public class TemaruHardware extends LinearOpMode {
         bpd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bsd.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        frontEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BOW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        POW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SOW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -168,9 +168,9 @@ public class TemaruHardware extends LinearOpMode {
         bsd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        leftEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontEncoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        POW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        SOW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BOW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
