@@ -174,14 +174,20 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         //sldkfjalsdhgsadhf;ajsdlfj
 
         if (gamepad2.left_bumper) { //goes up
-            robot.BOW.setPower(1);
-            robot.arm2.setPower(1);
+            robot.POW.setPower(1.0);
+            //robot.SOW.setPower(1);
+            robot.BOW.setPower(-1.0);
+            //robot.arm2.setPower(1);
         } else if (gamepad2.right_bumper){
-            robot.BOW.setPower(-0.4);
-            robot.arm2.setPower(-0.4);
+            robot.POW.setPower(-1);
+            //robot.SOW.setPower(-1);
+            robot.BOW.setPower(1);
+            //robot.arm2.setPower(-1);
         } else if (!(gamepad2.left_bumper) && !(gamepad2.right_bumper) && !gamepad2.a && !gamepad2.b && !gamepad2.y && !gamepad2.x){
-            robot.BOW.setPower(0.1);
-            robot.arm2.setPower(0.1);
+            robot.POW.setPower(0.0);
+            //robot.SOW.setPower(0.0);
+            robot.BOW.setPower(0.0); //previously used to be 0.1 in order to keep arm up
+            //robot.arm2.setPower(0.0);
         } else {}
     }
 
@@ -199,9 +205,12 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
     public void servoHand(){
         if (gamepad2.left_trigger > 0){
+            telemetry.addData("please work", "yay");
+            telemetry.update();
             robot.servoFinger.setPosition(0.0);
+
         } else {
-            robot.servoFinger.setPosition(1.0);
+            robot.servoFinger.setPosition(.7);
         }
         //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
 

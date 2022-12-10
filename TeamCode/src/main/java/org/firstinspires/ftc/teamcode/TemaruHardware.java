@@ -124,13 +124,18 @@ public class TemaruHardware extends LinearOpMode {
 
 
 
-        BOW.setDirection(DcMotorSimple.Direction.REVERSE); //check direction
+         //check direction
         arm2.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
 
         //hand.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        POW.setDirection(DcMotorSimple.Direction.FORWARD);
-        SOW.setDirection(DcMotorSimple.Direction.FORWARD);
+        POW.setDirection(DcMotorSimple.Direction.REVERSE);
+        BOW.setDirection(DcMotorSimple.Direction.FORWARD); //flipped BOW direction
+
+        SOW.setDirection(DcMotorSimple.Direction.REVERSE); //flipped SOW direction
+        arm2.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
 
 
         //set power to 0
@@ -139,6 +144,8 @@ public class TemaruHardware extends LinearOpMode {
         bpd.setPower(0);
         bsd.setPower(0);
 
+        POW.setPower(0);
+        SOW.setPower(0);
         BOW.setPower(0);
         arm2.setPower(0);
 

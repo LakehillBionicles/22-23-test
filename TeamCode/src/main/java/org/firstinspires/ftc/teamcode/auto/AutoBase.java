@@ -147,8 +147,10 @@ public class AutoBase extends LinearOpMode {
         robot.init(hardwareMap);
 
 
-
-        resetTicks();
+        ////////////reset encoders right here - added to make PID work
+        robot.BOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.POW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.SOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.WHITE);
 
@@ -159,6 +161,12 @@ public class AutoBase extends LinearOpMode {
         robot.bpd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.fsd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.bsd.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        robot.POW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.BOW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        robot.POW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.BOW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -176,6 +184,172 @@ public class AutoBase extends LinearOpMode {
         telemetry.addData("Vision is Ready", ")");
         telemetry.update();
 
+
+    }
+
+    public void autoWhereAmI(){
+        POWlocation = robot.POW.getCurrentPosition();
+        SOWlocation = robot.SOW.getCurrentPosition();
+        BOWlocation = robot.BOW.getCurrentPosition();
+
+        robotTheta = (-(((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap));
+        robotX = (BOWlocation / ODO_COUNTS_PER_INCH) - (5 * robotTheta);
+        robotY = (((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2) /ODO_COUNTS_PER_INCH);
+
+        xError = (newTargetX - robotX);
+        yError = (newTargetY - robotY);
+        thetaError = (newTargetTheta - robotTheta);
+
+        telemetry.addData("robotTheta:", robotTheta);
+        telemetry.addData("robotX:", robotX);
+        telemetry.addData("robotY:", robotY);
+
+        telemetry.addData("thetaError:", thetaError);
+        telemetry.addData("xError:", xError);
+        telemetry.addData("yError:", yError);
+
+        telemetry.update();
+
+    }
+
+    public void coordinateDrive(double thetaTarget, double xTarget, double yTarget, double rotPower, double linXPower, double linYPower, double rotTol, double xTol, double yTol){
+        POWlocation = robot.POW.getCurrentPosition();
+        SOWlocation = robot.SOW.getCurrentPosition();
+        BOWlocation = robot.BOW.getCurrentPosition();
+
+        robotTheta = (-(((POWlocation - SOWlocation) / ODO_COUNTS_PER_INCH) / odoWheelGap));
+        robotX = (BOWlocation / ODO_COUNTS_PER_INCH)- (5 * robotTheta);
+        robotY = (((robot.POW.getCurrentPosition() + robot.SOW.getCurrentPosition()) / 2) /ODO_COUNTS_PER_INCH);
+
+        newTargetTheta = Math.toRadians(thetaTarget) + robotTheta;
+        newTargetX = ((xTarget) + robotX);
+        newTargetY = ((yTarget) + robotY);
+
+        xError = (newTargetX - robotX);
+        yError = (newTargetY - robotY);
+        thetaError = (newTargetTheta - robotTheta);
+
+        telemetry.addData("robotTheta:", robotTheta);
+        telemetry.addData("robotX:", robotX);
+        telemetry.addData("robotY:", robotY);
+
+        telemetry.addData("newTargetTheta:", newTargetTheta);
+        telemetry.addData("newTargetX:", newTargetX);
+        telemetry.addData("newTargetY:", newTargetY);
+
+        telemetry.addData("thetaError:", thetaError);
+        telemetry.addData("xError:", xError);
+        telemetry.addData("yError:", yError);
+
+        telemetry.addData("thetaPower:", thetaPower);
+        telemetry.addData("xPower:", xPower);
+        telemetry.addData("yPower:", yPower);
+
+        telemetry.update();
+
+        while (Math.abs(thetaError) > Math.toRadians(rotTol) || Math.abs(xError) > xTol || Math.abs(yError) > yTol){
+
+            odoTime = getRuntime();
+
+            autoWhereAmI();
+
+            denominator2 = Math.max(Math.abs(yPower) + Math.abs(xPower) + Math.abs(thetaPower), 1);
+
+            robot.fpd.setPower(((linYPower * (yPower)) + (linXPower * (xPower)) + (rotPower * thetaPower))/denominator);
+            robot.bpd.setPower(((linYPower * (yPower)) - (linXPower * (xPower)) + (rotPower * thetaPower))/denominator);
+            robot.fsd.setPower(((linYPower * (yPower)) - (linXPower * (xPower)) - (rotPower * thetaPower))/denominator);
+            robot.bsd.setPower(((linYPower * (yPower)) + (linXPower * (xPower)) - (rotPower * thetaPower))/denominator);
+
+            if (Math.abs(thetaError) > Math.toRadians(rotTol)){
+                thetaDeriv = ((thetaError - lastThetaError) / odoTime);
+                thetaIntegralSum = (thetaIntegralSum + (thetaError * odoTime));
+                if (thetaIntegralSum > integralSumLimit){
+                    thetaIntegralSum = integralSumLimit;
+                }
+                if (thetaIntegralSum < -integralSumLimit){
+                    thetaIntegralSum = -integralSumLimit;
+                }
+                thetaPower = -((Kd * thetaDeriv) + (Ki * thetaIntegralSum) + (Kp * Math.signum(thetaError)));
+            }
+            else{
+                thetaPower = 0;
+            }
+
+            if (Math.abs(xError) > xTol){
+                xDeriv = ((xError - lastXError) / odoTime);
+                xIntegralSum = (xIntegralSum + (xError * odoTime));
+                if (xIntegralSum > integralSumLimit){
+                    xIntegralSum = integralSumLimit;
+                }
+                if (xIntegralSum < -integralSumLimit){
+                    xIntegralSum = -integralSumLimit;
+                }
+                xPower = ((Kd * xDeriv) + (Ki * xIntegralSum) + (Kp * Math.signum(xError)));
+            }
+            else{
+                xPower = 0;
+            }
+
+            if (Math.abs(yError) > yTol){
+                yDeriv = ((yError - lastYError) / odoTime);
+                yIntegralSum = (yIntegralSum + (yError * odoTime));
+                if (yIntegralSum > integralSumLimit){
+                    yIntegralSum = integralSumLimit;
+                }
+                if (yIntegralSum < -integralSumLimit){
+                    yIntegralSum = -integralSumLimit;
+                }
+                yPower = ((Kd * yDeriv) + (Ki * yIntegralSum) + (Kp * Math.signum(yError)));
+            }
+            else{
+                yPower = 0;
+            }
+
+            telemetry.addData("robotTheta:", robotTheta);
+            telemetry.addData("robotX:", robotX);
+            telemetry.addData("robotY:", robotY);
+
+            telemetry.addData("newTargetTheta:", newTargetTheta);
+            telemetry.addData("newTargetX:", newTargetX);
+            telemetry.addData("newTargetY:", newTargetY);
+
+            telemetry.addData("thetaError:", thetaError);
+            telemetry.addData("xError:", xError);
+            telemetry.addData("yError:", yError);
+
+            telemetry.addData("thetaPower:", thetaPower);
+            telemetry.addData("xPower:", xPower);
+            telemetry.addData("yPower:", yPower);
+
+            telemetry.addData("runtime", getRuntime());
+
+            telemetry.update();
+
+            //motor use to be here
+        }
+
+        robot.fpd.setPower(0);
+        robot.bpd.setPower(0);
+        robot.fsd.setPower(0);
+        robot.bsd.setPower(0);
+        telemetry.addData("robotTheta:", robotTheta);
+        telemetry.addData("robotX:", robotX);
+        telemetry.addData("robotY:", robotY);
+
+        telemetry.addData("newTargetTheta:", newTargetTheta);
+        telemetry.addData("newTargetX:", newTargetX);
+        telemetry.addData("newTargetY:", newTargetY);
+
+        telemetry.addData("thetaError:", thetaError);
+        telemetry.addData("xError:", xError);
+        telemetry.addData("yError:", yError);
+
+        telemetry.addData("thetaPower:", thetaPower);
+        telemetry.addData("xPower:", xPower);
+        telemetry.addData("yPower:", yPower);
+
+        telemetry.addData("yay", "made it");
+        telemetry.update();
 
     }
 

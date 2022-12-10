@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
 
 @Autonomous
-//@Disabled
+@Disabled
 
 public class redCornerCone extends AutoBase {
 
