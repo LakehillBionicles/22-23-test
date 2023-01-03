@@ -4,8 +4,10 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @Autonomous
-@Disabled
+//@Disabled
 
 public class testEncoderValues extends AutoBase {
 
@@ -16,6 +18,12 @@ public class testEncoderValues extends AutoBase {
 
         while (opModeIsActive()){
 
+
+
+            robot.distSensorLowerArm.getDistance(DistanceUnit.CM);
+            telemetry.addData("distance is:", robot.distSensorLowerArm.getDistance(DistanceUnit.CM));
+            telemetry.update();
+
         //test color values
 
 
@@ -23,12 +31,12 @@ public class testEncoderValues extends AutoBase {
 
 
 
-            encoderDrive(0.5, 24, 24, 20);
+            //encoderDrive(0.5, 24, 24, 20);
 
 
-            sleep(1000);
+            //sleep(1000);
 
-            telemetry.addData("fpd", robot.fpd.getCurrentPosition());
+            /*telemetry.addData("fpd", robot.fpd.getCurrentPosition());
             telemetry.addData("fsd", robot.fsd.getCurrentPosition());
             telemetry.addData("bpd", robot.bpd.getCurrentPosition());
             telemetry.addData("bsd", robot.bsd.getCurrentPosition());
@@ -40,7 +48,7 @@ public class testEncoderValues extends AutoBase {
             telemetry.update();
 
 
-            sleep(10000);
+            sleep(10000);*/
 
 
 

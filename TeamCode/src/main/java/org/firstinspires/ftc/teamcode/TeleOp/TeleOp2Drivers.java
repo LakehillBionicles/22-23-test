@@ -174,14 +174,14 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         //sldkfjalsdhgsadhf;ajsdlfj
 
         if (gamepad2.left_bumper) { //goes up
-            robot.POW.setPower(1.0);
+            robot.POW.setPower(.5);
             //robot.SOW.setPower(1);
-            robot.BOW.setPower(-1.0);
+            robot.BOW.setPower(-.5);
             //robot.arm2.setPower(1);
         } else if (gamepad2.right_bumper){
-            robot.POW.setPower(-1);
+            robot.POW.setPower(-.5);
             //robot.SOW.setPower(-1);
-            robot.BOW.setPower(1);
+            robot.BOW.setPower(.5);
             //robot.arm2.setPower(-1);
         } else if (!(gamepad2.left_bumper) && !(gamepad2.right_bumper) && !gamepad2.a && !gamepad2.b && !gamepad2.y && !gamepad2.x){
             robot.POW.setPower(0.0);

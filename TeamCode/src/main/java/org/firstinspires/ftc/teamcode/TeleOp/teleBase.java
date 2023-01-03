@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.TemaruHardware;
+import org.firstinspires.ftc.teamcode.auto.AutoBase;
 
 //@TeleOp
 //@Disabled
@@ -19,7 +20,7 @@ import org.firstinspires.ftc.teamcode.TemaruHardware;
 //////////////////////gamepad1 is drive; gamepad 2 is arm/hand/pre-set distances//////////////////////
 
 
-public class teleBase extends LinearOpMode { //gamepad1 is drive; gamepad 2 is arm/hand/pre-set distances
+public class teleBase extends AutoBase { //gamepad1 is drive; gamepad 2 is arm/hand/pre-set distances
     TemaruHardware robot = new TemaruHardware();
 
 

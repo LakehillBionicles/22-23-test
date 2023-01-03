@@ -32,14 +32,14 @@ public class TestMotor extends LinearOpMode {
         //robot.init(hardwareMap);
 
 
-        testMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
-        testMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
+        //testMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
+        //testMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        testMotor1.setPower(0);
-        testMotor2.setPower(0);
+        //testMotor1.setPower(0);
+        //testMotor2.setPower(0);
 
-        testMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        testMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //testMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //testMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
@@ -52,13 +52,13 @@ public class TestMotor extends LinearOpMode {
 
             if (gamepad1.left_trigger > 0) {
 
-                testMotor1.setPower(1);
-                testMotor2.setPower(1);
+                testMotor1.setPower(0.5);
+                testMotor2.setPower(-.5);
 
             } else if (gamepad1.right_trigger > 0) {
 
-                testMotor1.setPower(-1);
-                testMotor2.setPower(-1);
+                testMotor1.setPower(-.5);
+                testMotor2.setPower(.5);
 
             } else {
 
