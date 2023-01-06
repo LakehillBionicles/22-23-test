@@ -33,7 +33,9 @@ public class TemaruHardware extends LinearOpMode {
     public ColorSensor colorSensorPort = null;
     public ColorSensor colorSensorStar = null;
 
-    public DistanceSensor distSensorHorizontal = null;
+    public ColorSensor colorSensorHand = null;
+
+    public DistanceSensor distSensorHand = null;
 
     public DistanceSensor distSensorArm = null;
     public DistanceSensor distSensorLowerArm = null;
@@ -97,7 +99,10 @@ public class TemaruHardware extends LinearOpMode {
         colorSensorPort = hwMap.get(ColorSensor.class, "colorSensorPort");
         colorSensorStar = hwMap.get(ColorSensor.class, "colorSensorStar");
 
-        distSensorHorizontal = hwMap.get(DistanceSensor.class, "distSensorHorizontal");
+        colorSensorHand = hwMap.get(ColorSensor.class, "colorSenseHand");
+
+
+        distSensorHand = hwMap.get(DistanceSensor.class, "distSensorHand");
 
         distSensorArm = hwMap.get(DistanceSensor.class, "distSensorArm");
         distSensorLowerArm = hwMap.get(DistanceSensor.class, "distSensorLowerArm");

@@ -38,6 +38,15 @@ public class AutoBase extends LinearOpMode {
     public double newTargetX = 0;
     public double newTargetY = 0;
 
+    //////////////////////////////////// ODOMETRY WHEEL CALCULATIONS //////////////////////////////////////////////
+    public final double COUNTS_PER_ODO_REV = 8192;
+    public final double ODO_GEAR_REDUCTION = (1.0); // This is < 1.0 if geared UP
+    public final double ODO_WHEEL_DIAMETER_INCHES = 2.0;  // For figuring circumference
+    public final double ODO_COUNTS_PER_INCH = ((COUNTS_PER_ODO_REV * ODO_GEAR_REDUCTION) /
+            (ODO_WHEEL_DIAMETER_INCHES * 3.1415));
+
+    public final double odoWheelGap = 11.5;
+
     //////////////////////////////// LOCATIONS ////////////////////////////////////////////////
     public double POWlocation = 0;
     public double SPOWlocation = 0;
@@ -108,14 +117,7 @@ public class AutoBase extends LinearOpMode {
     static final double COUNTS_PER_INCH = 1.2 * 4 * ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415));
 
-    //////////////////////////////////// ODOMETRY WHEEL CALCULATIONS //////////////////////////////////////////////
-    static final double COUNTS_PER_ODO_REV = 8192;
-    static final double ODO_GEAR_REDUCTION = (1.0); // This is < 1.0 if geared UP
-    static final double ODO_WHEEL_DIAMETER_INCHES = 2.0;  // For figuring circumference
-    static final double ODO_COUNTS_PER_INCH = ((COUNTS_PER_ODO_REV * ODO_GEAR_REDUCTION) /
-            (ODO_WHEEL_DIAMETER_INCHES * 3.1415));
 
-    static final double odoWheelGap = 11.5;
 
 
     static final String sleeveColor = "";
@@ -442,8 +444,8 @@ public class AutoBase extends LinearOpMode {
             //changed all below to pos (both f and s were neg)
 
 
-            while (robot.distSensorHorizontal.getDistance(DistanceUnit.CM) > 9 && runtime.seconds()<timeoutS && opModeIsActive()) {//Is 13 correct?
-                telemetry.addData("horizontal", robot.distSensorHorizontal.getDistance(DistanceUnit.CM));
+            while (robot.distSensorHand.getDistance(DistanceUnit.CM) > 9 && runtime.seconds()<timeoutS && opModeIsActive()) {//Is 13 correct?
+                telemetry.addData("horizontal", robot.distSensorHand.getDistance(DistanceUnit.CM));
                 telemetry.update();
                 //Do nothing letting motors run until distance sensor sees a cone
             }

@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.TemaruHardware;
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
 
 //@TeleOp
-//@Disabled
+@Disabled
 
 //////////////////////gamepad1 is drive; gamepad 2 is arm/hand/pre-set distances//////////////////////
 
@@ -33,6 +33,45 @@ public class teleBase extends AutoBase { //gamepad1 is drive; gamepad 2 is arm/h
     public void runOpMode() {
 
         robot.init(hardwareMap);
+
+        /*public void driveMethod(double stickX, double stickY){ //LEFT
+            if(stickX > 0.2 || stickX < -0.2 || stickY > 0.2 ||stickY < -0.2){
+                //if you move the left joystick, run the DRIVE method until the joystick goes back to "zero"
+
+                while(stickX > 0.2 || stickX < -0.2 || stickY > 0.2 || stickY < -0.2) {
+
+                    drive();
+                }
+                robot.fpd.setPower(0);
+                robot.bpd.setPower(0);
+                robot.fsd.setPower(0);
+                robot.bsd.setPower(0);
+            }else if(gamepad1.right_stick_x > 0.15 || gamepad1.right_stick_x < -0.15&& gamepad1.left_stick_y==0 &&  gamepad1.left_stick_x==0){
+                //if you move the right joystick, run the TURN method until the joystick goes back to "zero"
+                while(gamepad1.right_stick_x > 0.15 || gamepad1.right_stick_x < -0.15&& gamepad1.left_stick_y==0 &&  gamepad1.left_stick_x==0){
+                    turn();
+                }
+                robot.fpd.setPower(0);
+                robot.bpd.setPower(0);
+                robot.fsd.setPower(0);
+                robot.bsd.setPower(0);
+            }else{
+                robot.fpd.setPower(0);
+                robot.bpd.setPower(0);
+                robot.fsd.setPower(0);
+                robot.bsd.setPower(0);
+            }
+
+
+
+              }
+
+
+
+
+        }/*
+
+
 
         waitForStart();
 
@@ -80,7 +119,7 @@ public class teleBase extends AutoBase { //gamepad1 is drive; gamepad 2 is arm/h
 
         }
 
-       /* public void drive(double stickX double stickY) { //omni strafe ||Testing||
+       public void drive(double stickX double stickY) { //omni strafe ||Testing||
             double angle = Math.atan2(stickY, stickX);
             double magnitude = Math.sqrt(Math.pow(stickY, 2) + Math.pow(stickX, 2));
             if (stickX > 0.2 || stickX < -0.2 || stickY < -0.2 || stickY > 0.2) {
@@ -89,7 +128,7 @@ public class teleBase extends AutoBase { //gamepad1 is drive; gamepad 2 is arm/h
                bpd.setPower((Math.sin(angle + Math.PI / 4)) * magnitude * speed);
                fpd.setPower((Math.sin(angle - Math.PI / 4)) * magnitude * speed);
                 bsd.setPower((Math.sin(angle - Math.PI / 4)) * magnitude * speed);
-            }*/
+            }
     }
 
     public void turn() {
@@ -123,7 +162,7 @@ public class teleBase extends AutoBase { //gamepad1 is drive; gamepad 2 is arm/h
             robot.bsd.setPower(0.0);
             robot.fsd.setPower(gamepad1.right_stick_y);
             telemetry.addData("bs","");
-*/
+non commented out is below
         } else {
             robot.fpd.setPower(0);
             robot.bpd.setPower(0);
@@ -131,11 +170,11 @@ public class teleBase extends AutoBase { //gamepad1 is drive; gamepad 2 is arm/h
             robot.bsd.setPower(0);
 
         }
-    }
+    }*/
 
     //lk;jfl;asdjflk;asdhg;sdfj;lk
 
-    public void drive() {
+   /* public void drive() {
 
 
         if (gamepad1.left_stick_x > 0.2 && gamepad1.right_stick_y < 0.2 && gamepad1.right_stick_y > -0.2) {//right
@@ -166,7 +205,7 @@ public class teleBase extends AutoBase { //gamepad1 is drive; gamepad 2 is arm/h
             robot.fsd.setPower(0);
             robot.bsd.setPower(0);
         }
-    }
+    }/*
 
 
 
@@ -204,7 +243,7 @@ public class teleBase extends AutoBase { //gamepad1 is drive; gamepad 2 is arm/h
 
     }*/
 
-    public void servoHand(){
+    /*public void servoHand(){
         if (gamepad2.left_trigger > 0){
             telemetry.addData("please work", "yay");
             telemetry.update();
@@ -287,7 +326,7 @@ public class teleBase extends AutoBase { //gamepad1 is drive; gamepad 2 is arm/h
         // if current - target is here this power
 
 
-    }
+    /*}
 
 
 
@@ -331,4 +370,5 @@ public class teleBase extends AutoBase { //gamepad1 is drive; gamepad 2 is arm/h
     }*/
 
 
+}
 }

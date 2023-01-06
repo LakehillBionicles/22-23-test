@@ -9,6 +9,9 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.TemaruHardware;
@@ -28,6 +31,9 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     double speedStrafe = 0.7;
     double startHeading;
     boolean isMoving;
+
+    public ElapsedTime runtime = new ElapsedTime(); //might cause an error (not sure)
+
 
     public void runOpMode() {
 
@@ -76,6 +82,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             servoHand();
             setArmToHeight();
             displayDistance();
+            fourBar();
 
         }
 
@@ -131,8 +138,6 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
         }
     }
-
-    //lk;jfl;asdjflk;asdhg;sdfj;lk
 
     public void drive() {
 
@@ -191,17 +196,67 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         } else {}
     }
 
-    /*public void hand(){
-        if (gamepad1.left_trigger > 0){
-            robot.hand.setPower(1.0);
-        } else if (gamepad1.right_trigger > 0){
-            robot.hand.setPower(-1.0);
-        } else {
-            robot.hand.setPower(0.0);
-        }
-        //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
 
-    }*/
+    public void fourBar(){
+        if(robot.distSensorHand.getDistance(DistanceUnit.CM) < 13 && (robot.colorSensorHand.equals("red")|| robot.colorSensorHand.equals("blue"))){//Don't know real distance
+            robot.servoFinger.setPosition(1);
+            sleep(50);
+            fourBarEncoders(1, 50, 50, 5);
+        }else if(gamepad2.left_stick_y > 0.2|| gamepad2.left_stick_y<-0.2){
+            robot.SOW.setPower(gamepad2.left_stick_y);
+            robot.arm2.setPower(gamepad2.left_stick_y);
+        }
+    }
+
+    public void fourBarEncoders(double speed, double leftInches, double rightInches,double timeoutS){
+        robot.SOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int newLeftTarget = 0;
+        int newRightTarget = 0;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = (int) ((leftInches)* (288/360));
+            newRightTarget = (int) ((rightInches)* (288/360));//288 is counts per revolution of core hex
+
+            robot.SOW.setTargetPosition(newLeftTarget);
+            robot.arm2.setTargetPosition(newRightTarget);
+
+            robot.SOW.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            int NT1 = (int) (newLeftTarget * 0.981); //fp
+            int NT2 = (int) (newRightTarget * 0.981); //fp
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+
+            robot.SOW.setPower(Math.abs(speed));
+            robot.arm2.setPower(Math.abs(speed));
+
+            while (robot.SOW.isBusy() && robot.SOW.isBusy() && opModeIsActive() && (runtime.seconds() < timeoutS) &&
+                    ((Math.abs(robot.SOW.getCurrentPosition()) < Math.abs(NT1)) ||
+                            (Math.abs(robot.SOW.getCurrentPosition()) < Math.abs(NT1)) ||
+                            (Math.abs(robot.arm2.getCurrentPosition()) < Math.abs(NT2))))
+            {
+                //empty loop body
+            }
+
+
+            robot.SOW.setPower(0);
+            robot.arm2.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.SOW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            sleep(40);
+        }
+    }
+
+
+
 
     public void servoHand(){
         if (gamepad2.left_trigger > 0){
@@ -222,7 +277,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         telemetry.addData("middle arm:", robot.distSensorMiddleArm.getDistance(DistanceUnit.CM));
         telemetry.addData("distance:", robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM));
 
-        telemetry.addData("horizontal", robot.distSensorHorizontal.getDistance(DistanceUnit.CM));
+        telemetry.addData("hand", robot.distSensorHand.getDistance(DistanceUnit.CM));
         telemetry.update();
 
         //small distance 39
@@ -297,8 +352,8 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     public void doLights(){
         if (robot.touchSensorPort.isPressed() && robot.touchSensorStar.isPressed()){
             robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
-        } else if (robot.distSensorHorizontal.getDistance(DistanceUnit.CM) < 8){
-            robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
+        //} else if (robot.distSensorHand.getDistance(DistanceUnit.CM) < 8){
+           // robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
         } else if (robot.touchSensorArm.isPressed()){
             robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED); //this should make it works with the dist. sensor
         }else {
