@@ -99,7 +99,7 @@ public class TemaruHardware extends LinearOpMode {
         colorSensorPort = hwMap.get(ColorSensor.class, "colorSensorPort");
         colorSensorStar = hwMap.get(ColorSensor.class, "colorSensorStar");
 
-        colorSensorHand = hwMap.get(ColorSensor.class, "colorSenseHand");
+        colorSensorHand = hwMap.get(ColorSensor.class, "colorSensorHand");
 
 
         distSensorHand = hwMap.get(DistanceSensor.class, "distSensorHand");

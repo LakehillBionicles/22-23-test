@@ -224,7 +224,7 @@ public class TeleOp1Driver extends LinearOpMode {
             telemetry.addData("middle arm:", robot.distSensorMiddleArm.getDistance(DistanceUnit.CM));
             telemetry.addData("distance:", robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM));
 
-            telemetry.addData("horizontal", robot.distSensorHorizontal.getDistance(DistanceUnit.CM));
+            telemetry.addData("horizontal", robot.distSensorHand.getDistance(DistanceUnit.CM));
             telemetry.update();
 
             //small distance 39
@@ -299,7 +299,7 @@ public class TeleOp1Driver extends LinearOpMode {
         public void doLights(){
             if (robot.touchSensorPort.isPressed() && robot.touchSensorStar.isPressed()){
                 robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
-            } else if (robot.distSensorHorizontal.getDistance(DistanceUnit.CM) < 8){
+            } else if (robot.distSensorHand.getDistance(DistanceUnit.CM) < 8){
                 robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
             } else if (robot.touchSensorArm.isPressed()){
                 robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED); //this should make it works with the dist. sensor

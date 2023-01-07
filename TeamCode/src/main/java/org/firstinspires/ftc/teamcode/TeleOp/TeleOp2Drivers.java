@@ -79,7 +79,8 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             armLift();
             doLights();
             //hand();
-            servoHand();
+            //servoHand();
+            fourBarControllerTest();
             setArmToHeight();
             displayDistance();
             fourBar();
@@ -179,21 +180,35 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         //sldkfjalsdhgsadhf;ajsdlfj
 
         if (gamepad2.left_bumper) { //goes up
-            robot.POW.setPower(.5);
+            //robot.POW.setPower(1);
             //robot.SOW.setPower(1);
-            robot.BOW.setPower(-.5);
-            //robot.arm2.setPower(1);
+            robot.BOW.setPower(1);
+            robot.arm2.setPower(1);
         } else if (gamepad2.right_bumper){
-            robot.POW.setPower(-.5);
+            //robot.POW.setPower(-1);
             //robot.SOW.setPower(-1);
-            robot.BOW.setPower(.5);
-            //robot.arm2.setPower(-1);
+            robot.BOW.setPower(-1);
+            robot.arm2.setPower(-1);
         } else if (!(gamepad2.left_bumper) && !(gamepad2.right_bumper) && !gamepad2.a && !gamepad2.b && !gamepad2.y && !gamepad2.x){
-            robot.POW.setPower(0.0);
+            //robot.POW.setPower(0.0);
             //robot.SOW.setPower(0.0);
             robot.BOW.setPower(0.0); //previously used to be 0.1 in order to keep arm up
-            //robot.arm2.setPower(0.0);
+            robot.arm2.setPower(0.0);
         } else {}
+    }
+
+    public void fourBarControllerTest(){
+        if (gamepad2.left_trigger > 0){
+            robot.SOW.setPower(-.5);
+
+        } else if (gamepad2.right_trigger > 0){
+            robot.SOW.setPower(.3);
+
+        } else {
+            robot.SOW.setPower(0.0);
+        }
+
+
     }
 
 
@@ -204,7 +219,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             fourBarEncoders(1, 50, 50, 5);
         }else if(gamepad2.left_stick_y > 0.2|| gamepad2.left_stick_y<-0.2){
             robot.SOW.setPower(gamepad2.left_stick_y);
-            robot.arm2.setPower(gamepad2.left_stick_y);
+            //robot.arm2.setPower(gamepad2.left_stick_y);
         }
     }
 
@@ -258,7 +273,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
 
 
-    public void servoHand(){
+    /*public void servoHand(){
         if (gamepad2.left_trigger > 0){
             telemetry.addData("please work", "yay");
             telemetry.update();
@@ -269,7 +284,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         }
         //for reference w/in the setPos we had this instead: (robot.flippyBox.getPosition() + .081)
 
-    }
+    }*/
 
     public void displayDistance(){
         telemetry.addData("upper arm:", robot.distSensorArm.getDistance(DistanceUnit.CM));
