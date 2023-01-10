@@ -19,10 +19,14 @@ public class testEncoderValues extends AutoBase {
         while (opModeIsActive()){
 
 
-
-            robot.distSensorLowerArm.getDistance(DistanceUnit.CM);
-            telemetry.addData("distance is:", robot.distSensorLowerArm.getDistance(DistanceUnit.CM));
+            robot.arm2.getCurrentPosition();
+            telemetry.addData("encoder pos:", robot.arm2.getCurrentPosition());
             telemetry.update();
+
+
+
+
+
 
         //test color values
 
