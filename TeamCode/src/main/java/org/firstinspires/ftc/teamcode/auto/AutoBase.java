@@ -21,8 +21,8 @@ import java.util.ArrayList;
 public class AutoBase extends LinearOpMode {
 
     public TemaruHardware robot = new TemaruHardware();
-    BNO055IMU imu;
-    Orientation angles;
+    //BNO055IMU imu;
+    //Orientation angles;
 
 
     static final double FEET_PER_METER = 3.28084;

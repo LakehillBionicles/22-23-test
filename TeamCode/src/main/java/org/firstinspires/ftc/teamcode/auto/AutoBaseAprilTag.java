@@ -31,13 +31,15 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
+
+
 import java.util.List;
 import java.util.ArrayList;
 
 public class AutoBaseAprilTag extends LinearOpMode {
 
     TemaruHardware robot = new TemaruHardware();
-    BNO055IMU imu;
+    //BNO055IMU imu;
     Orientation angles;
 //The lines 43-66 are for detecting April Tags
     OpenCvCamera camera;
@@ -714,13 +716,13 @@ public class AutoBaseAprilTag extends LinearOpMode {
 
 
     public void updateAngles() {
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        //BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        //parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        //parameters.calibrationDataFile = "BNO055IMUCalibration.json";
 
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS); //NullPointerException!!??
+        //imu = hardwareMap.get(BNO055IMU.class, "imu");
+        //imu.initialize(parameters);
+        //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS); //NullPointerException!!??
     }
 
     void tagToTelemetry(AprilTagDetection detection)
