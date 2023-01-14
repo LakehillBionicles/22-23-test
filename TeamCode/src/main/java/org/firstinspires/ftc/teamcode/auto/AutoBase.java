@@ -166,9 +166,12 @@ public class AutoBase extends LinearOpMode {
 
         robot.POW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.BOW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.SOW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        robot.POW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.BOW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -429,43 +432,6 @@ public class AutoBase extends LinearOpMode {
             sleep(40);
         }
     }
-    //DriveUntilDist doesn't work no idea why. Motors just don't turn on
-    public void driveUntilDist(double speed, double timeoutS) {  //method to drive until dist. sensor reads.../
-
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            runtime.reset();
-            robot.fpd.setPower(-0.2);
-            robot.fsd.setPower(-0.2);
-            robot.bsd.setPower(0.2);
-            robot.bpd.setPower(0.2);
-            //changed all below to pos (both f and s were neg)
-
-
-            while (robot.distSensorHand.getDistance(DistanceUnit.CM) > 9 && runtime.seconds()<timeoutS && opModeIsActive()) {//Is 13 correct?
-                telemetry.addData("horizontal", robot.distSensorHand.getDistance(DistanceUnit.CM));
-                telemetry.update();
-                //Do nothing letting motors run until distance sensor sees a cone
-            }
-
-            robot.fpd.setPower(0);
-            robot.fsd.setPower(0);
-            robot.bsd.setPower(0);
-            robot.bpd.setPower(0);
-            robot.fpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.fsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.bpd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.bsd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            // Turn off RUN_TO_POSITION
-            /*robot.fpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.fsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.bsd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.bpd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
-            sleep(40);
-        }
-    }
 
     public void setMotorDirTurn(){
         robot.fsd.setDirection(DcMotorSimple.Direction.REVERSE); //Positive is counterclockwise
@@ -554,10 +520,6 @@ public class AutoBase extends LinearOpMode {
 
 
     }
-
-
-
-
 
     public void sideways(double speed, double frontInches, double backInches, double timeoutS) { //positive is right
         int newFrontTarget = 0;
@@ -704,19 +666,24 @@ public class AutoBase extends LinearOpMode {
         }
     }
 
+    public void resetEncoderTouch (){
+        if(robot.touchSensorStar.isPressed() && robot.touchSensorPort.isPressed()){
+            robot.SOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.POW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.BOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        } else {}
 
+    }
 
     public void armLift ( double speed, double inches, double timeoutS){ //right now this function only lifts to the highest pole
-
-
 
         inches = inches / (2*3.14*23.8) * 560;
         // inches = inches*((560*23.8)/25.4);
         robot.BOW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.SOW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.BOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.SOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int newTarget = 0;
 
@@ -724,39 +691,66 @@ public class AutoBase extends LinearOpMode {
 
             newTarget = (int) inches; //inches * this.COUNTS_PER_INCH?
             robot.BOW.setTargetPosition(newTarget);
-            robot.arm2.setTargetPosition(newTarget);
+            robot.SOW.setTargetPosition(newTarget);
             robot.BOW.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.SOW.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             int NT = (int) (newTarget * 0.981); //fp
             runtime.reset();
             robot.BOW.setPower(Math.abs(speed));
-            robot.arm2.setPower(Math.abs(speed*0.9));//0.9 is encoder ticks of arm 1 over arm2
+            robot.SOW.setPower(Math.abs(speed*0.9));//0.9 is encoder ticks of arm 1 over arm2
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) && robot.BOW.isBusy() &&
                     ((Math.abs(robot.BOW.getCurrentPosition()) < Math.abs(NT)))) {
             }
             robot.BOW.setPower(0.6);
-            robot.arm2.setPower(0.6);
+            robot.SOW.setPower(0.6);
             robot.BOW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.SOW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
     }
 
-    public void armStayUp(){
-        while (opModeIsActive()){
+    public void armLiftDistance (double position){ //right now this function only lifts to the highest pole
+        robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - position) * (3.1415 / 4) / 85)));
+        robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - position) * (3.1415 / 4) / 85)));
+    }
+
+    public void armRunAllTheTime(){
+        if (opModeIsActive()) {
             robot.BOW.setPower(0.1);
-            robot.arm2.setPower(0.1);
+            robot.SOW.setPower(0.1);
+        }
+    }
+
+    public void fourBar (double position){
+        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double FourBarCurrentPos;
+        double FourBarTarget;
+
+        FourBarCurrentPos = robot.arm2.getCurrentPosition();
+        FourBarTarget = 0.0;
+
+        FourBarTarget = position;
+        robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        int NT = (int) (FourBarTarget * 0.981);
+        robot.arm2.setPower(1.0);
+        robot.arm2.setPower(Math.sin((-113) - FourBarCurrentPos)* (3.1415 / 4));
+        telemetry.addData("yay", "");
+        telemetry.update();
+    }
+
+    public void handGrab(){
+        if ((robot.distSensorHand.getDistance(DistanceUnit.CM) < 13) && (robot.colorSensorHand.equals("red") || robot.colorSensorHand.equals("blue"))){
+            telemetry.addData("i see:", "cone");
+            telemetry.update();
+            robot.servoFinger.setPosition(0.45);
         }
     }
 
     public void handDrop () {
         robot.servoFinger.setPosition(0.0);
-        sleep(1500); //this wait may need to be longer
-        robot.servoFinger.setPosition(1.0);
+        //might need to add a sleep an add in a second point if it dosen't drop fast enough
     }
-
-
 
     public void setMotorDir () { //make sure correct - not 100% sure
         robot.fsd.setDirection(DcMotorSimple.Direction.REVERSE); //forward
@@ -856,40 +850,15 @@ public class AutoBase extends LinearOpMode {
         return colorPort;
     }
 
-    public void resetTicks() {
-        resetLeftTicks();
-        resetFrontTicks();
-        resetRightTicks();
-    }
-    public void resetLeftTicks() {
-        POWPos = robot.POW.getCurrentPosition();
-    }
-    public int getLeftTicks() {
-        return robot.POW.getCurrentPosition() - POWPos;
-    }
-    public void resetRightTicks() {
-        SOWPos = robot.SOW.getCurrentPosition();
-    }
-    public int getRightTicks() {
-        return robot.SOW.getCurrentPosition() - SOWPos;
-    }
-    public void resetFrontTicks() {
-        BOWPos = robot.BOW.getCurrentPosition();
-    }
-    public int getFrontTicks() {
-        return robot.BOW.getCurrentPosition() - BOWPos;
-    }
 
 
 
 
 
 
-    public void blueParkingMethod (){
 
 
 
-    }
 
     /*public void initVuforia() {
 

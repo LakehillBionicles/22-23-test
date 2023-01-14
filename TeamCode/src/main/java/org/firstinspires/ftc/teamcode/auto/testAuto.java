@@ -22,7 +22,12 @@ public class testAuto extends AutoBase {
         while (opModeIsActive()) {
 
 
-            armLift(1.0, 3200, 30);
+            handGrab();
+            sleep(100);
+            handDrop();
+            sleep(100);
+
+
             telemetry.addData("arm", "lift well");
             telemetry.update();
             sleep(20000);

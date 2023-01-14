@@ -189,20 +189,20 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
     public void setArmToHeight(){
         if (gamepad2.a) { //cone distance
-            robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 25) * (3.1415 / 4) / 85)));
-            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 25) * (3.1415 / 4) / 85)));
+            robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 25) * (3.1415 / 4) / 85)));
+            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 25) * (3.1415 / 4) / 85)));
         }
         if (gamepad2.x){ //small distance
-            robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)  - 60) * (3.1415 / 4) / 85)));
-            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 60) * (3.1415 / 4) / 85)));
+            robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)  - 60) * (3.1415 / 4) / 85)));
+            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 60) * (3.1415 / 4) / 85)));
         }
         if (gamepad2.y){ //medium distance
-            robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
-            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
+            robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
+            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
         }
         if (gamepad2.b){ //large distance -- might need to comment out
-            robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
-            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
+            robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
+            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
         }
 
 
@@ -234,7 +234,8 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
 
 
-    public void fourBarPID2(){ //uses 2-3 predetermined targets with no way for driver to adjust
+
+    public void fourBarPID2() { //uses 2-3 predetermined targets with no way for driver to adjust
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         double FourBarCurrentPos;
         double FourBarTarget;
@@ -243,28 +244,30 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         FourBarTarget = 0.0;
 
 
-        if(robot.gamepad2.dpad_up){
+        if (gamepad2.dpad_up) {
             FourBarTarget = 13; //replace this value with an actual number
             robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             int NT = (int) (FourBarTarget * 0.981); //fp
             robot.arm2.setPower(1.0);
-            //robot.arm2.setPower(Math.sin((-113) - FourBarCurrentPos)* (3.1415 / 4));
+            robot.arm2.setPower(Math.sin((-113) - FourBarCurrentPos)* (3.1415 / 4));
+            telemetry.addData("yay", "");
+            telemetry.update();
 
-        } else if(robot.gamepad2.left_bumper){
-            FourBarTarget = 13; //replace this value with an actual number
-            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            int NT = (int) (FourBarTarget * 0.981); //fp
-            robot.arm2.setPower(1.0);
-
-            //robot.arm2.setPower(Math.sin((-113) - FourBarCurrentPos)* (3.1415 / 4));
-
-        } else if(robot.gamepad2.right_bumper){
+        } else if (gamepad2.left_bumper) {
             FourBarTarget = 13; //replace this value with an actual number
             robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             int NT = (int) (FourBarTarget * 0.981); //fp
             robot.arm2.setPower(1.0);
 
-            //robot.arm2.setPower(Math.sin((25) - FourBarCurrentPos)* (3.1415 / 4));
+            robot.arm2.setPower(Math.sin((-113) - FourBarCurrentPos)* (3.1415 / 4));
+
+        } else if (gamepad2.right_bumper) {
+            FourBarTarget = 13; //replace this value with an actual number
+            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            int NT = (int) (FourBarTarget * 0.981); //fp
+            robot.arm2.setPower(1.0);
+
+            robot.arm2.setPower(Math.sin((25) - FourBarCurrentPos)* (3.1415 / 4));
 
         } else {
             robot.arm2.setPower(0);
@@ -272,11 +275,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             //-113 at cone height to approx. 25 at cone drop height
 
 
-
         }
-
-
-
 
 
         //power to drive both up and down
@@ -288,20 +287,11 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         //need variable for targets and error in order to run to position
 
 
+
+
+
     }
 
-
-
-
-
-
-    public void fourBar(){
-        if(robot.distSensorHand.getDistance(DistanceUnit.CM) < 13 && (robot.colorSensorHand.equals("red")|| robot.colorSensorHand.equals("blue"))){//Don't know real distance
-            robot.servoFinger.setPosition(0);
-            sleep(50);
-            //code for four bar move??????? don't know if need here or not but maybe
-       }
-    }
 
     public void fourBarEncoders(double speed, double leftInches, double rightInches,double timeoutS){
         robot.SOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //we switched arm2 and SOW, not sure why they're used together here
@@ -377,10 +367,9 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
     public void displayDistance(){
         telemetry.addData("upper arm:", robot.distSensorArm.getDistance(DistanceUnit.CM));
-        telemetry.addData("second upper arm:", robot.distSensorHighArm.getDistance(DistanceUnit.CM));
         telemetry.addData("lower arm:", robot.distSensorLowerArm.getDistance(DistanceUnit.CM));
-        telemetry.addData("middle arm:", robot.distSensorMiddleArm.getDistance(DistanceUnit.CM));
-        telemetry.addData("distance:", robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) + robot.distSensorMiddleArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM));
+        telemetry.addData("middle arm:", robot.distSensorHighArm.getDistance(DistanceUnit.CM));
+        telemetry.addData("distance:", robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM));
 
         telemetry.addData("hand", robot.distSensorHand.getDistance(DistanceUnit.CM));
         telemetry.update();
@@ -400,8 +389,8 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     public void doLights(){
         if (robot.touchSensorPort.isPressed() && robot.touchSensorStar.isPressed()){
             robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_WITH_GLITTER);
-        //} else if (robot.distSensorHand.getDistance(DistanceUnit.CM) < 8){
-           // robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
+            //} else if (robot.distSensorHand.getDistance(DistanceUnit.CM) < 8){
+            // robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
         } else if (robot.touchSensorArm.isPressed()){
             robot.lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED); //this should make it works with the dist. sensor
         }else {
