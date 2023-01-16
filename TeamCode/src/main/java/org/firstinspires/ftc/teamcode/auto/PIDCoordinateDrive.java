@@ -195,6 +195,7 @@ public class PIDCoordinateDrive extends AutoBase {
         robot.bpd.setPower(0);
         robot.fsd.setPower(0);
         robot.bsd.setPower(0);
+
         telemetry.addData("robotTheta:", robotTheta);
         telemetry.addData("robotX:", robotX);
         telemetry.addData("robotY:", robotY);

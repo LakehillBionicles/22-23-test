@@ -56,6 +56,26 @@ public class TemaruHardware extends LinearOpMode {
     public static final double closeHandPos = 0.0;
 
 
+    ////////////////////////////////////////////////////  ELBOW VARIABLES ///////////////////////////////////////////////
+   /* public double elbowDenominator;
+    public double elbowPosition;
+    public double elbowError;
+    public double lastElbowError;
+    public double elbowTime = 0;
+    public double newElbowTarget;
+    public double elbowDeriv;
+    public double elbowIntegralSum = 0;
+    public double elbowIntegralSumLimit = 0.25;
+
+    public double elbowKp = 1.0;
+    public double elbowKd = 1.0;
+    public double elbowKi = 1.0;
+
+    public double elbowPower;
+*/
+
+
+
     private ElapsedTime runtime = new ElapsedTime();
 
 
@@ -132,7 +152,7 @@ public class TemaruHardware extends LinearOpMode {
 
 
 
-         //check direction
+        //check direction
         arm2.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
 
         //hand.setDirection(DcMotorSimple.Direction.FORWARD);

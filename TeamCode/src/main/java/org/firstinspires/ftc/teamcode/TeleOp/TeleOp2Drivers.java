@@ -32,12 +32,31 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     double startHeading;
     boolean isMoving;
 
+    ////////////////////////////////////////////////////  ELBOW VARIABLES ///////////////////////////////////////////////
+    public double elbowDenominator;
+    public double elbowPosition;
+    public double elbowError;
+    public double lastElbowError;
+    public double elbowTime = 0;
+    public double newElbowTarget;
+    public double elbowDeriv;
+    public double elbowIntegralSum = 0;
+    public double elbowIntegralSumLimit = 0.25;
+
+    public double elbowKp = 1.0;
+    public double elbowKd = 1.0;
+    public double elbowKi = 1.0;
+
+    public double elbowPower;
+
     public ElapsedTime runtime = new ElapsedTime(); //might cause an error (not sure)
 
 
     public void runOpMode() {
 
         robot.init(hardwareMap);
+
+        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
 
@@ -74,6 +93,16 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
                 robot.fsd.setPower(0);
                 robot.bsd.setPower(0);
             }
+
+            if(gamepad2.dpad_up){
+
+
+                fourBarPID2(.5, 25, 5);
+
+
+            } else {
+                robot.arm2.setPower(0.0);
+            }
             //NEED
             //if you press a bumper, run the ARMLIFT method until the bumper is "unpressed"
             armLift();
@@ -82,7 +111,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             setArmToHeight();
             displayDistance();
             //fourBar();
-            fourBarPID2();
+            //fourBarPID2();
 
 
         }
@@ -190,19 +219,19 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     public void setArmToHeight(){
         if (gamepad2.a) { //cone distance
             robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 25) * (3.1415 / 4) / 85)));
-            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 25) * (3.1415 / 4) / 85)));
+            robot.SOW.setPower(-1 * (2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 25) * (3.1415 / 4) / 85))));
         }
         if (gamepad2.x){ //small distance
             robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)  - 60) * (3.1415 / 4) / 85)));
-            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 60) * (3.1415 / 4) / 85)));
+            robot.SOW.setPower(-1 * (2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) - 60) * (3.1415 / 4) / 85))));
         }
         if (gamepad2.y){ //medium distance
             robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
-            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85)));
+            robot.SOW.setPower(-1 * (2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 94) * (3.1415 / 4) / 85))));
         }
         if (gamepad2.b){ //large distance -- might need to comment out
             robot.BOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
-            robot.SOW.setPower(2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85)));
+            robot.SOW.setPower(-1 * (2 * -(Math.sin((robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM)- 98) * (3.1415 / 4) / 85))));
         }
 
 
@@ -235,8 +264,76 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
 
 
-    public void fourBarPID2() { //uses 2-3 predetermined targets with no way for driver to adjust
-        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    public void fourBarPID2(double maxElbowPower, double inputTargetPos, double elbowTol) { //uses 2-3 predetermined targets with no way for driver to adjust
+        elbowPosition = robot.arm2.getCurrentPosition();
+
+        newElbowTarget = (inputTargetPos);
+
+        elbowError = (newElbowTarget - elbowPosition);
+
+        telemetry.addData("elbow pos", elbowPosition);
+        telemetry.addData("new elbow target", newElbowTarget);
+        telemetry.addData("error", elbowError);
+        telemetry.addData("elbow time", getRuntime());
+        telemetry.update();
+
+        while (Math.abs(elbowError) > (elbowTol)){
+
+            elbowTime = getRuntime();
+
+            elbowDenominator = Math.max(Math.abs(elbowPower), 1);
+
+
+            telemetry.addData("in while loop", "yay");
+            telemetry.addData("elbowPower", elbowPower);
+            telemetry.addData("elbowDenominator", elbowDenominator);
+            telemetry.addData("power function", (elbowPower * maxElbowPower / elbowDenominator));
+            telemetry.addData("runtime", elbowTime);
+            telemetry.addData("elbow pos", elbowPosition);
+            telemetry.addData("new elbow target", newElbowTarget);
+            telemetry.addData("error", elbowError);
+            telemetry.update();
+
+            elbowPower = ((elbowKd * elbowDeriv) + (elbowKi * elbowIntegralSum) + (elbowKp * Math.signum(elbowError)));
+
+            robot.arm2.setPower(elbowPower * maxElbowPower / elbowDenominator);
+
+
+            if (Math.abs(elbowError) > Math.abs(elbowTol)){
+                elbowDeriv = ((elbowError - lastElbowError) / elbowTime);
+                elbowIntegralSum = (elbowIntegralSum + (elbowError * elbowTime));
+                if (elbowIntegralSum > elbowIntegralSumLimit){
+                    elbowIntegralSum = elbowIntegralSumLimit;
+                }
+                if (elbowIntegralSum < -elbowIntegralSumLimit){
+                    elbowIntegralSum = -elbowIntegralSumLimit;
+                }
+                elbowPower = ((elbowKd * elbowDeriv) + (elbowKi * elbowIntegralSum) + (elbowKp * Math.signum(elbowError)));
+                robot.arm2.setPower(elbowPower * maxElbowPower / elbowDenominator);
+            }
+            else{
+                elbowPower = 0;
+                robot.arm2.setPower(elbowPower);
+            }
+
+            elbowPosition = robot.arm2.getCurrentPosition();
+            elbowError = (newElbowTarget - elbowPosition);
+
+
+        }
+
+        telemetry.addData("out of while loop", "yay");
+        telemetry.update();
+
+        robot.arm2.setPower(0);
+
+    }
+
+
+
+
+
+       /* robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         double FourBarCurrentPos;
         double FourBarTarget;
 
@@ -275,22 +372,22 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             //-113 at cone height to approx. 25 at cone drop height
 
 
-        }
+        }*/
 
 
-        //power to drive both up and down
-        //track position using the encoder
-        //power will be a function of error
-        //error:
-        //same sin function???????? please work???
+    //power to drive both up and down
+    //track position using the encoder
+    //power will be a function of error
+    //error:
+    //same sin function???????? please work???
 
-        //need variable for targets and error in order to run to position
-
-
+    //need variable for targets and error in order to run to position
 
 
 
-    }
+
+
+
 
 
     public void fourBarEncoders(double speed, double leftInches, double rightInches,double timeoutS){
@@ -365,14 +462,21 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     }
 
 
+
+
     public void displayDistance(){
         telemetry.addData("upper arm:", robot.distSensorArm.getDistance(DistanceUnit.CM));
         telemetry.addData("lower arm:", robot.distSensorLowerArm.getDistance(DistanceUnit.CM));
         telemetry.addData("middle arm:", robot.distSensorHighArm.getDistance(DistanceUnit.CM));
         telemetry.addData("distance:", robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM));
 
+        telemetry.addData("arm pos", robot.arm2.getCurrentPosition());
+
+
         telemetry.addData("hand", robot.distSensorHand.getDistance(DistanceUnit.CM));
         telemetry.update();
+
+
 
         //small distance 39
         //medium distance 47
