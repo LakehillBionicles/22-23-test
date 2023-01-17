@@ -261,11 +261,6 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
 
 
-
-
-
-
-
     public void fourBarPID2(double maxElbowPower, double inputTargetPos, double elbowTol) { //uses 2-3 predetermined targets with no way for driver to adjust
         elbowPosition = robot.arm2.getCurrentPosition();
         newElbowTarget = (inputTargetPos);
@@ -277,6 +272,8 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         telemetry.addData("elbow time", getRuntime());
         telemetry.update();
 
+        //robot.arm2.setPower(.5);
+
         while (Math.abs(elbowError) > (elbowTol)) {
             elbowError = (newElbowTarget - elbowPosition);
 
@@ -286,7 +283,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
             //this used to be in an if loop, but it was just rechecking what got us into the while loop, so I deleted it
 
-            elbowDeriv = ((elbowError - lastElbowError) / elbowTime); //lastElbowError is only in this file here and when it is initialized, the same is true for lastThetaError in PIDCoordinateDrive, what is the point of these?
+            elbowDeriv = ((elbowError - lastElbowError) / elbowTime); //lastElbowError=0, it is only in this file here and when it is initialized, the same is true for lastThetaError in PIDCoordinateDrive, what is the point of these?
             elbowIntegralSum = (elbowIntegralSum + (elbowError * elbowTime));
 
             if (elbowIntegralSum > elbowIntegralSumLimit) {
@@ -298,7 +295,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
             elbowPower = ((elbowKd * elbowDeriv) + (elbowKi * elbowIntegralSum) + (elbowKp * Math.signum(elbowError)));
             robot.arm2.setPower(elbowPower * maxElbowPower / elbowDenominator);
-            //robot.arm2.setPower(.5); //try this if still not working
+            //robot.arm2.setPower(.5); //try this if still not working - didn't work
 
             elbowPosition = robot.arm2.getCurrentPosition();
             elbowError = (newElbowTarget - elbowPosition);
@@ -313,9 +310,8 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             telemetry.addData("elbow pos", elbowPosition);
             telemetry.addData("new elbow target", newElbowTarget);
             telemetry.addData("error", elbowError);
-            telemetry.addData("last elbow error", lastElbowError);
             telemetry.update();
-        }   
+        }
 
         telemetry.addData("out of while loop", "yay");
         telemetry.update();
