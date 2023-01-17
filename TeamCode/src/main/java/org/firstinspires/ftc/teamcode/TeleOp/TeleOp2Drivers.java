@@ -52,6 +52,11 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     public double elbowPower;
 
 
+    public double currentTheta;
+    public double thetaPower;
+    public double currentElbowPos;
+
+
 
     public ElapsedTime runtime = new ElapsedTime(); //might cause an error (not sure)
 
@@ -116,6 +121,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             servoHandZeroInput();
             setArmToHeight();
             displayDistance();
+            elbowHold();
             //fourBar();
             //fourBarPID2();
 
@@ -317,8 +323,20 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         telemetry.addData("out of while loop", "yay");
         telemetry.update();
 
-        robot.arm2.setPower(0);
+        //robot.arm2.setPower(0);
 
+    }
+
+    public void elbowHold(){
+        currentElbowPos = robot.arm2.getCurrentPosition();
+        currentTheta = (currentElbowPos/288)*(2*Math.PI);
+        if (currentElbowPos <= 180) {
+            thetaPower = Math.abs(Math.cos(currentTheta));
+        }
+        if (currentElbowPos > 180) {
+            thetaPower = -Math.abs((Math.cos(currentTheta)));
+        }
+        robot.arm2.setPower(thetaPower);
     }
 
 
