@@ -51,6 +51,8 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
     public double elbowPower;
 
+
+
     public ElapsedTime runtime = new ElapsedTime(); //might cause an error (not sure)
 
 
@@ -67,6 +69,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
 
         while (opModeIsActive()) {
+
 
 
             if(gamepad1.left_stick_x > 0.2 || gamepad1.left_stick_x < -0.2 || gamepad1.left_stick_y > 0.2 ||gamepad1.left_stick_y < -0.2){
@@ -98,10 +101,10 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
             if(gamepad2.dpad_up){ //do we want to change this to while so that it does not continuosly try to stay at this target position?
                 //this is what is in the startup method for auto (where this method works), hardware class sets arm2 to RUN_WITHOUT_ENCODER
-                robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                //robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-                fourBarPID2(.5, 25, 5);
+                fourBarPID2(.05, 109, 5);
 
             } else {
                 robot.arm2.setPower(0.0);
@@ -261,7 +264,6 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     }
 
 
-
     public void fourBarPID2(double maxElbowPower, double inputTargetPos, double elbowTol) { //uses 2-3 predetermined targets with no way for driver to adjust
         elbowPosition = robot.arm2.getCurrentPosition();
         newElbowTarget = (inputTargetPos);
@@ -273,7 +275,6 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         telemetry.addData("elbow time", getRuntime());
         telemetry.update();
 
-        //robot.arm2.setPower(.5);
 
         while (Math.abs(elbowError) > (elbowTol)) {
             elbowError = (newElbowTarget - elbowPosition);
@@ -296,11 +297,10 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
             elbowPower = ((elbowKd * elbowDeriv) + (elbowKi * elbowIntegralSum) + (elbowKp * Math.signum(elbowError)));
             robot.arm2.setPower(elbowPower * maxElbowPower / elbowDenominator);
-            //robot.arm2.setPower(.5); //try this if still not working - didn't work
 
             elbowPosition = robot.arm2.getCurrentPosition();
             elbowError = (newElbowTarget - elbowPosition);
-            //lastElbowError = (newElbowTarget - elbowPosition); //not sure if this is even an issue, but we never set lastElbowError to any actual value
+            lastElbowError = (newElbowTarget - elbowPosition); //not sure if this is even an issue, but we never set lastElbowError to any actual value
 
 
             telemetry.addData("in while loop", "yay");
@@ -320,9 +320,6 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         robot.arm2.setPower(0);
 
     }
-
-
-
 
 
        /* robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -462,7 +459,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         telemetry.addData("middle arm:", robot.distSensorHighArm.getDistance(DistanceUnit.CM));
         telemetry.addData("distance:", robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM));
 
-        telemetry.addData("arm pos", robot.arm2.getCurrentPosition());
+        telemetry.addData("elbow pos", robot.arm2.getCurrentPosition());
 
 
         telemetry.addData("hand", robot.distSensorHand.getDistance(DistanceUnit.CM));
