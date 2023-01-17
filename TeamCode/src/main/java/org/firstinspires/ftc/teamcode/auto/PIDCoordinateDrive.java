@@ -124,7 +124,7 @@ public class PIDCoordinateDrive extends AutoBase {
             robot.bsd.setPower(((linYPower * (yPower)) + (linXPower * (xPower)) - (rotPower * thetaPower))/denominator);
 
             if (Math.abs(thetaError) > Math.toRadians(rotTol)){
-                thetaDeriv = ((thetaError - lastThetaError) / odoTime);
+                thetaDeriv = ((thetaError - lastThetaError) / odoTime); //lastThetaError is only here and when its initialized to equal zero
                 thetaIntegralSum = (thetaIntegralSum + (thetaError * odoTime));
                 if (thetaIntegralSum > integralSumLimit){
                     thetaIntegralSum = integralSumLimit;

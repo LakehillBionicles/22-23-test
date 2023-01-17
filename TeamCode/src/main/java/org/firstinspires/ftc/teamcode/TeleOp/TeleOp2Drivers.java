@@ -266,9 +266,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
     public void fourBarPID2(double maxElbowPower, double inputTargetPos, double elbowTol) { //uses 2-3 predetermined targets with no way for driver to adjust
         elbowPosition = robot.arm2.getCurrentPosition();
-
         newElbowTarget = (inputTargetPos);
-
         elbowError = (newElbowTarget - elbowPosition);
 
         telemetry.addData("elbow pos", elbowPosition);
@@ -277,11 +275,32 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         telemetry.addData("elbow time", getRuntime());
         telemetry.update();
 
-        while (Math.abs(elbowError) > (elbowTol)){
+        while (Math.abs(elbowError) > (elbowTol)) {
+            elbowError = (newElbowTarget - elbowPosition);
 
             elbowTime = getRuntime();
 
             elbowDenominator = Math.max(Math.abs(elbowPower), 1);
+
+            //this used to be in an if loop, but it was just rechecking what got us into the while loop, so I deleted it
+
+            elbowDeriv = ((elbowError - lastElbowError) / elbowTime); //lastElbowError is only in this file here and when it is initialized, the same is true for lastThetaError in PIDCoordinateDrive, what is the point of these?
+            elbowIntegralSum = (elbowIntegralSum + (elbowError * elbowTime));
+
+            if (elbowIntegralSum > elbowIntegralSumLimit) {
+                elbowIntegralSum = elbowIntegralSumLimit;
+            }
+            if (elbowIntegralSum < -elbowIntegralSumLimit) {
+                elbowIntegralSum = -elbowIntegralSumLimit;
+            }
+
+            elbowPower = ((elbowKd * elbowDeriv) + (elbowKi * elbowIntegralSum) + (elbowKp * Math.signum(elbowError)));
+            robot.arm2.setPower(elbowPower * maxElbowPower / elbowDenominator);
+            //robot.arm2.setPower(.5); //try this if still not working
+
+            elbowPosition = robot.arm2.getCurrentPosition();
+            elbowError = (newElbowTarget - elbowPosition);
+            //lastElbowError = (newElbowTarget - elbowPosition); //not sure if this is even an issue, but we never set lastElbowError to any actual value
 
 
             telemetry.addData("in while loop", "yay");
@@ -292,35 +311,9 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             telemetry.addData("elbow pos", elbowPosition);
             telemetry.addData("new elbow target", newElbowTarget);
             telemetry.addData("error", elbowError);
+            telemetry.addData("last elbow error", lastElbowError);
             telemetry.update();
-
-            elbowPower = ((elbowKd * elbowDeriv) + (elbowKi * elbowIntegralSum) + (elbowKp * Math.signum(elbowError)));
-
-            robot.arm2.setPower(elbowPower * maxElbowPower / elbowDenominator);
-
-
-            if (Math.abs(elbowError) > Math.abs(elbowTol)){
-                elbowDeriv = ((elbowError - lastElbowError) / elbowTime);
-                elbowIntegralSum = (elbowIntegralSum + (elbowError * elbowTime));
-                if (elbowIntegralSum > elbowIntegralSumLimit){
-                    elbowIntegralSum = elbowIntegralSumLimit;
-                }
-                if (elbowIntegralSum < -elbowIntegralSumLimit){
-                    elbowIntegralSum = -elbowIntegralSumLimit;
-                }
-                elbowPower = ((elbowKd * elbowDeriv) + (elbowKi * elbowIntegralSum) + (elbowKp * Math.signum(elbowError)));
-                robot.arm2.setPower(elbowPower * maxElbowPower / elbowDenominator);
-            }
-            else{
-                elbowPower = 0;
-                robot.arm2.setPower(elbowPower);
-            }
-
-            elbowPosition = robot.arm2.getCurrentPosition();
-            elbowError = (newElbowTarget - elbowPosition);
-
-
-        }
+        }   
 
         telemetry.addData("out of while loop", "yay");
         telemetry.update();
