@@ -96,11 +96,12 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
                 robot.bsd.setPower(0);
             }
 
-            if(gamepad2.dpad_up){
-
+            if(gamepad2.dpad_up){ //do we want to change this to while so that it does not continuosly try to stay at this target position?
+                //this is what is in the startup method for auto (where this method works), hardware class sets arm2 to RUN_WITHOUT_ENCODER
+                robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
                 fourBarPID2(.5, 25, 5);
-
 
             } else {
                 robot.arm2.setPower(0.0);
