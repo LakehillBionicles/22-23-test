@@ -42,6 +42,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     public double elbowTime = 0;
     public double newElbowTarget;
     public double elbowDeriv;
+    public double lastElbowDeriv;
     public double elbowIntegralSum = 0;
     public double elbowIntegralSumLimit = 0.25;
 
@@ -104,17 +105,11 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
                 robot.bsd.setPower(0);
             }
 
-            if(gamepad2.dpad_up){ //do we want to change this to while so that it does not continuosly try to stay at this target position?
-                //this is what is in the startup method for auto (where this method works), hardware class sets arm2 to RUN_WITHOUT_ENCODER
-                //robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                //robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //maybe try RUN_TO_POSITION
-
+            if(gamepad2.dpad_up){
                 fourBarPID2(.05, 180, 5);
-
             }
 
             if(gamepad2.dpad_down){
-
                 fourBarPID2(.05, 0, 5);
             }
 
@@ -123,8 +118,9 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             }
 
             if(gamepad2.dpad_right){
-                fourBarPID2(.05, 100, 5);
+                fourBarPID2(.05, 90, 5);
             }
+
             else {
                 robot.arm2.setPower(0.0);
             }
@@ -323,6 +319,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             elbowPosition = robot.arm2.getCurrentPosition();
             elbowError = (newElbowTarget - elbowPosition);
             lastElbowError = (newElbowTarget - elbowPosition);
+            lastElbowDeriv = elbowDeriv;
 
 
             telemetry.addData("in while loop", "yay");
