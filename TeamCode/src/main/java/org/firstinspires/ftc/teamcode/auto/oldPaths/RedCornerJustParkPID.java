@@ -1,15 +1,14 @@
-package org.firstinspires.ftc.teamcode.auto.paths;
+package org.firstinspires.ftc.teamcode.auto.oldPaths;
+
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
 
 @Autonomous
 //@Disabled
 
-public class BlueCornerJustParkPID extends AutoBase {
-
+public class RedCornerJustParkPID extends AutoBase {
 
     public double armSpeed = 0.5;
 
@@ -28,7 +27,7 @@ public class BlueCornerJustParkPID extends AutoBase {
 
 
             //move to align with cone
-            coordinateDrive(0, -18, 0, 0.1,0.1,0.1,2,0.1,0.1);
+            coordinateDrive(0, 18, 0, 0.1,0.1,0.1,2,0.1,0.1);
 
             //color sense and store variable
             if(senseColorsPort().equals( "red")){
@@ -44,23 +43,27 @@ public class BlueCornerJustParkPID extends AutoBase {
 
 
             //move over so in center of tile -- numbers probably wrong
-            coordinateDrive(0,-13,0,0.1, 0.1, 0.1, 2, 0.1, 0.1);
+            coordinateDrive(0,13,0,0.1, 0.1, 0.1, 2, 0.1, 0.1);
 
             //park based on color sleeve should be good yay!!!!!!!!!
             if(color.equals("red")){
-                coordinateDrive(0,0,24,0.1,0.1,0.1,2,0.1, 0.1);
+                stop();
 
             }else if(color.equals("blue")){
-                stop();
+                coordinateDrive(0,0,-24,0.1,0.1,0.1,2,0.1, 0.1);
 
 
             }else{
-                coordinateDrive(0,0,-24,0.1,0.1,0.1,2,0.1, 0.1);
+                coordinateDrive(0,0,24,0.1,0.1,0.1,2,0.1, 0.1);
             }
 
             stop();
         }
     }
+
+
+
+
 
 
 
