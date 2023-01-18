@@ -42,6 +42,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     public double elbowTime = 0;
     public double newElbowTarget;
     public double elbowDeriv;
+    public double lastElbowDeriv;
     public double elbowIntegralSum = 0;
     public double elbowIntegralSumLimit = 0.25;
 
@@ -50,6 +51,13 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     public double elbowKi = 1.0;
 
     public double elbowPower;
+
+
+    public double currentTheta;
+    public double thetaPower;
+    public double currentElbowPos;
+
+
 
     public ElapsedTime runtime = new ElapsedTime(); //might cause an error (not sure)
 
@@ -67,6 +75,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
 
         while (opModeIsActive()) {
+
 
 
             if(gamepad1.left_stick_x > 0.2 || gamepad1.left_stick_x < -0.2 || gamepad1.left_stick_y > 0.2 ||gamepad1.left_stick_y < -0.2){
@@ -97,12 +106,22 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             }
 
             if(gamepad2.dpad_up){
+                fourBarPID2(.05, 180, 5);
+            }
 
+            if(gamepad2.dpad_down){
+                fourBarPID2(.05, 0, 5);
+            }
 
-                fourBarPID2(.5, 25, 5);
+            if(gamepad2.dpad_left){
+                fourBarPID2(.05, 30, 5);
+            }
 
+            if(gamepad2.dpad_right){
+                fourBarPID2(.05, 90, 5);
+            }
 
-            } else {
+            else {
                 robot.arm2.setPower(0.0);
             }
             //NEED
@@ -259,14 +278,11 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
     }
 
+    //change inputTargetPos from double to int so that it can be used as the target position for RUN_TO_POSITION mode
+    public void fourBarPID2(double maxElbowPower, int inputTargetPos, double elbowTol) { //uses 2-3 predetermined targets with no way for driver to adjust
+        robot.arm2.setTargetPosition(inputTargetPos);
+        robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION); //trying RUN_TO_POSITION because according to someone on Reddit that will cause the motor to hold at target position
 
-
-
-
-
-
-
-    public void fourBarPID2(double maxElbowPower, double inputTargetPos, double elbowTol) { //uses 2-3 predetermined targets with no way for driver to adjust
         elbowPosition = robot.arm2.getCurrentPosition();
         newElbowTarget = (inputTargetPos);
         elbowError = (newElbowTarget - elbowPosition);
@@ -277,6 +293,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         telemetry.addData("elbow time", getRuntime());
         telemetry.update();
 
+        //could we just run the PID continuously (after tuning it better) to hold our target position?
         while (Math.abs(elbowError) > (elbowTol)) {
             elbowError = (newElbowTarget - elbowPosition);
 
@@ -286,7 +303,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
             //this used to be in an if loop, but it was just rechecking what got us into the while loop, so I deleted it
 
-            elbowDeriv = ((elbowError - lastElbowError) / elbowTime); //lastElbowError is only in this file here and when it is initialized, the same is true for lastThetaError in PIDCoordinateDrive, what is the point of these?
+            elbowDeriv = ((elbowError - lastElbowError) / elbowTime);
             elbowIntegralSum = (elbowIntegralSum + (elbowError * elbowTime));
 
             if (elbowIntegralSum > elbowIntegralSumLimit) {
@@ -298,11 +315,11 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
             elbowPower = ((elbowKd * elbowDeriv) + (elbowKi * elbowIntegralSum) + (elbowKp * Math.signum(elbowError)));
             robot.arm2.setPower(elbowPower * maxElbowPower / elbowDenominator);
-            //robot.arm2.setPower(.5); //try this if still not working
 
             elbowPosition = robot.arm2.getCurrentPosition();
             elbowError = (newElbowTarget - elbowPosition);
-            //lastElbowError = (newElbowTarget - elbowPosition); //not sure if this is even an issue, but we never set lastElbowError to any actual value
+            lastElbowError = (newElbowTarget - elbowPosition);
+            lastElbowDeriv = elbowDeriv;
 
 
             telemetry.addData("in while loop", "yay");
@@ -313,19 +330,30 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
             telemetry.addData("elbow pos", elbowPosition);
             telemetry.addData("new elbow target", newElbowTarget);
             telemetry.addData("error", elbowError);
-            telemetry.addData("last elbow error", lastElbowError);
             telemetry.update();
-        }   
+        }
 
         telemetry.addData("out of while loop", "yay");
         telemetry.update();
 
-        robot.arm2.setPower(0);
+        //robot.arm2.setPower(0);
 
     }
 
-
-
+   /* public void elbowHold(){
+        currentElbowPos = robot.arm2.getCurrentPosition();
+        currentTheta = (currentElbowPos/288)*(2*Math.PI);
+        if (currentElbowPos <= 180) {
+            thetaPower = Math.abs(Math.cos(currentTheta));
+        }
+        if (currentElbowPos > 180) {
+            thetaPower = -Math.abs((Math.cos(currentTheta)));
+        }
+        if (!gamepad2.dpad_up){
+            robot.arm2.setPower(thetaPower);
+        }
+    }
+    */
 
 
        /* robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -465,7 +493,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         telemetry.addData("middle arm:", robot.distSensorHighArm.getDistance(DistanceUnit.CM));
         telemetry.addData("distance:", robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM));
 
-        telemetry.addData("arm pos", robot.arm2.getCurrentPosition());
+        telemetry.addData("elbow pos", robot.arm2.getCurrentPosition());
 
 
         telemetry.addData("hand", robot.distSensorHand.getDistance(DistanceUnit.CM));
