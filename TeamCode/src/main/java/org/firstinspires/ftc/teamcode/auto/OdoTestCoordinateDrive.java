@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 //FOR NOTEBOOK: graph error vs power (to find perfect tolerance)
 
+
 public class OdoTestCoordinateDrive extends AutoBase {
     public void runOpMode() {
         super.runOpMode();
@@ -20,11 +21,11 @@ public class OdoTestCoordinateDrive extends AutoBase {
             robot.POW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.SOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            coordinateDrive(90, 24, 24, .2, 0.2, 0.2, 2, .5, 0.5); //theta x y power power power tol tol tol
+            coordinateDrive(0, 0, 24, .2, 0.2, 0.2, 2, .5, 0.5); //theta x y power power power tol tol tol
 
             sleep(5000);
 
-            coordinateDrive(-90, -24, -24, .2, 0.2, 0.2, 2, .5, 0.5);
+            //coordinateDrive(-90, -24, -24, .2, 0.2, 0.2, 2, .5, 0.5);
 
             //y tolerance and power were 0.5 (delta y = 24)
             //theta tolerance 1? or 2? and power 0.2 (delta theta = 90)
@@ -92,7 +93,7 @@ public class OdoTestCoordinateDrive extends AutoBase {
         yError = (newTargetY - robotY);
         thetaError = (newTargetTheta - robotTheta);
 
-        telemetry.addData("robotTheta:", robotTheta);
+        /*telemetry.addData("robotTheta:", robotTheta);
         telemetry.addData("robotX:", robotX);
         telemetry.addData("robotY:", robotY);
 
@@ -104,11 +105,11 @@ public class OdoTestCoordinateDrive extends AutoBase {
         telemetry.addData("xError:", xError);
         telemetry.addData("yError:", yError);
 
-        telemetry.addData("thetaPower:", thetaPower);
-        telemetry.addData("xPower:", xPower);
-        telemetry.addData("yPower:", yPower);
+          telemetry.addData("thetaPower:", thetaPower);
+            telemetry.addData("xPower:", xPower);
+            telemetry.addData("yPower:", yPower);
 
-        telemetry.update();
+        telemetry.update();*/
 
         while (Math.abs(thetaError) > Math.toRadians(rotTol) || Math.abs(xError) > xTol || Math.abs(yError) > yTol){
 
@@ -141,7 +142,26 @@ public class OdoTestCoordinateDrive extends AutoBase {
                 yPower = 0;
             }
 
+            POWlocation = robot.POW.getCurrentPosition();
+            SOWlocation = robot.SOW.getCurrentPosition();
+            BOWlocation = robot.BOW.getCurrentPosition();
+
+            telemetry.addData("POW: ", POWlocation);
+            telemetry.addData("SOW: ", SOWlocation);
+            telemetry.addData("BOW: ", BOWlocation);
+
             telemetry.addData("robotTheta:", robotTheta);
+            telemetry.addData("robotX:", robotX);
+            telemetry.addData("robotY:", robotY);
+
+            telemetry.addData("WE UPDATED", "we updated please track the changes ");
+            telemetry.addData("we updated", "track the changes");
+            telemetry.update();
+
+
+
+
+            /*telemetry.addData("robotTheta:", robotTheta);
             telemetry.addData("robotX:", robotX);
             telemetry.addData("robotY:", robotY);
 
@@ -157,16 +177,16 @@ public class OdoTestCoordinateDrive extends AutoBase {
             telemetry.addData("xPower:", xPower);
             telemetry.addData("yPower:", yPower);
 
-            telemetry.update();
+            telemetry.update();*/
 
             //motor use to be here
         }
 
-        robot.fpd.setPower(0);
+        /*robot.fpd.setPower(0);
         robot.bpd.setPower(0);
         robot.fsd.setPower(0);
         robot.bsd.setPower(0);
-        telemetry.addData("robotTheta:", robotTheta);
+         telemetry.addData("robotTheta:", robotTheta);
         telemetry.addData("robotX:", robotX);
         telemetry.addData("robotY:", robotY);
 
@@ -179,11 +199,11 @@ public class OdoTestCoordinateDrive extends AutoBase {
         telemetry.addData("yError:", yError);
 
         telemetry.addData("thetaPower:", thetaPower);
-        telemetry.addData("xPower:", xPower);
-        telemetry.addData("yPower:", yPower);
+            telemetry.addData("xPower:", xPower);
+            telemetry.addData("yPower:", yPower);
 
         telemetry.addData("yay", "made it");
-        telemetry.update();
+        telemetry.update();*/
 
     }
 
