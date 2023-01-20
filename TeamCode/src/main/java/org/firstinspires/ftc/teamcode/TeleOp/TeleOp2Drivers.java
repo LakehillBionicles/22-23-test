@@ -74,6 +74,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         waitForStart();
 
         telemetry.addData("does this work", "yes it does");
+        telemetry.addData("update?", "yes 3");
         telemetry.update();
 
 
@@ -106,13 +107,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
                 robot.bsd.setPower(0);
             }
 
-            if(gamepad2.dpad_up){
-                telemetry.addData("yay", "yay");
-                telemetry.update();
-                fourBarTheta();
-            }
-
-            if(gamepad2.dpad_down){
+        /*    if(gamepad2.dpad_down){
                 while (gamepad2.dpad_down){
                     //fourBarPID2(1, 110, 5);
                     //robot.arm2.setPower(.5);
@@ -134,7 +129,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
             else {
                 robot.arm2.setPower(0.0);
-            }
+            } */
 
             //NEED
             //if you press a bumper, run the ARMLIFT method until the bumper is "unpressed"
@@ -148,6 +143,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
 
         }
+    }
 
        /* public void drive(double stickX double stickY) { //omni strafe ||Testing||
             double angle = Math.atan2(stickY, stickX);
@@ -159,7 +155,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
                fpd.setPower((Math.sin(angle - Math.PI / 4)) * magnitude * speed);
                 bsd.setPower((Math.sin(angle - Math.PI / 4)) * magnitude * speed);
             }*/
-    }
+
 
     public void turn() {
         if (gamepad1.right_stick_x > 0.15 || gamepad1.right_stick_x < -0.15 && gamepad1.left_stick_y==0 &&  gamepad1.left_stick_x==0) {    //clockwise
@@ -292,38 +288,57 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
 
     public void fourBarTheta(){
-        newElbowTarget = 180;
 
-        robot.arm2.setTargetPosition(newElbowTarget);
-        robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if(gamepad2.dpad_up){
+            newElbowTarget = 180;
 
-        elbowPosition = robot.arm2.getCurrentPosition();
-        elbowTol = 5;
-        elbowTargetTheta = ((Math.PI/144) * newElbowTarget);
-        elbowTheta = ((Math.PI/144) * elbowPosition);
-        elbowError = elbowTargetTheta - elbowTheta;
+            robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        telemetry.addData("elbow pos", elbowPosition);
-        telemetry.addData("elbow theta", elbowTheta);
-        telemetry.addData("new elbow target", newElbowTarget);
-        telemetry.addData("error", elbowError);
-        telemetry.addData("elbow time", getRuntime());
-        telemetry.update();
+            elbowPosition = robot.arm2.getCurrentPosition();
+            elbowTol = 5;
+            elbowTargetTheta = ((Math.PI/144) * newElbowTarget);
+            elbowTheta = ((Math.PI/144) * elbowPosition);
+            elbowError = elbowTargetTheta - elbowTheta;
 
-        while (Math.abs(elbowError) > (elbowTol)) {
-            elbowPower = Math.sin(elbowTheta + (Math.PI/2));
-            robot.arm2.setPower(elbowPower);
+/*
+                telemetry.addData("elbow pos", elbowPosition);
+                telemetry.addData("elbow theta", elbowTheta);
+                telemetry.addData("target theta", elbowTargetTheta);
+                telemetry.addData("error", elbowError);
+                telemetry.addData("elbow time", getRuntime());
+                telemetry.update();
+                */
 
-            telemetry.addData("elbow pos", elbowPosition);
-            telemetry.addData("elbow theta", elbowTheta);
-            telemetry.addData("new elbow target", newElbowTarget);
-            telemetry.addData("error", elbowError);
-            telemetry.addData("elbow power", elbowPower);
-            telemetry.update();
+            if ((elbowTheta) < (1)) {
+                elbowPower = 1.25*(Math.cos(elbowTheta));
+                robot.arm2.setPower(elbowPower);
+                telemetry.addData("quadrant", "1");
+                telemetry.addData("power", elbowPower);
+                telemetry.addData("theta", elbowTheta);
+                telemetry.update();
+            }
+
+            else if ((elbowTheta) < (2.5) && (elbowTheta) > (1)) {
+                elbowPower = (Math.abs(Math.cos(elbowTheta - 1)));
+                robot.arm2.setPower(elbowPower);
+                telemetry.addData("quadrant", "2");
+                telemetry.addData("power", elbowPower);
+                telemetry.addData("theta", elbowTheta);
+                telemetry.update();
+            }
+            else if ((elbowTheta) > (2.5)) {
+                robot.arm2.setPower(0);
+                sleep(700);
+                elbowPower = .5*(Math.cos(elbowTheta));
+                robot.arm2.setPower(elbowPower);
+                telemetry.addData("quadrant", "3");
+                telemetry.addData("power", elbowPower);
+                telemetry.addData("theta", elbowTheta);
+                telemetry.update();
+            }
+
         }
-
-
     }
 
     //change inputTargetPos from double to int so that it can be used as the target position for RUN_TO_POSITION mode
