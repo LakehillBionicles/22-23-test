@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.TemaruHardware;
 
 @TeleOp
-//@Disabled
+@Disabled
 
 public class JudgeOp extends LinearOpMode {
 

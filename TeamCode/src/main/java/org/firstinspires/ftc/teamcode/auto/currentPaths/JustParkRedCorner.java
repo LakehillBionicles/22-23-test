@@ -18,7 +18,7 @@ public class JustParkRedCorner extends AutoBase {
 
         while (opModeIsActive()) {
 
-            coordinateDrive(0, 19, 0, .05, .05, .05, 4, .25, .25);
+            coordinateDrive(0, 19, 0, .1, .1, .1, 5, .5, .5);
             //strafe sideways to see cone
 
             if(senseColorsStar().equals( "red")){
@@ -33,16 +33,16 @@ public class JustParkRedCorner extends AutoBase {
 
             sleep(200);
 
-            coordinateDrive(0, 8, 0, .1, .1, .1, 4, .25, .25);
+            coordinateDrive(0, 8, 0, .2, .2, .2, 5, .5, .5);
 
             if(color.equals("red")){
-                coordinateDrive(0, 0, 26, .1, .1, .1, 4, .25, .25);
+                coordinateDrive(0, 0, 26, .2, .2, .2, 5, .5, .5);
 
             }else if(color.equals("blue")){
-                coordinateDrive(0, 22, 0, .1, .1, .1, 4, .25, .25);
+                coordinateDrive(0, 22, 0, .2, .2, .2, 5, .5, .5);
 
             }else{
-                coordinateDrive(0, 0, -24, .1, .1, .1, 4, .25, .25);
+                coordinateDrive(0, 0, -24, .2, .2, .2, 5, .5, .5);
             }
 
 

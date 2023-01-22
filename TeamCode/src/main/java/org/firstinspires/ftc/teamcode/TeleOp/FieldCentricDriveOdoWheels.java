@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.TemaruHardware;
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
 
 @TeleOp
-//@Disabled
+@Disabled
 
 
 public class FieldCentricDriveOdoWheels extends AutoBase {

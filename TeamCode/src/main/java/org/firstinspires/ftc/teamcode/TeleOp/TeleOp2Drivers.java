@@ -48,6 +48,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     public double elbowIntegralSum = 0;
     public double elbowIntegralSumLimit = 0.25;
     public double elbowTol;
+    public double elbowMotorPower;
 
     public double elbowKp = 1.0;
     public double elbowKd = 1.0;
@@ -70,11 +71,13 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         robot.init(hardwareMap);
 
         robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         waitForStart();
 
         telemetry.addData("does this work", "yes it does");
-        telemetry.addData("update?", "yes 3");
+        telemetry.addData("update?", "yes 4");
         telemetry.update();
 
 
@@ -107,38 +110,31 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
                 robot.bsd.setPower(0);
             }
 
-        /*    if(gamepad2.dpad_down){
-                while (gamepad2.dpad_down){
-                    //fourBarPID2(1, 110, 5);
-                    //robot.arm2.setPower(.5);
-                    fourBarTheta();
-                }
-            }
-
-            if(gamepad2.dpad_right){
-                fourBarTheta();
-                telemetry.addData("yay", "yay");
+            while(gamepad2.dpad_up) {
+                robot.arm2.setPower(1);
+                telemetry.addData("going ", "back");
+                telemetry.addData("power", robot.arm2.getPower());
                 telemetry.update();
             }
 
-            if(gamepad2.dpad_left){
-                fourBarTheta();
-
-               // robot.arm2.setPower(.5);
+            while(gamepad2.dpad_down) {
+                robot.arm2.setPower(-1);
+                telemetry.addData("going ", "forward");
+                telemetry.addData("power", robot.arm2.getPower());
+                telemetry.update();
             }
 
-            else {
-                robot.arm2.setPower(0.0);
-            } */
 
             //NEED
             //if you press a bumper, run the ARMLIFT method until the bumper is "unpressed"
             armLift();
-            servoHand();
-            servoHandZeroInput();
+            //servoHand();
+            //servoHandZeroInput();
             setArmToHeight();
             displayDistance();
-            fourBarTheta();
+            //fourBarThetaGoBack();
+            //fourBarThetaGoForward();
+            servoHandLastTry();
             //fourBarPID2();
 
 
@@ -203,16 +199,16 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
 
         if (gamepad1.left_stick_x > 0.2 && gamepad1.right_stick_y < 0.2 && gamepad1.right_stick_y > -0.2) {//right
 
-            robot.bpd.setPower(- (speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8))));
-            robot.fpd.setPower(- (speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8))));
-            robot.bsd.setPower(speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8)));
-            robot.fsd.setPower(speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8)));
+            robot.bpd.setPower((- (speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8)))));
+            robot.fpd.setPower(- 2*(speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8))));
+            robot.bsd.setPower((speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8))));
+            robot.fsd.setPower(2*(speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8))));
         } else if (gamepad1.left_stick_x < -0.2 && gamepad1.right_stick_y < 0.2 && gamepad1.right_stick_y > -0.2) {//left
 
-            robot.bpd.setPower(- (speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8))));
-            robot.fpd.setPower(- (speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8))));
-            robot.bsd.setPower(speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8)));
-            robot.fsd.setPower(speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8)));
+            robot.bpd.setPower((- (speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8)))));
+            robot.fpd.setPower(- 2*(speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8))));
+            robot.bsd.setPower((speedStrafe * (gamepad1.left_stick_x-(gamepad1.right_stick_x * .8))));
+            robot.fsd.setPower(2*(speedStrafe * (gamepad1.left_stick_x+(gamepad1.right_stick_x * .8))));
         } else if (gamepad1.left_stick_y > 0.2) {//forward
             robot.fpd.setPower(gamepad1.left_stick_y-(gamepad1.right_stick_x * .8));// && (gamepad1.right_stick_x < 0.2 && gamepad1.right_stick_x > -0.2)
             robot.bsd.setPower(-gamepad1.left_stick_y-(gamepad1.right_stick_x * .8));
@@ -287,249 +283,133 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     }
 
 
-    public void fourBarTheta(){
+    public void fourBarThetaGoBack() {
 
-        if(gamepad2.dpad_up){
+        while(gamepad2.dpad_up) {
+            robot.arm2.setPower(1);
+            telemetry.addData("going ", "back");
+            telemetry.addData("power", robot.arm2.getPower());
+            telemetry.update();
+        }
+
+        /*if (gamepad2.dpad_up) {
             newElbowTarget = 180;
 
             robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
             elbowPosition = robot.arm2.getCurrentPosition();
-            elbowTol = 5;
-            elbowTargetTheta = ((Math.PI/144) * newElbowTarget);
-            elbowTheta = ((Math.PI/144) * elbowPosition);
-            elbowError = elbowTargetTheta - elbowTheta;
+            elbowTol = .05;
+            elbowTargetTheta = ((Math.PI / 144) * newElbowTarget);
+            elbowTheta = ((Math.PI / 144) * elbowPosition);
+            elbowError = Math.abs(elbowTargetTheta - elbowTheta);
 
-/*
-                telemetry.addData("elbow pos", elbowPosition);
-                telemetry.addData("elbow theta", elbowTheta);
-                telemetry.addData("target theta", elbowTargetTheta);
+            telemetry.addData("in loop", "yes");
+            telemetry.update();
+
+            while (Math.abs(elbowError) > elbowTol) {
+
+                /*if ((elbowError) >= (3.2)) {
+                    elbowPower = (1);
+                        //start moving
+                } else if ((elbowError) >= (1.6) && (elbowError) < (3.2)) {
+                    elbowPower = .75 * (Math.abs(Math.cos(elbowTheta - 1)));
+                        //keep turning but not as fast
+                } else if (((elbowError) < (1.2)) && (elbowError > 1.6)) {
+                    elbowPower = .8 * (Math.cos(elbowTheta)); //we tuned the number that multiplies the cos function
+                        //breaking
+                } else {
+                    elbowPower = 0;
+                    //resting at target and just before breaking
+                }
+
+                robot.arm2.setPower(elbowPower);
+
+                elbowPosition = robot.arm2.getCurrentPosition();
+                elbowTheta = ((Math.PI / 144) * elbowPosition);
+                elbowError = Math.abs(elbowTargetTheta - elbowTheta);
+                elbowMotorPower = robot.arm2.getPower();
+
+
+                telemetry.addData("theoretical power", elbowPower);
+                telemetry.addData("actual power", elbowMotorPower);
                 telemetry.addData("error", elbowError);
-                telemetry.addData("elbow time", getRuntime());
-                telemetry.update();
-                */
+                telemetry.update(); */
 
-            if ((elbowTheta) < (1)) {
-                elbowPower = 1.25*(Math.cos(elbowTheta));
-                robot.arm2.setPower(elbowPower);
-                telemetry.addData("quadrant", "1");
-                telemetry.addData("power", elbowPower);
-                telemetry.addData("theta", elbowTheta);
-                telemetry.update();
             }
 
-            else if ((elbowTheta) < (2.5) && (elbowTheta) > (1)) {
-                elbowPower = (Math.abs(Math.cos(elbowTheta - 1)));
-                robot.arm2.setPower(elbowPower);
-                telemetry.addData("quadrant", "2");
-                telemetry.addData("power", elbowPower);
-                telemetry.addData("theta", elbowTheta);
-                telemetry.update();
-            }
-            else if ((elbowTheta) > (2.5)) {
-                robot.arm2.setPower(0);
-                sleep(700);
-                elbowPower = .5*(Math.cos(elbowTheta));
-                robot.arm2.setPower(elbowPower);
-                telemetry.addData("quadrant", "3");
-                telemetry.addData("power", elbowPower);
-                telemetry.addData("theta", elbowTheta);
-                telemetry.update();
-            }
+    public void fourBarThetaGoForward() {
 
+        while (gamepad2.dpad_down) {
+            robot.arm2.setPower(-1);
+            telemetry.addData("going ", "forward");
+            telemetry.addData("power", robot.arm2.getPower());
+            telemetry.update();
         }
-    }
+           /*
+        if (gamepad2.dpad_down) {
+            newElbowTarget = 0;
 
-    //change inputTargetPos from double to int so that it can be used as the target position for RUN_TO_POSITION mode
-   /* public void fourBarPID2(double maxElbowPower, int inputTargetPos, double elbowTol) { //uses 2-3 predetermined targets with no way for driver to adjust
-        robot.arm2.setTargetPosition(inputTargetPos);
-        robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION); //trying RUN_TO_POSITION because according to someone on Reddit that will cause the motor to hold at target position
-
-        elbowPosition = robot.arm2.getCurrentPosition();
-        newElbowTarget = (inputTargetPos);
-        elbowError = (newElbowTarget - elbowPosition);
-
-        resetRuntime();
-
-        telemetry.addData("elbow pos", elbowPosition);
-        telemetry.addData("new elbow target", newElbowTarget);
-        telemetry.addData("error", elbowError);
-        telemetry.addData("elbow time", getRuntime());
-        telemetry.update();
-
-        //could we just run the PID continuously (after tuning it better) to hold our target position?
-        while (Math.abs(elbowError) > (elbowTol)) {
-            elbowError = (newElbowTarget - elbowPosition);
-
-
-            elbowTime = getRuntime();
-
-            elbowDenominator = Math.max(Math.abs(elbowPower), 1);
-
-            //this used to be in an if loop, but it was just rechecking what got us into the while loop, so I deleted it
-
-            elbowDeriv = ((elbowError - lastElbowError) / elbowTime);
-            elbowIntegralSum = (elbowIntegralSum + (elbowError * elbowTime));
-
-            if (elbowIntegralSum > elbowIntegralSumLimit) {
-                elbowIntegralSum = elbowIntegralSumLimit;
-            }
-            if (elbowIntegralSum < -elbowIntegralSumLimit) {
-                elbowIntegralSum = -elbowIntegralSumLimit;
-            }
-
-            elbowPower = ((elbowKd * elbowDeriv) + (elbowKi * elbowIntegralSum) + (elbowKp * Math.signum(elbowError)));
-            robot.arm2.setPower(elbowPower);
+            robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             elbowPosition = robot.arm2.getCurrentPosition();
-            elbowError = (newElbowTarget - elbowPosition);
-            lastElbowError = (newElbowTarget - elbowPosition);
-            lastElbowDeriv = elbowDeriv;
+            elbowTol = .05;
+            elbowTargetTheta = ((Math.PI / 144) * newElbowTarget);
+            elbowTheta = ((Math.PI / 144) * elbowPosition);
+            elbowError = Math.abs(elbowTargetTheta - elbowTheta);
 
-            resetRuntime();
-
-
-            telemetry.addData("in while loop", "yay");
-            telemetry.addData("elbowPower", elbowPower);
-            telemetry.addData("elbowDenominator", elbowDenominator);
-            telemetry.addData("power function", (Math.cos(3.1415*((elbowPosition)/newElbowTarget))));
-            telemetry.addData("runtime", elbowTime);
-            telemetry.addData("elbow pos", elbowPosition);
-            telemetry.addData("new elbow target", newElbowTarget);
-            telemetry.addData("error", elbowError);
-            telemetry.addData("please work", "sjdkfjal");
+            telemetry.addData("in loop", "yes");
             telemetry.update();
+
+            while (Math.abs(elbowError) > elbowTol) {
+
+                if ((elbowError) >= (2.3)) {
+                    elbowPower = (-1);
+
+                } else if ((elbowError) >= (.5) && (elbowError) < (2.3)) {
+                    elbowPower = .75 * (Math.abs(Math.cos(elbowTheta - 1)));
+
+                } else if (((elbowError) < (.5)) && (elbowError > elbowTol)) {
+                    elbowPower = .5 * (Math.cos(elbowTheta));
+
+                } else {
+                    elbowPower = 0;
+                }
+
+                robot.arm2.setPower(elbowPower);
+
+                elbowPosition = robot.arm2.getCurrentPosition();
+                elbowTheta = ((Math.PI / 144) * elbowPosition);
+                elbowError = Math.abs(elbowTargetTheta - elbowTheta);
+                elbowMotorPower = robot.arm2.getPower();
+
+
+                telemetry.addData("theoretical power", elbowPower);
+                telemetry.addData("actual power", elbowMotorPower);
+                telemetry.addData("error", elbowError);
+                telemetry.update();
+
+            }
+
         }
 
-        telemetry.addData("out of while loop", "yay");
-        telemetry.update();
-
-        //robot.arm2.setPower(0);
-
-    } */
-
-   /* public void elbowHold(){
-        currentElbowPos = robot.arm2.getCurrentPosition();
-        currentTheta = (currentElbowPos/288)*(2*Math.PI);
-        if (currentElbowPos <= 180) {
-            thetaPower = Math.abs(Math.cos(currentTheta));
-        }
-        if (currentElbowPos > 180) {
-            thetaPower = -Math.abs((Math.cos(currentTheta)));
-        }
-        if (!gamepad2.dpad_up){
-            robot.arm2.setPower(thetaPower);
-        }
+            */
     }
-    */
 
-
-       /* robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        double FourBarCurrentPos;
-        double FourBarTarget;
-
-        FourBarCurrentPos = robot.arm2.getCurrentPosition();
-        FourBarTarget = 0.0;
-
-
-        if (gamepad2.dpad_up) {
-            FourBarTarget = 13; //replace this value with an actual number
-            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            int NT = (int) (FourBarTarget * 0.981); //fp
-            robot.arm2.setPower(1.0);
-            robot.arm2.setPower(Math.sin((-113) - FourBarCurrentPos)* (3.1415 / 4));
-            telemetry.addData("yay", "");
+    public void servoHandLastTry() {
+        if (gamepad2.left_trigger > 0) {
+            telemetry.addData("please work", "yay");
             telemetry.update();
-
-        } else if (gamepad2.left_bumper) {
-            FourBarTarget = 13; //replace this value with an actual number
-            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            int NT = (int) (FourBarTarget * 0.981); //fp
-            robot.arm2.setPower(1.0);
-
-            robot.arm2.setPower(Math.sin((-113) - FourBarCurrentPos)* (3.1415 / 4));
-
-        } else if (gamepad2.right_bumper) {
-            FourBarTarget = 13; //replace this value with an actual number
-            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            int NT = (int) (FourBarTarget * 0.981); //fp
-            robot.arm2.setPower(1.0);
-
-            robot.arm2.setPower(Math.sin((25) - FourBarCurrentPos)* (3.1415 / 4));
+            robot.servoFinger.setPosition(1.0);
 
         } else {
-            robot.arm2.setPower(0);
-
-            //-113 at cone height to approx. 25 at cone drop height
-
-
-        }*/
-
-
-    //power to drive both up and down
-    //track position using the encoder
-    //power will be a function of error
-    //error:
-    //same sin function???????? please work???
-
-    //need variable for targets and error in order to run to position
-
-
-
-
-
-
-
-
-    public void fourBarEncoders(double speed, double leftInches, double rightInches,double timeoutS){
-        robot.SOW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //we switched arm2 and SOW, not sure why they're used together here
-        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int newLeftTarget = 0;
-        int newRightTarget = 0;
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newLeftTarget = (int) ((leftInches)* (288/360));
-            newRightTarget = (int) ((rightInches)* (288/360));//288 is counts per revolution of core hex
-
-            robot.SOW.setTargetPosition(newLeftTarget);
-            robot.arm2.setTargetPosition(newRightTarget);
-
-            robot.SOW.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            int NT1 = (int) (newLeftTarget * 0.981); //fp
-            int NT2 = (int) (newRightTarget * 0.981); //fp
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-
-            robot.SOW.setPower(Math.abs(speed));
-            robot.arm2.setPower(Math.abs(speed));
-
-            while (robot.SOW.isBusy() && robot.SOW.isBusy() && opModeIsActive() && (runtime.seconds() < timeoutS) &&
-                    ((Math.abs(robot.SOW.getCurrentPosition()) < Math.abs(NT1)) ||
-                            (Math.abs(robot.SOW.getCurrentPosition()) < Math.abs(NT1)) ||
-                            (Math.abs(robot.arm2.getCurrentPosition()) < Math.abs(NT2))))
-            {
-                //empty loop body
-            }
-
-
-            robot.SOW.setPower(0);
-            robot.arm2.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            robot.SOW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            sleep(40);
+            robot.servoFinger.setPosition(0.0);
+            //robot.servoFinger.setPosition(.7);
         }
     }
 
-    public void servoHand(){
+
+
+    /*public void servoHand(){
         if (gamepad2.right_trigger > 0){
             telemetry.addData("hand pos", "open");
             telemetry.update();
@@ -544,14 +424,14 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
     }
 
     public void servoHandZeroInput(){
-        if ((robot.distSensorHand.getDistance(DistanceUnit.CM) < 13) && (robot.colorSensorHand.equals("red") || robot.colorSensorHand.equals("blue"))){
+        if ((robot.distSensorHand.getDistance(DistanceUnit.CM) < 3) && !(gamepad2.right_trigger > 0)){
             telemetry.addData("i see:", "cone");
             telemetry.update();
             robot.servoFinger.setPosition(0.45);
         }
 
 
-    }
+    }*/
 
 
 
@@ -562,8 +442,7 @@ public class TeleOp2Drivers extends LinearOpMode { //gamepad1 is drive; gamepad 
         telemetry.addData("middle arm:", robot.distSensorHighArm.getDistance(DistanceUnit.CM));
         telemetry.addData("distance:", robot.distSensorArm.getDistance(DistanceUnit.CM) + robot.distSensorLowerArm.getDistance(DistanceUnit.CM) + robot.distSensorHighArm.getDistance(DistanceUnit.CM));
 
-        telemetry.addData("elbow pos", robot.arm2.getCurrentPosition());
-
+//commented out telemtry for four bar to make better
 
         telemetry.addData("hand", robot.distSensorHand.getDistance(DistanceUnit.CM));
         telemetry.update();

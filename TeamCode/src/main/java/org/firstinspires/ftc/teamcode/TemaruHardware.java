@@ -152,10 +152,7 @@ public class TemaruHardware extends LinearOpMode {
 
 
 
-        //check direction
-        arm2.setDirection(DcMotorSimple.Direction.FORWARD); //check direction
 
-        //hand.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //DO NOT CHANGE ARM DIRECTIONS EVER EVER EVER EVER EVER EVER EVER EVER EVER OR ELSE
 
@@ -210,7 +207,7 @@ public class TemaruHardware extends LinearOpMode {
         BOW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); //used to be brake
 
         //hand.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 

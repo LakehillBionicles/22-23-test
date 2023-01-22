@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.TemaruHardware;
 
 @TeleOp
-//@Disabled
+@Disabled
 
 public class FieldCentricDriveTestAustin extends LinearOpMode{
 

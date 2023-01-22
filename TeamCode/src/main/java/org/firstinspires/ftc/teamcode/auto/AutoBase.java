@@ -93,9 +93,9 @@ public class AutoBase extends LinearOpMode {
     public double integralSumLimit = 0.25;
 
     //////////////////////////////// PID VARIABLES ////////////////////////////////////////////////
-    public double Kp = 1.0;
-    public double Kd = 1.0;
-    public double Ki = 1.0;
+    public double Kp = .33;
+    public double Kd = .33;
+    public double Ki = .33;
 
     //////////////////////////////// MISC ////////////////////////////////////////////////
     public double odoTime = 0;
